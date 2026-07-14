@@ -3,56 +3,17 @@ import ExcelJS from "exceljs";
 import prisma from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
+import { SUBCUENTAS, SUBCUENTAS_CONTABILIDAD } from "@/lib/expense-categories";
 
 // ✅ IVA configurable (21% España)
+// ⚠️ TODO (financiero): este export usa IVA_RATE=0 mientras que el export de
+// usuario (app/api/trips/export/route.ts) usa 0.21. Divergencia intencionada por
+// ahora: unificarla afecta a los importes de todo el histórico. No tocar sin
+// decisión de financiero.
 const IVA_RATE = 0;
 
-const SUBCUENTAS: Record<string, { concepto: string; subconcepto: string }> = {
-  Taxi: {
-    concepto: "GASTOS DE VIAJE",
-    subconcepto: "Taxi viajes",
-  },
-  Comida: {
-    concepto: "GASTOS DE VIAJE",
-    subconcepto: "Comidas viajes",
-  },
-  Hotel: {
-    concepto: "GASTOS DE VIAJE",
-    subconcepto: "Hotel viajes",
-  },
-  "Metrobus/Parking": {
-    concepto: "GASTOS DE VIAJE",
-    subconcepto: "Parking viajes metrobus",
-  },
-  Gasolina: {
-    concepto: "GASTOS DE VIAJE",
-    subconcepto: "Gasolina viajes",
-  },
-  Ave: {
-    concepto: "GASTOS DE VIAJE",
-    subconcepto: "Ave",
-  },
-  Avion: {
-    concepto: "GASTOS DE VIAJE",
-    subconcepto: "Avion",
-  },
-  ComidasOficina: {
-    concepto: "FUNCIONAMIENTO OFICINA",
-    subconcepto: "Comidas oficina",
-  },
-};
-
-const SUBCUENTAS_CONTABILIDAD: Record<string, string> = {
-  Taxi: "62900000006",
-  Comida: "62900000024",
-  Hotel: "62900000039",
-  "Metrobus/Parking": "62900000045",
-  Gasolina: "62900000031",
-  Ave: "62900000025",
-  Avion: "62900000038",
-  ComidasOficina: "62900000022",
-};
-
+// SUBCUENTAS y SUBCUENTAS_CONTABILIDAD viven en @/lib/expense-categories
+// (fuente única de verdad). BANCOS es específico de los exports.
 const BANCOS: Record<string, string> = {
   Tarjeta: "Santander tarj debito",
   Efectivo: "Efectivo",

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import Anthropic from "@anthropic-ai/sdk";
+import { OCR_CATEGORIES, isValidCategory } from "@/lib/expense-categories";
 
 // ── Modelo OCR ───────────────────────────────────────────────────────────────
 // Alias SIN fecha: apunta siempre al último snapshot de Haiku 4.5, así no se
@@ -79,7 +80,7 @@ export async function POST(request: NextRequest) {
   "amount": número (solo el importe total, sin símbolos de moneda),
   "date": "YYYY-MM-DD" (fecha del ticket),
   "invoiceNumber": "NIF o CIF de la empresa emisora",
-  "category": "una de estas opciones: Taxi, Comida, Hotel, Metrobus/Parking, Gasolina, Ave, Avion, ComidasOficina",
+  "category": "una de estas opciones: ${OCR_CATEGORIES.join(", ")}",
   "description": "breve descripción del gasto (qué se compró o consumió) no mas de 10 palabras"
 }
 
@@ -117,6 +118,22 @@ REGLAS:
         },
         { status: 502 }
       );
+    }
+
+    // Whitelist de categoría: el modelo solo debe devolver una de OCR_CATEGORIES.
+    // Si viene algo fuera de lista (o una categoría "de oficina", que es de
+    // selección manual), lo descartamos para que el usuario la elija en el
+    // formulario. NO rompemos la request por esto.
+    if (
+      extractedData &&
+      typeof extractedData === "object" &&
+      "category" in extractedData &&
+      !(
+        isValidCategory(extractedData.category) &&
+        OCR_CATEGORIES.includes(extractedData.category)
+      )
+    ) {
+      extractedData.category = "";
     }
 
     return NextResponse.json({

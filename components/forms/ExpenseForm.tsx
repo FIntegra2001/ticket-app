@@ -18,6 +18,7 @@ import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { ImageCapture } from "./ImageCapture"; // ✅ nuevo componente
 import { compressImage } from "@/lib/compress-image";
+import { EXPENSE_CATEGORIES } from "@/lib/expense-categories";
 
 type ExpenseFormValues = {
   date: Date;
@@ -251,14 +252,11 @@ export default function ExpenseForm({
               <SelectValue placeholder="Selecciona una categoría" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="Taxi">Taxi</SelectItem>
-              <SelectItem value="Comida">Comida</SelectItem>
-              <SelectItem value="Hotel">Hotel</SelectItem>
-              <SelectItem value="Metrobus/Parking">Metrobus/Parking</SelectItem>
-              <SelectItem value="Gasolina">Gasolina</SelectItem>
-              <SelectItem value="Ave">Ave</SelectItem>
-              <SelectItem value="Avion">Avion</SelectItem>
-              <SelectItem value="ComidasOficina">Escuela Formación</SelectItem>
+              {EXPENSE_CATEGORIES.map((cat) => (
+                <SelectItem key={cat.value} value={cat.value}>
+                  {cat.label}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
