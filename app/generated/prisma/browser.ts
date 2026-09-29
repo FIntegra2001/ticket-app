@@ -28,10 +28,20 @@ export type User = Prisma.UserModel
  */
 export type Trip = Prisma.TripModel
 /**
+ * Model TripDocument
+ * 
+ */
+export type TripDocument = Prisma.TripDocumentModel
+/**
  * Model TripAssignment
  * 
  */
 export type TripAssignment = Prisma.TripAssignmentModel
+/**
+ * Model OfficeExpense
+ * 
+ */
+export type OfficeExpense = Prisma.OfficeExpenseModel
 /**
  * Model Expense
  * 

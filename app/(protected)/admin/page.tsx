@@ -5,6 +5,7 @@ import {
   useAdminTripsTable,
   useUpdateTripStatus,
   useExportExcel,
+  useExportTripsSummary,
 } from "@/hooks/useAdminTrips";
 import {
   Table,
@@ -29,12 +30,19 @@ import { Trip, TripStatus } from "@/types";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   FileSpreadsheet,
+  ClipboardList,
   ChevronLeft,
   ChevronRight,
   Plus,
   X,
 } from "lucide-react";
 import { useUsers } from "@/hooks/useUser";
+import PendingTripRequests from "@/components/admin/PendingTripRequests";
+import {
+  TRIP_STATUS_OPTIONS,
+  TRIP_STATUS_SHORT_LABEL,
+  TRIP_STATUS_VARIANT,
+} from "@/lib/trip-status";
 
 export default function AdminPage() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -47,21 +55,10 @@ export default function AdminPage() {
   const { users } = useUsers();
   const updateStatus = useUpdateTripStatus();
   const exportExcel = useExportExcel();
+  const exportSummary = useExportTripsSummary();
 
-  const STATUS_OPTIONS: TripStatus[] = ["PENDIENTE", "APROBADO", "RECHAZADO"];
-
-  const getStatusVariant = (status: TripStatus) => {
-    switch (status) {
-      case "PENDIENTE":
-        return "outline";
-      case "APROBADO":
-        return "default";
-      case "RECHAZADO":
-        return "destructive";
-      default:
-        return "outline";
-    }
-  };
+  // Etiquetas y variantes vienen de lib/trip-status.ts (fuente única)
+  const STATUS_OPTIONS = TRIP_STATUS_OPTIONS;
 
   if (isLoading) {
     return (
@@ -113,7 +110,26 @@ export default function AdminPage() {
             </Link>
           </Button>
 
-          {/* Exportar Excel */}
+          {/* 🆕 Resumen de viajes: una fila por viaje, sin gastos */}
+          <Button
+            variant="outline"
+            onClick={() => exportSummary.mutate()}
+            disabled={exportSummary.isPending}
+          >
+            {exportSummary.isPending ? (
+              <>
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current mr-2" />
+                Generando...
+              </>
+            ) : (
+              <>
+                <ClipboardList className="w-4 h-4 mr-2" />
+                Resumen de viajes
+              </>
+            )}
+          </Button>
+
+          {/* Exportar Excel de gastos (una fila por gasto, 27 columnas) */}
           <Button
             onClick={() => exportExcel.mutate()}
             disabled={exportExcel.isPending}
@@ -126,12 +142,16 @@ export default function AdminPage() {
             ) : (
               <>
                 <FileSpreadsheet className="w-4 h-4 mr-2" />
-                Exportar Excel
+                Exportar gastos
               </>
             )}
           </Button>
         </div>
       </div>
+
+      {/* 🆕 Lo primero: solicitudes esperando aprobación (no pinta nada si no hay) */}
+      <PendingTripRequests />
+
       {/* ✅ Filtros */}
       <div className="flex flex-col sm:flex-row gap-4 items-stretch sm:items-end bg-muted/50 p-4 rounded-lg border">
         <div className="flex-1">
@@ -173,7 +193,7 @@ export default function AdminPage() {
               <SelectItem value="all">Todos los estados</SelectItem>
               {STATUS_OPTIONS.map((s) => (
                 <SelectItem key={s} value={s}>
-                  {s}
+                  {TRIP_STATUS_SHORT_LABEL[s]}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -203,8 +223,10 @@ export default function AdminPage() {
               <TableHeader>
                 <TableRow>
                   <TableHead>Ciudad</TableHead>
+                  <TableHead>Nº Factura</TableHead>
                   <TableHead>Usuario</TableHead>
                   <TableHead>Fechas</TableHead>
+                  <TableHead>Docs.</TableHead>
                   <TableHead className="text-right">Gastos</TableHead>
                   <TableHead className="text-right">Total</TableHead>
                   <TableHead>Estado</TableHead>
@@ -215,6 +237,14 @@ export default function AdminPage() {
                 {trips.map((trip: Trip) => (
                   <TableRow key={trip.id}>
                     <TableCell className="font-medium">{trip.city}</TableCell>
+                    {/* 🆕 Nº de factura interno, visible sin abrir el viaje */}
+                    <TableCell className="text-sm">
+                      {trip.numberInvoice ? (
+                        trip.numberInvoice
+                      ) : (
+                        <span className="text-amber-600">Sin asignar</span>
+                      )}
+                    </TableCell>
                     <TableCell>
                       {trip.assignedUsers && trip.assignedUsers.length > 0 ? (
                         <div>
@@ -236,6 +266,37 @@ export default function AdminPage() {
                     <TableCell className="text-sm">
                       {formatDate(trip.startDate)} — {formatDate(trip.endDate)}
                     </TableCell>
+                    {/* 🆕 Billete comprado / hotel reservado, de un vistazo */}
+                    <TableCell>
+                      <div className="flex gap-1 text-xs">
+                        <span
+                          title="Billete"
+                          className={
+                            trip.documents?.some((d) => d.type === "BILLETE")
+                              ? "text-green-600"
+                              : "text-muted-foreground"
+                          }
+                        >
+                          ✈️
+                          {trip.documents?.some((d) => d.type === "BILLETE")
+                            ? "✓"
+                            : "✗"}
+                        </span>
+                        <span
+                          title="Reserva de hotel"
+                          className={
+                            trip.documents?.some((d) => d.type === "RESERVA")
+                              ? "text-green-600"
+                              : "text-muted-foreground"
+                          }
+                        >
+                          🏨
+                          {trip.documents?.some((d) => d.type === "RESERVA")
+                            ? "✓"
+                            : "✗"}
+                        </span>
+                      </div>
+                    </TableCell>
                     <TableCell className="text-right">
                       {trip.expenses?.length ?? 0}
                     </TableCell>
@@ -244,8 +305,8 @@ export default function AdminPage() {
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
-                        <Badge variant={getStatusVariant(trip.status)}>
-                          {trip.status}
+                        <Badge variant={TRIP_STATUS_VARIANT[trip.status]}>
+                          {TRIP_STATUS_SHORT_LABEL[trip.status]}
                         </Badge>
                         <Select
                           value={trip.status}
@@ -263,7 +324,7 @@ export default function AdminPage() {
                           <SelectContent>
                             {STATUS_OPTIONS.map((s) => (
                               <SelectItem key={s} value={s}>
-                                {s}
+                                {TRIP_STATUS_SHORT_LABEL[s]}
                               </SelectItem>
                             ))}
                           </SelectContent>

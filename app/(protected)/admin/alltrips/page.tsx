@@ -135,6 +135,7 @@ export default function AdminAllTripsPage() {
                 // ✅ Admin puede editar y eliminar
                 onEdit={handleEdit}
                 onDelete={handleDelete}
+                isDeleting={deleteTrip.isPending}
                 isAdmin
               />
             ))}

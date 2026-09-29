@@ -30,7 +30,11 @@ export async function GET() {
   }
 
   // ✅ FIX: incluir trip con assignedUsers → user (ya no trip.user)
+  // 🆕 Solo gastos DE VIAJE: `tripId` es nullable desde que existen los partes de
+  // gastos de oficina, que cuelgan de `officeExpenseId` y van a otras cuentas
+  // contables. Sin este filtro se colarían aquí con el fallback a "Taxi".
   const expenses = await prisma.expense.findMany({
+    where: { tripId: { not: null } },
     include: {
       trip: {
         include: {
@@ -83,6 +87,9 @@ export async function GET() {
 
   expenses.forEach((expense) => {
     const trip = expense.trip;
+    // Ya filtrado en la query; esta guarda solo estrecha el tipo (trip es nullable)
+    if (!trip) return;
+
     const fechaGasto = new Date(expense.date);
     const mesNum     = fechaGasto.getMonth() + 1;
     const añoGasto   = fechaGasto.getFullYear();

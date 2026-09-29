@@ -22,6 +22,12 @@ interface TripFormProps {
   initialData?: Trip | null;
   onSubmit: (values: CreateTripDto) => void;
   onCancel: () => void;
+  /**
+   * 🆕 "admin": formulario completo (nº de factura + asignados).
+   * "request": un USER pide un viaje. Se ocultan el nº de factura (lo pone el
+   * admin al aprobar) y el selector de usuarios (se autoasigna en el servidor).
+   */
+  mode?: "admin" | "request";
 }
 
 // ✅ Ciudades disponibles
@@ -42,7 +48,9 @@ export default function TripForm({
   initialData,
   onSubmit,
   onCancel,
+  mode = "admin",
 }: TripFormProps) {
+  const isRequest = mode === "request";
   const { users } = useUsers();
 
   // ✅ Inicializar usuarios asignados desde datos existentes
@@ -93,6 +101,13 @@ export default function TripForm({
 
   return (
     <form className="space-y-4" onSubmit={handleSubmit}>
+      {isRequest && (
+        <p className="text-sm text-muted-foreground bg-muted/50 border rounded-lg p-3">
+          Administración revisará tu solicitud. Hasta que la apruebe podrás
+          editarla, pero no cargar gastos.
+        </p>
+      )}
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <Label htmlFor="city">Ciudad *</Label>
@@ -150,21 +165,25 @@ export default function TripForm({
           />
         </div>
       </div>
-      <div>
-        <Label htmlFor="numberInvoice">Nº Factura Interno (Financiero)</Label>
-        <Input
-          id="numberInvoice"
-          name="numberInvoice"
-          value={values.numberInvoice || ""}
-          onChange={handleChange}
-          placeholder="Número de factura generado por el sistema contable..."
-        />
-        <p className="text-xs text-muted-foreground mt-1">
-          Campo opcional para referencia del departamento financiero
-        </p>
-      </div>
+      {/* Nº de factura: lo rellena el admin, normalmente al aprobar */}
+      {!isRequest && (
+        <div>
+          <Label htmlFor="numberInvoice">Nº Factura Interno (Financiero)</Label>
+          <Input
+            id="numberInvoice"
+            name="numberInvoice"
+            value={values.numberInvoice || ""}
+            onChange={handleChange}
+            placeholder="Número de factura generado por el sistema contable..."
+          />
+          <p className="text-xs text-muted-foreground mt-1">
+            Campo opcional para referencia del departamento financiero
+          </p>
+        </div>
+      )}
 
-      {/* ✅ NUEVO: Selector de usuarios */}
+      {/* ✅ Selector de usuarios — en una solicitud el USER se autoasigna */}
+      {!isRequest && (
       <div className="space-y-2">
         <Label>Asignar usuarios *</Label>
         <Select onValueChange={handleAddUser}>
@@ -209,9 +228,12 @@ export default function TripForm({
           </p>
         )}
       </div>
+      )}
 
       <div>
-        <Label htmlFor="notes">Notas</Label>
+        <Label htmlFor="notes">
+          {isRequest ? "Motivo del viaje / notas" : "Notas"}
+        </Label>
         <Textarea
           id="notes"
           name="notes"
@@ -231,10 +253,14 @@ export default function TripForm({
             !values.city ||
             !values.startDate ||
             !values.endDate ||
-            selectedUserIds.length === 0
+            (!isRequest && selectedUserIds.length === 0)
           }
         >
-          {initialData ? "Actualizar" : "Crear"} Viaje
+          {isRequest
+            ? initialData
+              ? "Actualizar solicitud"
+              : "Enviar solicitud"
+            : `${initialData ? "Actualizar" : "Crear"} Viaje`}
         </Button>
       </div>
     </form>

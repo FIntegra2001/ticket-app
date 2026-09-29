@@ -18,7 +18,10 @@ import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { ImageCapture } from "./ImageCapture"; // ✅ nuevo componente
 import { compressImage } from "@/lib/compress-image";
-import { EXPENSE_CATEGORIES } from "@/lib/expense-categories";
+import {
+  getCategoriesByScope,
+  type CategoryScope,
+} from "@/lib/expense-categories";
 
 type ExpenseFormValues = {
   date: Date;
@@ -32,7 +35,16 @@ type ExpenseFormValues = {
 };
 
 interface ExpenseFormProps {
-  tripId: string;
+  /** Viaje al que pertenece el gasto. Excluyente con `officeExpenseId`. */
+  tripId?: string;
+  /** 🆕 Parte de gastos de oficina al que pertenece. Excluyente con `tripId`. */
+  officeExpenseId?: string;
+  /**
+   * 🆕 Contexto contable. Determina qué categorías se ofrecen en el select y
+   * qué puede sugerir el OCR: las de viaje y las de oficina van a cuentas
+   * distintas y no deben mezclarse.
+   */
+  scope?: CategoryScope;
   initialData?: Expense | null;
   onSubmit: (values: ExpenseFormValues) => void;
   onCancel: () => void;
@@ -43,7 +55,12 @@ export default function ExpenseForm({
   onSubmit,
   onCancel,
   tripId,
+  officeExpenseId,
+  scope = "trip",
 }: ExpenseFormProps) {
+  // Categorías del contexto: en un viaje solo salen las de viaje, en un parte de
+  // oficina solo las de oficina.
+  const categories = getCategoriesByScope(scope);
   const ocrMutation = useOCR();
   const uploadMutation = useUploadReceipt();
 
@@ -120,10 +137,16 @@ export default function ExpenseForm({
 
       toast.info("Extrayendo datos del ticket");
 
-      // OCR y upload en paralelo
+      // OCR y upload en paralelo. El scope viaja al OCR para que sugiera
+      // categorías del contexto correcto, y el id determina en qué carpeta de
+      // Cloudinary acaba el ticket.
       const [ocrData, imageUrl] = await Promise.all([
-        ocrMutation.mutateAsync(compressed),
-        uploadMutation.mutateAsync({ image: compressed, tripId }),
+        ocrMutation.mutateAsync({ image: compressed, scope }),
+        uploadMutation.mutateAsync({
+          image: compressed,
+          tripId,
+          officeExpenseId,
+        }),
       ]);
 
       setReceiptUrl(imageUrl);
@@ -252,7 +275,7 @@ export default function ExpenseForm({
               <SelectValue placeholder="Selecciona una categoría" />
             </SelectTrigger>
             <SelectContent>
-              {EXPENSE_CATEGORIES.map((cat) => (
+              {categories.map((cat) => (
                 <SelectItem key={cat.value} value={cat.value}>
                   {cat.label}
                 </SelectItem>

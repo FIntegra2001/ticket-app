@@ -1,6 +1,7 @@
 "use client";
 
 import { useMutation } from "@tanstack/react-query";
+import type { CategoryScope } from "@/lib/expense-categories";
 
 interface OCRResult {
   vendor: string | null;
@@ -13,9 +14,22 @@ interface OCRResult {
 
 export function useOCR() {
   return useMutation({
-    mutationFn: async (image: File): Promise<OCRResult> => {
+    mutationFn: async ({
+      image,
+      scope = "trip",
+    }: {
+      image: File;
+      /**
+       * 🆕 Contexto del gasto. Decide qué categorías puede sugerir el modelo:
+       * en un parte de oficina un taxi es "TaxiOficina" (62900000019), no "Taxi"
+       * (62900000006). Por defecto "trip", para no cambiar el comportamiento
+       * existente.
+       */
+      scope?: CategoryScope;
+    }): Promise<OCRResult> => {
       const formData = new FormData();
       formData.append("image", image);
+      formData.append("scope", scope);
 
       const res = await fetch("/api/expenses/ocr", {
         method: "POST",
@@ -36,10 +50,20 @@ export function useOCR() {
 
 export function useUploadReceipt() {
   return useMutation({
-    mutationFn: async ({ image, tripId }: { image: File; tripId: string }): Promise<string> => {
+    mutationFn: async ({
+      image,
+      tripId,
+      officeExpenseId,
+    }: {
+      image: File;
+      /** Uno de los dos, nunca ambos: el ticket cuelga de un viaje o de un parte. */
+      tripId?: string;
+      officeExpenseId?: string;
+    }): Promise<string> => {
       const formData = new FormData();
       formData.append("image", image);
-      formData.append("tripId", tripId);
+      if (tripId) formData.append("tripId", tripId);
+      if (officeExpenseId) formData.append("officeExpenseId", officeExpenseId);
 
       const res = await fetch("/api/expenses/upload-receipt", {
         method: "POST",

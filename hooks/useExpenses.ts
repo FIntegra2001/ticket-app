@@ -3,6 +3,7 @@
 import { useUserContext } from "@/context/userContext";
 import { CreateExpenseDto, UpdateExpenseDto, Expense } from "@/types";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 /* ===============================
    Obtener expenses de un trip
@@ -58,6 +59,8 @@ export function useCreateExpense(tripId: string) {
       queryClient.invalidateQueries({ queryKey: ["trip", tripId] });
       if (user?.id) {
         queryClient.invalidateQueries({ queryKey: ["trips", user.id] });
+        // El dashboard del usuario lee ["tripStats"]: sin esto quedaba desfasado
+        queryClient.invalidateQueries({ queryKey: ["tripStats", user.id] });
       }
       
       // ✅ Queries de admin — para que se refresque si el admin está viendo el trip
@@ -112,6 +115,8 @@ export function useUpdateExpense(tripId: string) {
       queryClient.invalidateQueries({ queryKey: ["trip", tripId] });
       if (user?.id) {
         queryClient.invalidateQueries({ queryKey: ["trips", user.id] });
+        // El dashboard del usuario lee ["tripStats"]: sin esto quedaba desfasado
+        queryClient.invalidateQueries({ queryKey: ["tripStats", user.id] });
       }
 
       // ✅ Queries de admin
@@ -160,6 +165,8 @@ export function useDeleteExpense(tripId: string) {
       queryClient.invalidateQueries({ queryKey: ["trip", tripId] });
       if (user?.id) {
         queryClient.invalidateQueries({ queryKey: ["trips", user.id] });
+        // El dashboard del usuario lee ["tripStats"]: sin esto quedaba desfasado
+        queryClient.invalidateQueries({ queryKey: ["tripStats", user.id] });
       }
 
       // ✅ Queries de admin
@@ -172,9 +179,14 @@ export function useDeleteExpense(tripId: string) {
       queryClient.setQueryData<Expense[]>(["expenses", tripId], (old) =>
         old ? old.filter((e) => e.id !== expenseId) : []
       );
+
+      toast.success("Gasto eliminado");
     },
     onError: (error) => {
       console.error("Error deleting expense:", error);
+      toast.error(
+        error instanceof Error ? error.message : "No se pudo eliminar el gasto"
+      );
     },
   });
 }
