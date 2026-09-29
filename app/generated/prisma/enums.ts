@@ -24,3 +24,20 @@ export const TripStatus = {
 } as const
 
 export type TripStatus = (typeof TripStatus)[keyof typeof TripStatus]
+
+
+export const TripDocumentType = {
+  BILLETE: 'BILLETE',
+  RESERVA: 'RESERVA',
+  OTRO: 'OTRO'
+} as const
+
+export type TripDocumentType = (typeof TripDocumentType)[keyof typeof TripDocumentType]
+
+
+export const OfficeExpenseStatus = {
+  ABIERTO: 'ABIERTO',
+  CERRADO: 'CERRADO'
+} as const
+
+export type OfficeExpenseStatus = (typeof OfficeExpenseStatus)[keyof typeof OfficeExpenseStatus]

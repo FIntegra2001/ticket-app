@@ -11,12 +11,16 @@ import {
 } from "@/hooks/useExpenses";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { ConfirmDeleteDialog } from "@/components/ui/confirm-delete-dialog";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import type { Expense } from "@/types";
 import { useState } from "react";
 import ExpenseForm from "@/components/forms/ExpenseForm";
 import { useRouter } from "next/navigation";
 import { SkeletonExpenses } from "@/components/SkeletonExpenses";
+import { acceptsExpenses, TRIP_STATUS_LABEL } from "@/lib/trip-status";
+import { Lock } from "lucide-react";
+import TripDocuments from "@/components/trips/TripDocuments";
 
 export default function TripExpensesPage() {
   const params = useParams<{ tripId: string }>();
@@ -33,6 +37,46 @@ export default function TripExpensesPage() {
   const [showForm, setShowForm] = useState(false);
 
   if (isLoading) return <SkeletonExpenses />;
+
+  // 🆕 La card ya no enlaza aquí si el viaje no está aprobado, pero la URL es
+  // adivinable: sin esta guarda el usuario vería el formulario y solo se
+  // enteraría al recibir el 403 del servidor al guardar.
+  if (trip && !acceptsExpenses(trip.status)) {
+    const isPending = trip.status === "PENDIENTE";
+    return (
+      <div className="max-w-3xl mx-auto p-6 space-y-6">
+        <Button
+          variant="ghost"
+          className="px-0"
+          onClick={() => router.push("/trips")}
+        >
+          ← Volver
+        </Button>
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Lock className="w-5 h-5 text-muted-foreground" />
+              {isPending
+                ? "Solicitud pendiente de aprobación"
+                : "Viaje rechazado"}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2 text-sm text-muted-foreground">
+            <p>
+              El viaje a <strong>{trip.city}</strong> está en estado{" "}
+              <strong>{TRIP_STATUS_LABEL[trip.status]}</strong>, así que todavía
+              no admite gastos.
+            </p>
+            <p>
+              {isPending
+                ? "En cuanto administración lo apruebe podrás cargar tus tickets aquí."
+                : "Si crees que es un error, habla con administración."}
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-3xl mx-auto p-6 space-y-6">
@@ -62,6 +106,9 @@ export default function TripExpensesPage() {
           </Button>
         </div>
       </div>
+
+      {/* 🆕 Billete y reserva, antes de los gastos */}
+      <TripDocuments tripId={tripId} />
 
       {showForm && (
         <Card>
@@ -134,14 +181,36 @@ export default function TripExpensesPage() {
                   >
                     Editar
                   </Button>
-                  <Button
-                    variant="destructive"
-                    size="sm"
-                    onClick={() => deleteExpense.mutate(exp.id)}
-                    className="w-full sm:w-auto"
-                  >
-                    Borrar
-                  </Button>
+                  <ConfirmDeleteDialog
+                    title="¿Eliminar este gasto?"
+                    description={
+                      <>
+                        Vas a eliminar el gasto de{" "}
+                        <strong>{formatCurrency(exp.amount)}</strong>
+                        {exp.vendor ? (
+                          <>
+                            {" "}
+                            en <strong>{exp.vendor}</strong>
+                          </>
+                        ) : null}{" "}
+                        del {formatDate(exp.date)}. El total del viaje se
+                        recalculará. Esta acción no se puede deshacer.
+                      </>
+                    }
+                    confirmLabel="Eliminar gasto"
+                    isPending={deleteExpense.isPending}
+                    onConfirm={() => deleteExpense.mutate(exp.id)}
+                    trigger={
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        disabled={deleteExpense.isPending}
+                        className="w-full sm:w-auto"
+                      >
+                        Borrar
+                      </Button>
+                    }
+                  />
                 </div>
               </div>
             ))

@@ -53,7 +53,9 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   User: 'User',
   Trip: 'Trip',
+  TripDocument: 'TripDocument',
   TripAssignment: 'TripAssignment',
+  OfficeExpense: 'OfficeExpense',
   Expense: 'Expense',
   Session: 'Session',
   Account: 'Account',
@@ -93,6 +95,9 @@ export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof User
 export const TripScalarFieldEnum = {
   id: 'id',
   createdByAdminId: 'createdByAdminId',
+  requestedById: 'requestedById',
+  approvedAt: 'approvedAt',
+  approvedById: 'approvedById',
   city: 'city',
   startDate: 'startDate',
   endDate: 'endDate',
@@ -108,6 +113,22 @@ export const TripScalarFieldEnum = {
 export type TripScalarFieldEnum = (typeof TripScalarFieldEnum)[keyof typeof TripScalarFieldEnum]
 
 
+export const TripDocumentScalarFieldEnum = {
+  id: 'id',
+  tripId: 'tripId',
+  type: 'type',
+  url: 'url',
+  publicId: 'publicId',
+  fileName: 'fileName',
+  mimeType: 'mimeType',
+  size: 'size',
+  uploadedById: 'uploadedById',
+  createdAt: 'createdAt'
+} as const
+
+export type TripDocumentScalarFieldEnum = (typeof TripDocumentScalarFieldEnum)[keyof typeof TripDocumentScalarFieldEnum]
+
+
 export const TripAssignmentScalarFieldEnum = {
   id: 'id',
   tripId: 'tripId',
@@ -118,9 +139,26 @@ export const TripAssignmentScalarFieldEnum = {
 export type TripAssignmentScalarFieldEnum = (typeof TripAssignmentScalarFieldEnum)[keyof typeof TripAssignmentScalarFieldEnum]
 
 
+export const OfficeExpenseScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  year: 'year',
+  month: 'month',
+  title: 'title',
+  notes: 'notes',
+  status: 'status',
+  totalAmount: 'totalAmount',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type OfficeExpenseScalarFieldEnum = (typeof OfficeExpenseScalarFieldEnum)[keyof typeof OfficeExpenseScalarFieldEnum]
+
+
 export const ExpenseScalarFieldEnum = {
   id: 'id',
   tripId: 'tripId',
+  officeExpenseId: 'officeExpenseId',
   date: 'date',
   amount: 'amount',
   category: 'category',

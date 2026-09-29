@@ -26,7 +26,28 @@ export default function Navigation() {
             <span className="text-md font-bold text-gray-900">Inicio</span>
           </Link>
 
-          <nav className="flex items-center space-x-6">
+          <nav className="flex items-center space-x-2 sm:space-x-6">
+            {/* 🆕 Gastos de oficina: el USER va a sus partes, el ADMIN al panel
+                con los de todos. Es el único acceso a la sección, así que va en
+                el nav y no solo en el dashboard. */}
+            {user && (
+              <Link
+                href={
+                  user.role === "ADMIN"
+                    ? "/admin/office-expenses"
+                    : "/office-expenses"
+                }
+                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                  isActive("/office-expenses") ||
+                  isActive("/admin/office-expenses")
+                    ? "text-indigo-600 bg-indigo-50"
+                    : "text-gray-600 hover:text-gray-900"
+                }`}
+              >
+                Gastos oficina
+              </Link>
+            )}
+
             {user?.role === "ADMIN" && (
               <Link
                 href="/admin"
@@ -36,9 +57,22 @@ export default function Navigation() {
                     : "text-gray-600 hover:text-gray-900"
                 }`}
               >
-                Administracion
+                Viajes
               </Link>
             )}
+            {user?.role === "USER" && (
+              <Link
+                href="/trips"
+                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                  isActive("/trips")
+                    ? "text-indigo-600 bg-indigo-50"
+                    : "text-gray-600 hover:text-gray-900"
+                }`}
+              >
+                Viajes
+              </Link>
+            )}
+
 
             {user && <UserBadge />}
 

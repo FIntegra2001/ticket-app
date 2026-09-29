@@ -2,7 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import Anthropic from "@anthropic-ai/sdk";
-import { OCR_CATEGORIES, isValidCategory } from "@/lib/expense-categories";
+import {
+  getOcrCategories,
+  isValidCategoryForScope,
+  type CategoryScope,
+} from "@/lib/expense-categories";
 
 // ── Modelo OCR ───────────────────────────────────────────────────────────────
 // Alias SIN fecha: apunta siempre al último snapshot de Haiku 4.5, así no se
@@ -18,6 +22,24 @@ const anthropic = new Anthropic({
 const ALLOWED_MEDIA_TYPES = ["image/jpeg", "image/png", "image/webp"] as const;
 type AllowedMediaType = (typeof ALLOWED_MEDIA_TYPES)[number];
 
+// 🆕 Pistas de categorización por contexto. Los casos que un ticket no deja
+// claros por sí solos (un AVE frente a un avión, mensajería frente a material)
+// se explican aquí; la lista de valores válidos sale de expense-categories.
+const CATEGORY_HINTS: Record<CategoryScope, string> = {
+  trip: `    · "Ave" = billetes de tren AVE / Renfe.
+    · "Avion" = vuelos / billetes de avión.
+    · "Metrobus/Parking" = transporte público urbano o aparcamiento.
+    · "Comida" = restaurantes, bares, cafeterías.`,
+  office: `    · "Mensajeria" = mensajería o paquetería (Correos, MRW, SEUR, Glovo de envíos...).
+    · "Material" = material de oficina y papelería.
+    · "Limpieza" = productos o servicios de limpieza.
+    · "ComidasOficina" = comida o catering para la oficina, restaurantes y cafeterías.
+    · "ParkingOficina" = aparcamiento o transporte público urbano (metrobús).
+    · "TaxiOficina" = taxi o VTC.
+    · "GasolinaOficina" = combustible / gasolineras.
+    · "Regalos" = regalos, detalles u obsequios.`,
+};
+
 export async function POST(request: NextRequest) {
   try {
     const session = await auth.api.getSession({
@@ -30,6 +52,15 @@ export async function POST(request: NextRequest) {
 
     const formData = await request.formData();
     const image = formData.get("image") as File | null;
+
+    // 🆕 Contexto del gasto: "trip" (por defecto, retrocompatible) u "office".
+    // Determina qué categorías se le ofrecen al modelo y contra qué se valida su
+    // respuesta. Dentro de un parte de oficina, un ticket de taxi ES taxi de
+    // oficina: el contexto resuelve la ambigüedad que antes obligaba a que las
+    // categorías de oficina fuesen de selección manual.
+    const scopeParam = formData.get("scope");
+    const scope: CategoryScope = scopeParam === "office" ? "office" : "trip";
+    const allowedCategories = getOcrCategories(scope);
 
     if (!image) {
       return NextResponse.json(
@@ -80,17 +111,14 @@ export async function POST(request: NextRequest) {
   "amount": número (solo el importe total, sin símbolos de moneda),
   "date": "YYYY-MM-DD" (fecha del ticket),
   "invoiceNumber": "NIF o CIF de la empresa emisora",
-  "category": "una de estas opciones: ${OCR_CATEGORIES.join(", ")}",
+  "category": "una de estas opciones: ${allowedCategories.join(", ")}",
   "description": "breve descripción del gasto (qué se compró o consumió) no mas de 10 palabras"
 }
 
 REGLAS:
 - invoiceNumber: busca el NIF/CIF de la empresa emisora (formatos como A12345678, B87654321, 12345678A...). Suele estar en la cabecera del ticket, junto al nombre o razón social.
 - category: elige la más apropiada según el tipo de establecimiento.
-    · "Ave" = billetes de tren AVE / Renfe.
-    · "Avion" = vuelos / billetes de avión.
-    · "ComidasOficina" = comida o catering para la oficina.
-    · "Metrobus/Parking" = transporte público urbano o aparcamiento.
+${CATEGORY_HINTS[scope]}
 - amount: debe ser un número, sin símbolos de moneda.
 - Si no encuentras algún dato, usa null.
 - Responde SOLO con el objeto JSON, sin texto adicional ni bloques de markdown.`,
@@ -120,18 +148,17 @@ REGLAS:
       );
     }
 
-    // Whitelist de categoría: el modelo solo debe devolver una de OCR_CATEGORIES.
-    // Si viene algo fuera de lista (o una categoría "de oficina", que es de
-    // selección manual), lo descartamos para que el usuario la elija en el
-    // formulario. NO rompemos la request por esto.
+    // Whitelist de categoría contra el MISMO scope con el que se construyó el
+    // prompt. Si el modelo devuelve algo fuera de lista — por ejemplo "Taxi"
+    // (cuenta de viaje) en un parte de oficina — lo descartamos para que el
+    // usuario la elija en el formulario. NO rompemos la request por esto.
+    // Sin esta comprobación el valor acabaría en el fallback `?? SUBCUENTAS
+    // ["Taxi"]` del Excel y se contabilizaría mal en silencio.
     if (
       extractedData &&
       typeof extractedData === "object" &&
       "category" in extractedData &&
-      !(
-        isValidCategory(extractedData.category) &&
-        OCR_CATEGORIES.includes(extractedData.category)
-      )
+      !isValidCategoryForScope(extractedData.category, scope)
     ) {
       extractedData.category = "";
     }

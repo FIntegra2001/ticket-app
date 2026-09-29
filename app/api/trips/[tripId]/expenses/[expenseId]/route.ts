@@ -18,10 +18,14 @@ async function verifyExpenseAccess(
   userId: string,
   isAdmin: boolean
 ) {
+  // Se incluye el status del viaje para poder aplicar el candado de aprobación
+  const include = { trip: { select: { status: true } } } as const;
+
   if (isAdmin) {
     // Admin puede acceder a cualquier expense
     return prisma.expense.findFirst({
       where: { id: expenseId, tripId },
+      include,
     });
   }
 
@@ -36,7 +40,20 @@ async function verifyExpenseAccess(
         },
       },
     },
+    include,
   });
+}
+
+// 🆕 Mismo candado que en la ruta de creación: un USER no toca gastos de un
+// viaje que no esté APROBADO. El ADMIN sí, para poder corregir.
+const EXPENSES_LOCKED_MSG =
+  "Este viaje no está aprobado, así que sus gastos no se pueden modificar.";
+
+function expensesLocked(
+  expense: { trip: { status: string } | null },
+  isAdmin: boolean,
+): boolean {
+  return !isAdmin && expense.trip?.status !== "APROBADO";
 }
 
 export async function PUT(request: Request, { params }: Params) {
@@ -62,6 +79,10 @@ export async function PUT(request: Request, { params }: Params) {
 
     if (!existingExpense) {
       return NextResponse.json({ error: "Expense not found" }, { status: 404 });
+    }
+
+    if (expensesLocked(existingExpense, isAdmin)) {
+      return NextResponse.json({ error: EXPENSES_LOCKED_MSG }, { status: 403 });
     }
 
     const body = await request.json();
@@ -162,6 +183,10 @@ export async function DELETE(_: Request, { params }: Params) {
 
     if (!existingExpense) {
       return NextResponse.json({ error: "Expense not found" }, { status: 404 });
+    }
+
+    if (expensesLocked(existingExpense, isAdmin)) {
+      return NextResponse.json({ error: EXPENSES_LOCKED_MSG }, { status: 403 });
     }
 
     // ✅ Eliminar expense y actualizar total en transacción

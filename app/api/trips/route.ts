@@ -1,6 +1,7 @@
+import { Prisma } from "@/app/generated/prisma/client";
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/db";
-import { createTripSchema } from "@/lib/validations";
+import { createTripSchema, requestTripSchema } from "@/lib/validations";
 import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { ZodError } from "zod";
@@ -71,48 +72,59 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // ✅ SOLO ADMIN puede crear viajes
-    if (session.user.role !== "ADMIN") {
-      return NextResponse.json(
-        { error: "Only admins can create trips" },
-        { status: 403 }
-      );
-    }
-
+    const isAdmin = session.user.role === "ADMIN";
     const body = await request.json();
-    const validatedData = createTripSchema.parse(body);
 
-    // ✅ Crear viaje con asignaciones en una transacción
-    const trip = await prisma.$transaction(async (tx) => {
-      const newTrip = await tx.trip.create({
-        data: {
-          createdByAdminId: session.user.id,
-          city: validatedData.city,
-          startDate: new Date(validatedData.startDate),
-          endDate: new Date(validatedData.endDate),
-          project: validatedData.project,
-          notes: validatedData.notes,
-          numberInvoice: validatedData.numberInvoice,
-          // ✅ Crear asignaciones
-          assignedUsers: {
-            create: validatedData.assignedUserIds.map((userId) => ({
-              userId,
-            })),
-          },
-        },
-        include: {
-          assignedUsers: {
-            include: {
-              user: {
-                select: { id: true, name: true, email: true },
-              },
+    // 🆕 Dos caminos según el rol:
+    //  - ADMIN crea el viaje ya aprobado (no hay a quién pedírselo) y elige
+    //    asignados y nº de factura.
+    //  - USER crea una SOLICITUD en PENDIENTE, autoasignada. No puede elegir
+    //    asignados ni nº de factura: su esquema no los declara.
+    const data: Prisma.TripCreateInput = isAdmin
+      ? (() => {
+          const v = createTripSchema.parse(body);
+          return {
+            createdByAdmin: { connect: { id: session.user.id } },
+            city: v.city,
+            startDate: new Date(v.startDate),
+            endDate: new Date(v.endDate),
+            project: v.project,
+            notes: v.notes,
+            numberInvoice: v.numberInvoice,
+            status: "APROBADO",
+            approvedAt: new Date(),
+            approvedBy: { connect: { id: session.user.id } },
+            assignedUsers: {
+              create: v.assignedUserIds.map((userId) => ({ userId })),
+            },
+          };
+        })()
+      : (() => {
+          const v = requestTripSchema.parse(body);
+          return {
+            requestedBy: { connect: { id: session.user.id } },
+            city: v.city,
+            startDate: new Date(v.startDate),
+            endDate: new Date(v.endDate),
+            project: v.project,
+            notes: v.notes,
+            status: "PENDIENTE",
+            assignedUsers: { create: [{ userId: session.user.id }] },
+          };
+        })();
+
+    const trip = await prisma.trip.create({
+      data,
+      include: {
+        assignedUsers: {
+          include: {
+            user: {
+              select: { id: true, name: true, email: true },
             },
           },
-          expenses: true,
         },
-      });
-
-      return newTrip;
+        expenses: true,
+      },
     });
 
     return NextResponse.json(trip, { status: 201 });

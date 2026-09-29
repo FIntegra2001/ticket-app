@@ -1,3 +1,4 @@
+import { Prisma } from "@/app/generated/prisma/client";
 import prisma from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
@@ -17,9 +18,20 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get("limit") || "15");
     const skip = (page - 1) * limit;
 
+    // 🆕 Filtro opcional por estado: lo usa el panel para listar las solicitudes
+    // pendientes de aprobación sin traerse todos los viajes.
+    const statusParam = searchParams.get("status");
+    const where: Prisma.TripWhereInput =
+      statusParam === "PENDIENTE" ||
+      statusParam === "APROBADO" ||
+      statusParam === "RECHAZADO"
+        ? { status: statusParam }
+        : {};
+
     // ✅ Consulta con paginación
     const [trips, totalCount] = await Promise.all([
       prisma.trip.findMany({
+        where,
         include: {
           assignedUsers: {
             include: {
@@ -29,12 +41,16 @@ export async function GET(request: NextRequest) {
             },
           },
           expenses: true,
+          // 🆕 Quién solicitó el viaje (para el bloque de aprobaciones) y el
+          // estado documental, que la card pinta como badges.
+          requestedBy: { select: { id: true, name: true, email: true } },
+          documents: { select: { id: true, type: true } },
         },
         orderBy: { createdAt: "desc" },
         skip,
         take: limit,
       }),
-      prisma.trip.count(),
+      prisma.trip.count({ where }),
     ]);
 
     return NextResponse.json({

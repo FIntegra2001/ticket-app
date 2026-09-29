@@ -1,13 +1,14 @@
 "use client";
 
 import { useUserContext } from "@/context/userContext";
-import {  UpdateTripDto, Trip, PaginatedResponse } from "@/types";
+import { RequestTripDto, Trip, PaginatedResponse } from "@/types";
 import {
   useInfiniteQuery,
   useQuery,
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 /* ===============================
    Obtener viajes con paginación (INFINITE SCROLL)
@@ -103,9 +104,9 @@ export function useTrip(tripId: string) {
 // }
 
 /* ===============================
-   Editar viaje
+   Editar la solicitud (solo mientras esté PENDIENTE — lo valida el backend)
 ================================ */
-export function useUpdateTrip() {
+export function useUpdateTripRequest() {
   const queryClient = useQueryClient();
   const { user } = useUserContext();
 
@@ -115,7 +116,7 @@ export function useUpdateTrip() {
       data,
     }: {
       tripId: string;
-      data: Partial<UpdateTripDto>;
+      data: Partial<RequestTripDto>;
     }) => {
       if (!user?.id) throw new Error("No user");
 
@@ -137,9 +138,72 @@ export function useUpdateTrip() {
       queryClient.invalidateQueries({ queryKey: ["trips", user!.id] });
       queryClient.invalidateQueries({ queryKey: ["trip", updatedTrip.id] });
       queryClient.setQueryData<Trip>(["trip", updatedTrip.id], updatedTrip);
+      // Las listas del admin también cambian: la solicitud sigue en su panel
+      queryClient.invalidateQueries({ queryKey: ["adminTrips"] });
+      queryClient.invalidateQueries({ queryKey: ["adminTripsTable"] });
+      queryClient.invalidateQueries({ queryKey: ["pendingTrips"] });
+      toast.success("Solicitud actualizada");
     },
     onError: (error) => {
-      console.error("Error updating trip:", error);
+      console.error("Error updating trip request:", error);
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "No se pudo actualizar la solicitud"
+      );
+    },
+  });
+}
+
+/* ===============================
+   🆕 Solicitar un viaje (USER)
+   POST /api/trips → el backend lo crea en PENDIENTE y autoasignado.
+================================ */
+export function useRequestTrip() {
+  const queryClient = useQueryClient();
+  const { user } = useUserContext();
+
+  return useMutation({
+    mutationFn: async (data: RequestTripDto) => {
+      const res = await fetch("/api/trips", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...data,
+          startDate: new Date(data.startDate).toISOString(),
+          endDate: new Date(data.endDate).toISOString(),
+        }),
+      });
+
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.error || "Error al solicitar el viaje");
+      }
+
+      return res.json();
+    },
+    onSuccess: () => {
+      if (user?.id) {
+        queryClient.invalidateQueries({ queryKey: ["trips", user.id] });
+        queryClient.invalidateQueries({ queryKey: ["tripStats", user.id] });
+      }
+      // El admin tiene que ver la solicitud nueva en su panel
+      queryClient.invalidateQueries({ queryKey: ["adminTrips"] });
+      queryClient.invalidateQueries({ queryKey: ["adminTripsTable"] });
+      queryClient.invalidateQueries({ queryKey: ["adminTripStats"] });
+      queryClient.invalidateQueries({ queryKey: ["pendingTrips"] });
+      toast.success(
+        "Solicitud enviada. Administración la revisará y te avisará al aprobarla."
+      );
+    },
+    onError: (error) => {
+      console.error("Error requesting trip:", error);
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "No se pudo enviar la solicitud"
+      );
     },
   });
 }
@@ -171,9 +235,13 @@ export function useDeleteTrip() {
     onSuccess: (_, tripId) => {
       queryClient.invalidateQueries({ queryKey: ["trips", user!.id] });
       queryClient.removeQueries({ queryKey: ["trip", tripId] });
+      toast.success("Viaje eliminado");
     },
     onError: (error) => {
       console.error("Error deleting trip:", error);
+      toast.error(
+        error instanceof Error ? error.message : "No se pudo eliminar el viaje"
+      );
     },
   });
 }

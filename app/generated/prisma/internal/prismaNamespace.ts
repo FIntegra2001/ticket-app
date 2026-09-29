@@ -386,7 +386,9 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 export const ModelName = {
   User: 'User',
   Trip: 'Trip',
+  TripDocument: 'TripDocument',
   TripAssignment: 'TripAssignment',
+  OfficeExpense: 'OfficeExpense',
   Expense: 'Expense',
   Session: 'Session',
   Account: 'Account',
@@ -406,7 +408,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "trip" | "tripAssignment" | "expense" | "session" | "account" | "verification"
+    modelProps: "user" | "trip" | "tripDocument" | "tripAssignment" | "officeExpense" | "expense" | "session" | "account" | "verification"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -558,6 +560,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    TripDocument: {
+      payload: Prisma.$TripDocumentPayload<ExtArgs>
+      fields: Prisma.TripDocumentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TripDocumentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripDocumentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TripDocumentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripDocumentPayload>
+        }
+        findFirst: {
+          args: Prisma.TripDocumentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripDocumentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TripDocumentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripDocumentPayload>
+        }
+        findMany: {
+          args: Prisma.TripDocumentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripDocumentPayload>[]
+        }
+        create: {
+          args: Prisma.TripDocumentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripDocumentPayload>
+        }
+        createMany: {
+          args: Prisma.TripDocumentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.TripDocumentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripDocumentPayload>[]
+        }
+        delete: {
+          args: Prisma.TripDocumentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripDocumentPayload>
+        }
+        update: {
+          args: Prisma.TripDocumentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripDocumentPayload>
+        }
+        deleteMany: {
+          args: Prisma.TripDocumentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TripDocumentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.TripDocumentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripDocumentPayload>[]
+        }
+        upsert: {
+          args: Prisma.TripDocumentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripDocumentPayload>
+        }
+        aggregate: {
+          args: Prisma.TripDocumentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTripDocument>
+        }
+        groupBy: {
+          args: Prisma.TripDocumentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TripDocumentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TripDocumentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TripDocumentCountAggregateOutputType> | number
+        }
+      }
+    }
     TripAssignment: {
       payload: Prisma.$TripAssignmentPayload<ExtArgs>
       fields: Prisma.TripAssignmentFieldRefs
@@ -629,6 +705,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.TripAssignmentCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.TripAssignmentCountAggregateOutputType> | number
+        }
+      }
+    }
+    OfficeExpense: {
+      payload: Prisma.$OfficeExpensePayload<ExtArgs>
+      fields: Prisma.OfficeExpenseFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.OfficeExpenseFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfficeExpensePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.OfficeExpenseFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfficeExpensePayload>
+        }
+        findFirst: {
+          args: Prisma.OfficeExpenseFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfficeExpensePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.OfficeExpenseFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfficeExpensePayload>
+        }
+        findMany: {
+          args: Prisma.OfficeExpenseFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfficeExpensePayload>[]
+        }
+        create: {
+          args: Prisma.OfficeExpenseCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfficeExpensePayload>
+        }
+        createMany: {
+          args: Prisma.OfficeExpenseCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.OfficeExpenseCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfficeExpensePayload>[]
+        }
+        delete: {
+          args: Prisma.OfficeExpenseDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfficeExpensePayload>
+        }
+        update: {
+          args: Prisma.OfficeExpenseUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfficeExpensePayload>
+        }
+        deleteMany: {
+          args: Prisma.OfficeExpenseDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.OfficeExpenseUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.OfficeExpenseUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfficeExpensePayload>[]
+        }
+        upsert: {
+          args: Prisma.OfficeExpenseUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfficeExpensePayload>
+        }
+        aggregate: {
+          args: Prisma.OfficeExpenseAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateOfficeExpense>
+        }
+        groupBy: {
+          args: Prisma.OfficeExpenseGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OfficeExpenseGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.OfficeExpenseCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OfficeExpenseCountAggregateOutputType> | number
         }
       }
     }
@@ -984,6 +1134,9 @@ export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof User
 export const TripScalarFieldEnum = {
   id: 'id',
   createdByAdminId: 'createdByAdminId',
+  requestedById: 'requestedById',
+  approvedAt: 'approvedAt',
+  approvedById: 'approvedById',
   city: 'city',
   startDate: 'startDate',
   endDate: 'endDate',
@@ -999,6 +1152,22 @@ export const TripScalarFieldEnum = {
 export type TripScalarFieldEnum = (typeof TripScalarFieldEnum)[keyof typeof TripScalarFieldEnum]
 
 
+export const TripDocumentScalarFieldEnum = {
+  id: 'id',
+  tripId: 'tripId',
+  type: 'type',
+  url: 'url',
+  publicId: 'publicId',
+  fileName: 'fileName',
+  mimeType: 'mimeType',
+  size: 'size',
+  uploadedById: 'uploadedById',
+  createdAt: 'createdAt'
+} as const
+
+export type TripDocumentScalarFieldEnum = (typeof TripDocumentScalarFieldEnum)[keyof typeof TripDocumentScalarFieldEnum]
+
+
 export const TripAssignmentScalarFieldEnum = {
   id: 'id',
   tripId: 'tripId',
@@ -1009,9 +1178,26 @@ export const TripAssignmentScalarFieldEnum = {
 export type TripAssignmentScalarFieldEnum = (typeof TripAssignmentScalarFieldEnum)[keyof typeof TripAssignmentScalarFieldEnum]
 
 
+export const OfficeExpenseScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  year: 'year',
+  month: 'month',
+  title: 'title',
+  notes: 'notes',
+  status: 'status',
+  totalAmount: 'totalAmount',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type OfficeExpenseScalarFieldEnum = (typeof OfficeExpenseScalarFieldEnum)[keyof typeof OfficeExpenseScalarFieldEnum]
+
+
 export const ExpenseScalarFieldEnum = {
   id: 'id',
   tripId: 'tripId',
+  officeExpenseId: 'officeExpenseId',
   date: 'date',
   amount: 'amount',
   category: 'category',
@@ -1181,6 +1367,20 @@ export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMo
 
 
 /**
+ * Reference to a field of type 'TripDocumentType'
+ */
+export type EnumTripDocumentTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TripDocumentType'>
+    
+
+
+/**
+ * Reference to a field of type 'TripDocumentType[]'
+ */
+export type ListEnumTripDocumentTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TripDocumentType[]'>
+    
+
+
+/**
  * Reference to a field of type 'Int'
  */
 export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -1191,6 +1391,34 @@ export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'In
  * Reference to a field of type 'Int[]'
  */
 export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+/**
+ * Reference to a field of type 'OfficeExpenseStatus'
+ */
+export type EnumOfficeExpenseStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OfficeExpenseStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'OfficeExpenseStatus[]'
+ */
+export type ListEnumOfficeExpenseStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OfficeExpenseStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Float'
+ */
+export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+/**
+ * Reference to a field of type 'Float[]'
+ */
+export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
 
 /**
@@ -1290,7 +1518,9 @@ export type PrismaClientOptions = ({
 export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
   trip?: Prisma.TripOmit
+  tripDocument?: Prisma.TripDocumentOmit
   tripAssignment?: Prisma.TripAssignmentOmit
+  officeExpense?: Prisma.OfficeExpenseOmit
   expense?: Prisma.ExpenseOmit
   session?: Prisma.SessionOmit
   account?: Prisma.AccountOmit

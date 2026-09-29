@@ -10,7 +10,9 @@
  */
 export type * from './models/User'
 export type * from './models/Trip'
+export type * from './models/TripDocument'
 export type * from './models/TripAssignment'
+export type * from './models/OfficeExpense'
 export type * from './models/Expense'
 export type * from './models/Session'
 export type * from './models/Account'

@@ -1,7 +1,8 @@
 import { Prisma } from "@/app/generated/prisma/client";
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/db";
-import { updateTripSchema } from "@/lib/validations";
+import { updateTripRequestSchema } from "@/lib/validations";
+import { destroyTripDocument } from "@/lib/trip-documents.server";
 import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { ZodError } from "zod";
@@ -69,10 +70,26 @@ export async function PUT(request: NextRequest, { params }: Params) {
       return NextResponse.json({ error: "Trip not found" }, { status: 404 });
     }
 
-    const body = await request.json();
-    const validatedData = updateTripSchema.parse(body);
+    // 🆕 Esta ruta es la del USER: solo puede editar su SOLICITUD mientras esté
+    // pendiente de aprobación. Un viaje aprobado o rechazado lo toca el admin
+    // desde /api/admin/trips/[tripId].
+    if (existingTrip.status !== "PENDIENTE") {
+      return NextResponse.json(
+        {
+          error:
+            "Este viaje ya ha sido revisado por un administrador y no se puede editar. Habla con administración si necesitas cambiarlo.",
+        },
+        { status: 403 },
+      );
+    }
 
-    // Construir objeto de actualización con tipos correctos
+    const body = await request.json();
+    // 🆕 Esquema restringido: sin `status`, `totalAmount`, `assignedUserIds` ni
+    // `numberInvoice`. Antes se usaba `updateTripSchema` (el completo) sin
+    // comprobar rol, así que un USER asignado podía auto-aprobarse el viaje y
+    // reescribir el total.
+    const validatedData = updateTripRequestSchema.parse(body);
+
     const updateData: Prisma.TripUpdateInput = {};
 
     if (validatedData.city !== undefined) updateData.city = validatedData.city;
@@ -80,27 +97,12 @@ export async function PUT(request: NextRequest, { params }: Params) {
       updateData.project = validatedData.project;
     if (validatedData.notes !== undefined)
       updateData.notes = validatedData.notes;
-    if (validatedData.status !== undefined)
-      updateData.status = validatedData.status;
 
     if (validatedData.startDate !== undefined) {
       updateData.startDate = new Date(validatedData.startDate);
     }
     if (validatedData.endDate !== undefined) {
       updateData.endDate = new Date(validatedData.endDate);
-    }
-    if (validatedData.totalAmount !== undefined) {
-      updateData.totalAmount = new Prisma.Decimal(validatedData.totalAmount);
-    }
-    // En el PUT, añadir manejo de assignedUserIds:
-    if (validatedData.assignedUserIds !== undefined) {
-      // ✅ Reemplazar asignaciones en transacción
-      await prisma.$transaction([
-        prisma.tripAssignment.deleteMany({ where: { tripId } }),
-        ...validatedData.assignedUserIds.map((userId) =>
-          prisma.tripAssignment.create({ data: { tripId, userId } }),
-        ),
-      ]);
     }
 
     const trip = await prisma.trip.update({
@@ -150,6 +152,40 @@ export async function DELETE(_: Request, { params }: Params) {
     if (!existingTrip) {
       return NextResponse.json({ error: "Trip not found" }, { status: 404 });
     }
+
+    // 🆕 Un USER solo puede retirar SU propia solicitud mientras siga pendiente.
+    // Antes, cualquier usuario asignado podía borrar un viaje aprobado entero y,
+    // por la cascada, todos sus gastos. Borrar viajes aprobados es cosa del
+    // admin, desde /api/admin/trips/[tripId].
+    if (existingTrip.status !== "PENDIENTE") {
+      return NextResponse.json(
+        {
+          error:
+            "Solo puedes eliminar una solicitud que siga pendiente de aprobación.",
+        },
+        { status: 403 },
+      );
+    }
+
+    if (
+      existingTrip.requestedById &&
+      existingTrip.requestedById !== session.user.id
+    ) {
+      return NextResponse.json(
+        { error: "Solo puedes eliminar las solicitudes que has creado tú." },
+        { status: 403 },
+      );
+    }
+
+    // Una solicitud pendiente puede tener ya documentos si el admin los subió
+    // antes de aprobar. La cascada borra las filas, pero no los ficheros.
+    const documents = await prisma.tripDocument.findMany({
+      where: { tripId },
+      select: { publicId: true, mimeType: true },
+    });
+    await Promise.all(
+      documents.map((d) => destroyTripDocument(d.publicId, d.mimeType)),
+    );
 
     await prisma.trip.delete({
       where: { id: tripId },

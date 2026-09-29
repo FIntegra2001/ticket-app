@@ -37,6 +37,7 @@ export type ExpenseSumAggregateOutputType = {
 export type ExpenseMinAggregateOutputType = {
   id: string | null
   tripId: string | null
+  officeExpenseId: string | null
   date: Date | null
   amount: runtime.Decimal | null
   category: string | null
@@ -53,6 +54,7 @@ export type ExpenseMinAggregateOutputType = {
 export type ExpenseMaxAggregateOutputType = {
   id: string | null
   tripId: string | null
+  officeExpenseId: string | null
   date: Date | null
   amount: runtime.Decimal | null
   category: string | null
@@ -69,6 +71,7 @@ export type ExpenseMaxAggregateOutputType = {
 export type ExpenseCountAggregateOutputType = {
   id: number
   tripId: number
+  officeExpenseId: number
   date: number
   amount: number
   category: number
@@ -95,6 +98,7 @@ export type ExpenseSumAggregateInputType = {
 export type ExpenseMinAggregateInputType = {
   id?: true
   tripId?: true
+  officeExpenseId?: true
   date?: true
   amount?: true
   category?: true
@@ -111,6 +115,7 @@ export type ExpenseMinAggregateInputType = {
 export type ExpenseMaxAggregateInputType = {
   id?: true
   tripId?: true
+  officeExpenseId?: true
   date?: true
   amount?: true
   category?: true
@@ -127,6 +132,7 @@ export type ExpenseMaxAggregateInputType = {
 export type ExpenseCountAggregateInputType = {
   id?: true
   tripId?: true
+  officeExpenseId?: true
   date?: true
   amount?: true
   category?: true
@@ -229,7 +235,8 @@ export type ExpenseGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
 
 export type ExpenseGroupByOutputType = {
   id: string
-  tripId: string
+  tripId: string | null
+  officeExpenseId: string | null
   date: Date
   amount: runtime.Decimal
   category: string | null
@@ -268,7 +275,8 @@ export type ExpenseWhereInput = {
   OR?: Prisma.ExpenseWhereInput[]
   NOT?: Prisma.ExpenseWhereInput | Prisma.ExpenseWhereInput[]
   id?: Prisma.StringFilter<"Expense"> | string
-  tripId?: Prisma.StringFilter<"Expense"> | string
+  tripId?: Prisma.StringNullableFilter<"Expense"> | string | null
+  officeExpenseId?: Prisma.StringNullableFilter<"Expense"> | string | null
   date?: Prisma.DateTimeFilter<"Expense"> | Date | string
   amount?: Prisma.DecimalFilter<"Expense"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   category?: Prisma.StringNullableFilter<"Expense"> | string | null
@@ -280,12 +288,14 @@ export type ExpenseWhereInput = {
   createdByAdminId?: Prisma.StringNullableFilter<"Expense"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Expense"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Expense"> | Date | string
-  trip?: Prisma.XOR<Prisma.TripScalarRelationFilter, Prisma.TripWhereInput>
+  trip?: Prisma.XOR<Prisma.TripNullableScalarRelationFilter, Prisma.TripWhereInput> | null
+  officeExpense?: Prisma.XOR<Prisma.OfficeExpenseNullableScalarRelationFilter, Prisma.OfficeExpenseWhereInput> | null
 }
 
 export type ExpenseOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  tripId?: Prisma.SortOrder
+  tripId?: Prisma.SortOrderInput | Prisma.SortOrder
+  officeExpenseId?: Prisma.SortOrderInput | Prisma.SortOrder
   date?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   category?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -298,6 +308,7 @@ export type ExpenseOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   trip?: Prisma.TripOrderByWithRelationInput
+  officeExpense?: Prisma.OfficeExpenseOrderByWithRelationInput
 }
 
 export type ExpenseWhereUniqueInput = Prisma.AtLeast<{
@@ -305,7 +316,8 @@ export type ExpenseWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.ExpenseWhereInput | Prisma.ExpenseWhereInput[]
   OR?: Prisma.ExpenseWhereInput[]
   NOT?: Prisma.ExpenseWhereInput | Prisma.ExpenseWhereInput[]
-  tripId?: Prisma.StringFilter<"Expense"> | string
+  tripId?: Prisma.StringNullableFilter<"Expense"> | string | null
+  officeExpenseId?: Prisma.StringNullableFilter<"Expense"> | string | null
   date?: Prisma.DateTimeFilter<"Expense"> | Date | string
   amount?: Prisma.DecimalFilter<"Expense"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   category?: Prisma.StringNullableFilter<"Expense"> | string | null
@@ -317,12 +329,14 @@ export type ExpenseWhereUniqueInput = Prisma.AtLeast<{
   createdByAdminId?: Prisma.StringNullableFilter<"Expense"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Expense"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Expense"> | Date | string
-  trip?: Prisma.XOR<Prisma.TripScalarRelationFilter, Prisma.TripWhereInput>
+  trip?: Prisma.XOR<Prisma.TripNullableScalarRelationFilter, Prisma.TripWhereInput> | null
+  officeExpense?: Prisma.XOR<Prisma.OfficeExpenseNullableScalarRelationFilter, Prisma.OfficeExpenseWhereInput> | null
 }, "id">
 
 export type ExpenseOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  tripId?: Prisma.SortOrder
+  tripId?: Prisma.SortOrderInput | Prisma.SortOrder
+  officeExpenseId?: Prisma.SortOrderInput | Prisma.SortOrder
   date?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   category?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -346,7 +360,8 @@ export type ExpenseScalarWhereWithAggregatesInput = {
   OR?: Prisma.ExpenseScalarWhereWithAggregatesInput[]
   NOT?: Prisma.ExpenseScalarWhereWithAggregatesInput | Prisma.ExpenseScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Expense"> | string
-  tripId?: Prisma.StringWithAggregatesFilter<"Expense"> | string
+  tripId?: Prisma.StringNullableWithAggregatesFilter<"Expense"> | string | null
+  officeExpenseId?: Prisma.StringNullableWithAggregatesFilter<"Expense"> | string | null
   date?: Prisma.DateTimeWithAggregatesFilter<"Expense"> | Date | string
   amount?: Prisma.DecimalWithAggregatesFilter<"Expense"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   category?: Prisma.StringNullableWithAggregatesFilter<"Expense"> | string | null
@@ -373,12 +388,14 @@ export type ExpenseCreateInput = {
   createdByAdminId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  trip: Prisma.TripCreateNestedOneWithoutExpensesInput
+  trip?: Prisma.TripCreateNestedOneWithoutExpensesInput
+  officeExpense?: Prisma.OfficeExpenseCreateNestedOneWithoutExpensesInput
 }
 
 export type ExpenseUncheckedCreateInput = {
   id?: string
-  tripId: string
+  tripId?: string | null
+  officeExpenseId?: string | null
   date: Date | string
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   category?: string | null
@@ -405,12 +422,14 @@ export type ExpenseUpdateInput = {
   createdByAdminId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  trip?: Prisma.TripUpdateOneRequiredWithoutExpensesNestedInput
+  trip?: Prisma.TripUpdateOneWithoutExpensesNestedInput
+  officeExpense?: Prisma.OfficeExpenseUpdateOneWithoutExpensesNestedInput
 }
 
 export type ExpenseUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  tripId?: Prisma.StringFieldUpdateOperationsInput | string
+  tripId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  officeExpenseId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -426,7 +445,8 @@ export type ExpenseUncheckedUpdateInput = {
 
 export type ExpenseCreateManyInput = {
   id?: string
-  tripId: string
+  tripId?: string | null
+  officeExpenseId?: string | null
   date: Date | string
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   category?: string | null
@@ -457,7 +477,8 @@ export type ExpenseUpdateManyMutationInput = {
 
 export type ExpenseUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  tripId?: Prisma.StringFieldUpdateOperationsInput | string
+  tripId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  officeExpenseId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -484,6 +505,7 @@ export type ExpenseOrderByRelationAggregateInput = {
 export type ExpenseCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   tripId?: Prisma.SortOrder
+  officeExpenseId?: Prisma.SortOrder
   date?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   category?: Prisma.SortOrder
@@ -504,6 +526,7 @@ export type ExpenseAvgOrderByAggregateInput = {
 export type ExpenseMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   tripId?: Prisma.SortOrder
+  officeExpenseId?: Prisma.SortOrder
   date?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   category?: Prisma.SortOrder
@@ -520,6 +543,7 @@ export type ExpenseMaxOrderByAggregateInput = {
 export type ExpenseMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   tripId?: Prisma.SortOrder
+  officeExpenseId?: Prisma.SortOrder
   date?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   category?: Prisma.SortOrder
@@ -579,6 +603,48 @@ export type ExpenseUncheckedUpdateManyWithoutTripNestedInput = {
   deleteMany?: Prisma.ExpenseScalarWhereInput | Prisma.ExpenseScalarWhereInput[]
 }
 
+export type ExpenseCreateNestedManyWithoutOfficeExpenseInput = {
+  create?: Prisma.XOR<Prisma.ExpenseCreateWithoutOfficeExpenseInput, Prisma.ExpenseUncheckedCreateWithoutOfficeExpenseInput> | Prisma.ExpenseCreateWithoutOfficeExpenseInput[] | Prisma.ExpenseUncheckedCreateWithoutOfficeExpenseInput[]
+  connectOrCreate?: Prisma.ExpenseCreateOrConnectWithoutOfficeExpenseInput | Prisma.ExpenseCreateOrConnectWithoutOfficeExpenseInput[]
+  createMany?: Prisma.ExpenseCreateManyOfficeExpenseInputEnvelope
+  connect?: Prisma.ExpenseWhereUniqueInput | Prisma.ExpenseWhereUniqueInput[]
+}
+
+export type ExpenseUncheckedCreateNestedManyWithoutOfficeExpenseInput = {
+  create?: Prisma.XOR<Prisma.ExpenseCreateWithoutOfficeExpenseInput, Prisma.ExpenseUncheckedCreateWithoutOfficeExpenseInput> | Prisma.ExpenseCreateWithoutOfficeExpenseInput[] | Prisma.ExpenseUncheckedCreateWithoutOfficeExpenseInput[]
+  connectOrCreate?: Prisma.ExpenseCreateOrConnectWithoutOfficeExpenseInput | Prisma.ExpenseCreateOrConnectWithoutOfficeExpenseInput[]
+  createMany?: Prisma.ExpenseCreateManyOfficeExpenseInputEnvelope
+  connect?: Prisma.ExpenseWhereUniqueInput | Prisma.ExpenseWhereUniqueInput[]
+}
+
+export type ExpenseUpdateManyWithoutOfficeExpenseNestedInput = {
+  create?: Prisma.XOR<Prisma.ExpenseCreateWithoutOfficeExpenseInput, Prisma.ExpenseUncheckedCreateWithoutOfficeExpenseInput> | Prisma.ExpenseCreateWithoutOfficeExpenseInput[] | Prisma.ExpenseUncheckedCreateWithoutOfficeExpenseInput[]
+  connectOrCreate?: Prisma.ExpenseCreateOrConnectWithoutOfficeExpenseInput | Prisma.ExpenseCreateOrConnectWithoutOfficeExpenseInput[]
+  upsert?: Prisma.ExpenseUpsertWithWhereUniqueWithoutOfficeExpenseInput | Prisma.ExpenseUpsertWithWhereUniqueWithoutOfficeExpenseInput[]
+  createMany?: Prisma.ExpenseCreateManyOfficeExpenseInputEnvelope
+  set?: Prisma.ExpenseWhereUniqueInput | Prisma.ExpenseWhereUniqueInput[]
+  disconnect?: Prisma.ExpenseWhereUniqueInput | Prisma.ExpenseWhereUniqueInput[]
+  delete?: Prisma.ExpenseWhereUniqueInput | Prisma.ExpenseWhereUniqueInput[]
+  connect?: Prisma.ExpenseWhereUniqueInput | Prisma.ExpenseWhereUniqueInput[]
+  update?: Prisma.ExpenseUpdateWithWhereUniqueWithoutOfficeExpenseInput | Prisma.ExpenseUpdateWithWhereUniqueWithoutOfficeExpenseInput[]
+  updateMany?: Prisma.ExpenseUpdateManyWithWhereWithoutOfficeExpenseInput | Prisma.ExpenseUpdateManyWithWhereWithoutOfficeExpenseInput[]
+  deleteMany?: Prisma.ExpenseScalarWhereInput | Prisma.ExpenseScalarWhereInput[]
+}
+
+export type ExpenseUncheckedUpdateManyWithoutOfficeExpenseNestedInput = {
+  create?: Prisma.XOR<Prisma.ExpenseCreateWithoutOfficeExpenseInput, Prisma.ExpenseUncheckedCreateWithoutOfficeExpenseInput> | Prisma.ExpenseCreateWithoutOfficeExpenseInput[] | Prisma.ExpenseUncheckedCreateWithoutOfficeExpenseInput[]
+  connectOrCreate?: Prisma.ExpenseCreateOrConnectWithoutOfficeExpenseInput | Prisma.ExpenseCreateOrConnectWithoutOfficeExpenseInput[]
+  upsert?: Prisma.ExpenseUpsertWithWhereUniqueWithoutOfficeExpenseInput | Prisma.ExpenseUpsertWithWhereUniqueWithoutOfficeExpenseInput[]
+  createMany?: Prisma.ExpenseCreateManyOfficeExpenseInputEnvelope
+  set?: Prisma.ExpenseWhereUniqueInput | Prisma.ExpenseWhereUniqueInput[]
+  disconnect?: Prisma.ExpenseWhereUniqueInput | Prisma.ExpenseWhereUniqueInput[]
+  delete?: Prisma.ExpenseWhereUniqueInput | Prisma.ExpenseWhereUniqueInput[]
+  connect?: Prisma.ExpenseWhereUniqueInput | Prisma.ExpenseWhereUniqueInput[]
+  update?: Prisma.ExpenseUpdateWithWhereUniqueWithoutOfficeExpenseInput | Prisma.ExpenseUpdateWithWhereUniqueWithoutOfficeExpenseInput[]
+  updateMany?: Prisma.ExpenseUpdateManyWithWhereWithoutOfficeExpenseInput | Prisma.ExpenseUpdateManyWithWhereWithoutOfficeExpenseInput[]
+  deleteMany?: Prisma.ExpenseScalarWhereInput | Prisma.ExpenseScalarWhereInput[]
+}
+
 export type ExpenseCreateWithoutTripInput = {
   id?: string
   date: Date | string
@@ -592,10 +658,12 @@ export type ExpenseCreateWithoutTripInput = {
   createdByAdminId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  officeExpense?: Prisma.OfficeExpenseCreateNestedOneWithoutExpensesInput
 }
 
 export type ExpenseUncheckedCreateWithoutTripInput = {
   id?: string
+  officeExpenseId?: string | null
   date: Date | string
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   category?: string | null
@@ -640,7 +708,8 @@ export type ExpenseScalarWhereInput = {
   OR?: Prisma.ExpenseScalarWhereInput[]
   NOT?: Prisma.ExpenseScalarWhereInput | Prisma.ExpenseScalarWhereInput[]
   id?: Prisma.StringFilter<"Expense"> | string
-  tripId?: Prisma.StringFilter<"Expense"> | string
+  tripId?: Prisma.StringNullableFilter<"Expense"> | string | null
+  officeExpenseId?: Prisma.StringNullableFilter<"Expense"> | string | null
   date?: Prisma.DateTimeFilter<"Expense"> | Date | string
   amount?: Prisma.DecimalFilter<"Expense"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   category?: Prisma.StringNullableFilter<"Expense"> | string | null
@@ -654,8 +723,67 @@ export type ExpenseScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Expense"> | Date | string
 }
 
+export type ExpenseCreateWithoutOfficeExpenseInput = {
+  id?: string
+  date: Date | string
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  category?: string | null
+  vendor?: string | null
+  description?: string | null
+  receiptUrl?: string | null
+  invoiceNumber?: string | null
+  paymentMethod?: string | null
+  createdByAdminId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  trip?: Prisma.TripCreateNestedOneWithoutExpensesInput
+}
+
+export type ExpenseUncheckedCreateWithoutOfficeExpenseInput = {
+  id?: string
+  tripId?: string | null
+  date: Date | string
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  category?: string | null
+  vendor?: string | null
+  description?: string | null
+  receiptUrl?: string | null
+  invoiceNumber?: string | null
+  paymentMethod?: string | null
+  createdByAdminId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type ExpenseCreateOrConnectWithoutOfficeExpenseInput = {
+  where: Prisma.ExpenseWhereUniqueInput
+  create: Prisma.XOR<Prisma.ExpenseCreateWithoutOfficeExpenseInput, Prisma.ExpenseUncheckedCreateWithoutOfficeExpenseInput>
+}
+
+export type ExpenseCreateManyOfficeExpenseInputEnvelope = {
+  data: Prisma.ExpenseCreateManyOfficeExpenseInput | Prisma.ExpenseCreateManyOfficeExpenseInput[]
+  skipDuplicates?: boolean
+}
+
+export type ExpenseUpsertWithWhereUniqueWithoutOfficeExpenseInput = {
+  where: Prisma.ExpenseWhereUniqueInput
+  update: Prisma.XOR<Prisma.ExpenseUpdateWithoutOfficeExpenseInput, Prisma.ExpenseUncheckedUpdateWithoutOfficeExpenseInput>
+  create: Prisma.XOR<Prisma.ExpenseCreateWithoutOfficeExpenseInput, Prisma.ExpenseUncheckedCreateWithoutOfficeExpenseInput>
+}
+
+export type ExpenseUpdateWithWhereUniqueWithoutOfficeExpenseInput = {
+  where: Prisma.ExpenseWhereUniqueInput
+  data: Prisma.XOR<Prisma.ExpenseUpdateWithoutOfficeExpenseInput, Prisma.ExpenseUncheckedUpdateWithoutOfficeExpenseInput>
+}
+
+export type ExpenseUpdateManyWithWhereWithoutOfficeExpenseInput = {
+  where: Prisma.ExpenseScalarWhereInput
+  data: Prisma.XOR<Prisma.ExpenseUpdateManyMutationInput, Prisma.ExpenseUncheckedUpdateManyWithoutOfficeExpenseInput>
+}
+
 export type ExpenseCreateManyTripInput = {
   id?: string
+  officeExpenseId?: string | null
   date: Date | string
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   category?: string | null
@@ -682,10 +810,12 @@ export type ExpenseUpdateWithoutTripInput = {
   createdByAdminId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  officeExpense?: Prisma.OfficeExpenseUpdateOneWithoutExpensesNestedInput
 }
 
 export type ExpenseUncheckedUpdateWithoutTripInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  officeExpenseId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -701,6 +831,71 @@ export type ExpenseUncheckedUpdateWithoutTripInput = {
 
 export type ExpenseUncheckedUpdateManyWithoutTripInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  officeExpenseId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vendor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdByAdminId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type ExpenseCreateManyOfficeExpenseInput = {
+  id?: string
+  tripId?: string | null
+  date: Date | string
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  category?: string | null
+  vendor?: string | null
+  description?: string | null
+  receiptUrl?: string | null
+  invoiceNumber?: string | null
+  paymentMethod?: string | null
+  createdByAdminId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type ExpenseUpdateWithoutOfficeExpenseInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vendor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdByAdminId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  trip?: Prisma.TripUpdateOneWithoutExpensesNestedInput
+}
+
+export type ExpenseUncheckedUpdateWithoutOfficeExpenseInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tripId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vendor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdByAdminId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type ExpenseUncheckedUpdateManyWithoutOfficeExpenseInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tripId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -719,6 +914,7 @@ export type ExpenseUncheckedUpdateManyWithoutTripInput = {
 export type ExpenseSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   tripId?: boolean
+  officeExpenseId?: boolean
   date?: boolean
   amount?: boolean
   category?: boolean
@@ -730,12 +926,14 @@ export type ExpenseSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   createdByAdminId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  trip?: boolean | Prisma.TripDefaultArgs<ExtArgs>
+  trip?: boolean | Prisma.Expense$tripArgs<ExtArgs>
+  officeExpense?: boolean | Prisma.Expense$officeExpenseArgs<ExtArgs>
 }, ExtArgs["result"]["expense"]>
 
 export type ExpenseSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   tripId?: boolean
+  officeExpenseId?: boolean
   date?: boolean
   amount?: boolean
   category?: boolean
@@ -747,12 +945,14 @@ export type ExpenseSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   createdByAdminId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  trip?: boolean | Prisma.TripDefaultArgs<ExtArgs>
+  trip?: boolean | Prisma.Expense$tripArgs<ExtArgs>
+  officeExpense?: boolean | Prisma.Expense$officeExpenseArgs<ExtArgs>
 }, ExtArgs["result"]["expense"]>
 
 export type ExpenseSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   tripId?: boolean
+  officeExpenseId?: boolean
   date?: boolean
   amount?: boolean
   category?: boolean
@@ -764,12 +964,14 @@ export type ExpenseSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   createdByAdminId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  trip?: boolean | Prisma.TripDefaultArgs<ExtArgs>
+  trip?: boolean | Prisma.Expense$tripArgs<ExtArgs>
+  officeExpense?: boolean | Prisma.Expense$officeExpenseArgs<ExtArgs>
 }, ExtArgs["result"]["expense"]>
 
 export type ExpenseSelectScalar = {
   id?: boolean
   tripId?: boolean
+  officeExpenseId?: boolean
   date?: boolean
   amount?: boolean
   category?: boolean
@@ -783,25 +985,30 @@ export type ExpenseSelectScalar = {
   updatedAt?: boolean
 }
 
-export type ExpenseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tripId" | "date" | "amount" | "category" | "vendor" | "description" | "receiptUrl" | "invoiceNumber" | "paymentMethod" | "createdByAdminId" | "createdAt" | "updatedAt", ExtArgs["result"]["expense"]>
+export type ExpenseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tripId" | "officeExpenseId" | "date" | "amount" | "category" | "vendor" | "description" | "receiptUrl" | "invoiceNumber" | "paymentMethod" | "createdByAdminId" | "createdAt" | "updatedAt", ExtArgs["result"]["expense"]>
 export type ExpenseInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  trip?: boolean | Prisma.TripDefaultArgs<ExtArgs>
+  trip?: boolean | Prisma.Expense$tripArgs<ExtArgs>
+  officeExpense?: boolean | Prisma.Expense$officeExpenseArgs<ExtArgs>
 }
 export type ExpenseIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  trip?: boolean | Prisma.TripDefaultArgs<ExtArgs>
+  trip?: boolean | Prisma.Expense$tripArgs<ExtArgs>
+  officeExpense?: boolean | Prisma.Expense$officeExpenseArgs<ExtArgs>
 }
 export type ExpenseIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  trip?: boolean | Prisma.TripDefaultArgs<ExtArgs>
+  trip?: boolean | Prisma.Expense$tripArgs<ExtArgs>
+  officeExpense?: boolean | Prisma.Expense$officeExpenseArgs<ExtArgs>
 }
 
 export type $ExpensePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Expense"
   objects: {
-    trip: Prisma.$TripPayload<ExtArgs>
+    trip: Prisma.$TripPayload<ExtArgs> | null
+    officeExpense: Prisma.$OfficeExpensePayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    tripId: string
+    tripId: string | null
+    officeExpenseId: string | null
     date: Date
     amount: runtime.Decimal
     category: string | null
@@ -1207,7 +1414,8 @@ readonly fields: ExpenseFieldRefs;
  */
 export interface Prisma__ExpenseClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  trip<T extends Prisma.TripDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TripDefaultArgs<ExtArgs>>): Prisma.Prisma__TripClient<runtime.Types.Result.GetResult<Prisma.$TripPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  trip<T extends Prisma.Expense$tripArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Expense$tripArgs<ExtArgs>>): Prisma.Prisma__TripClient<runtime.Types.Result.GetResult<Prisma.$TripPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  officeExpense<T extends Prisma.Expense$officeExpenseArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Expense$officeExpenseArgs<ExtArgs>>): Prisma.Prisma__OfficeExpenseClient<runtime.Types.Result.GetResult<Prisma.$OfficeExpensePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1239,6 +1447,7 @@ export interface Prisma__ExpenseClient<T, Null = never, ExtArgs extends runtime.
 export interface ExpenseFieldRefs {
   readonly id: Prisma.FieldRef<"Expense", 'String'>
   readonly tripId: Prisma.FieldRef<"Expense", 'String'>
+  readonly officeExpenseId: Prisma.FieldRef<"Expense", 'String'>
   readonly date: Prisma.FieldRef<"Expense", 'DateTime'>
   readonly amount: Prisma.FieldRef<"Expense", 'Decimal'>
   readonly category: Prisma.FieldRef<"Expense", 'String'>
@@ -1643,6 +1852,44 @@ export type ExpenseDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Limit how many Expenses to delete.
    */
   limit?: number
+}
+
+/**
+ * Expense.trip
+ */
+export type Expense$tripArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Trip
+   */
+  select?: Prisma.TripSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Trip
+   */
+  omit?: Prisma.TripOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TripInclude<ExtArgs> | null
+  where?: Prisma.TripWhereInput
+}
+
+/**
+ * Expense.officeExpense
+ */
+export type Expense$officeExpenseArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OfficeExpense
+   */
+  select?: Prisma.OfficeExpenseSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OfficeExpense
+   */
+  omit?: Prisma.OfficeExpenseOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OfficeExpenseInclude<ExtArgs> | null
+  where?: Prisma.OfficeExpenseWhereInput
 }
 
 /**

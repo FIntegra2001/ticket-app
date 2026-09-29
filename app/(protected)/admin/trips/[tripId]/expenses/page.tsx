@@ -21,16 +21,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-// import {
-//   AlertDialog,
-//   AlertDialogAction,
-//   AlertDialogCancel,
-//   AlertDialogContent,
-//   AlertDialogDescription,
-//   AlertDialogFooter,
-//   AlertDialogHeader,
-//   AlertDialogTitle,
-// } from "@/components/ui/alert-dialog";
+import { ConfirmDeleteDialog } from "@/components/ui/confirm-delete-dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -46,6 +37,13 @@ import { formatCurrency, formatDate } from "@/lib/utils";
 import { Expense, TripStatus } from "@/types";
 import { Skeleton } from "@/components/ui/skeleton";
 import ExpenseForm from "@/components/forms/ExpenseForm";
+import {
+  TRIP_STATUS_OPTIONS,
+  TRIP_STATUS_LABEL,
+  TRIP_STATUS_SHORT_LABEL,
+  TRIP_STATUS_VARIANT,
+} from "@/lib/trip-status";
+import TripDocuments from "@/components/trips/TripDocuments";
 
 export default function AdminTripExpenses({
   params,
@@ -64,20 +62,8 @@ export default function AdminTripExpenses({
   const [editingExpense, setEditingExpense] = useState<Expense | null>(null);
  
 
-  const STATUS_OPTIONS: TripStatus[] = ["PENDIENTE", "APROBADO", "RECHAZADO"];
-
-  const getStatusVariant = (status: TripStatus) => {
-    switch (status) {
-      case "PENDIENTE":
-        return "outline";
-      case "APROBADO":
-        return "default";
-      case "RECHAZADO":
-        return "destructive";
-      default:
-        return "outline";
-    }
-  };
+  // Etiquetas y variantes vienen de lib/trip-status.ts (fuente única)
+  const STATUS_OPTIONS = TRIP_STATUS_OPTIONS;
 
   // ✅ Construir lista de usuarios asignados desde assignedUsers
   const assignedUsers = trip?.assignedUsers ?? [];
@@ -153,8 +139,8 @@ export default function AdminTripExpenses({
 
           {/* Cambiar status */}
           <div className="flex items-center gap-3">
-            <Badge variant={getStatusVariant(trip.status)} className="text-sm">
-              {trip.status}
+            <Badge variant={TRIP_STATUS_VARIANT[trip.status]} className="text-sm">
+              {TRIP_STATUS_LABEL[trip.status]}
             </Badge>
             <Select
               value={trip.status}
@@ -172,7 +158,7 @@ export default function AdminTripExpenses({
               <SelectContent>
                 {STATUS_OPTIONS.map((s) => (
                   <SelectItem key={s} value={s}>
-                    {s}
+                    {TRIP_STATUS_SHORT_LABEL[s]}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -229,6 +215,10 @@ export default function AdminTripExpenses({
           </div>
         )}
       </div>
+
+      {/* 🆕 Billete y reserva: el admin los sube aquí y el usuario los ve en su
+          propia vista del viaje, sin pedírselos por correo. */}
+      <TripDocuments tripId={tripId} isAdmin />
 
       {/* Sección de gastos */}
       <div className="space-y-4">
@@ -331,14 +321,36 @@ export default function AdminTripExpenses({
                         >
                           <Edit3 className="w-4 h-4" />
                         </Button>
-                       <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => deleteExpense.mutate(expense.id)}
-                          disabled={deleteExpense.isPending}
-                        >
-                          <Trash2 className="w-4 h-4 text-destructive" />
-                        </Button>
+                        <ConfirmDeleteDialog
+                          title="¿Eliminar este gasto?"
+                          description={
+                            <>
+                              Vas a eliminar el gasto de{" "}
+                              <strong>{formatCurrency(expense.amount)}</strong>
+                              {expense.vendor ? (
+                                <>
+                                  {" "}
+                                  en <strong>{expense.vendor}</strong>
+                                </>
+                              ) : null}{" "}
+                              del {formatDate(expense.date)}. El total del viaje
+                              se recalculará. Esta acción no se puede deshacer.
+                            </>
+                          }
+                          confirmLabel="Eliminar gasto"
+                          isPending={deleteExpense.isPending}
+                          onConfirm={() => deleteExpense.mutate(expense.id)}
+                          trigger={
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              disabled={deleteExpense.isPending}
+                              aria-label="Eliminar gasto"
+                            >
+                              <Trash2 className="w-4 h-4 text-destructive" />
+                            </Button>
+                          }
+                        />
                       </div>
                     </TableCell>
                   </TableRow>

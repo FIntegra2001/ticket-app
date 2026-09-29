@@ -29,6 +29,13 @@ model User {
   // ✅ NUEVO: asignaciones de viajes
   tripAssignments TripAssignment[]
 
+  // 🆕 Flujo de aprobación: viajes que este usuario ha solicitado / aprobado
+  requestedTrips Trip[] @relation("RequestedTrips")
+  approvedTrips  Trip[] @relation("ApprovedTrips")
+
+  // 🆕 Partes de gastos de oficina de este usuario
+  officeExpenses OfficeExpense[]
+
   @@map("user")
 }
 
@@ -38,12 +45,27 @@ enum TripStatus {
   RECHAZADO
 }
 
+// Flujo de estados (se reutiliza TripStatus, no se añaden valores):
+//   PENDIENTE → solicitud sin aprobar. El USER puede editarla pero NO cargar gastos.
+//   APROBADO  → el USER ya puede cargar gastos.
+//   RECHAZADO → denegada, bloqueada.
+// Un viaje creado directamente por un ADMIN nace en APROBADO: no hay a quién pedírselo.
 model Trip {
   id        String     @id @default(cuid())
-  
-  // ✅ NUEVO: quien creó el viaje (siempre admin)
-  createdByAdminId String
-  createdByAdmin   User   @relation("AdminTrips", fields: [createdByAdminId], references: [id])
+
+  // Quién creó el viaje siendo admin. 🆕 null cuando lo solicitó un USER.
+  createdByAdminId String?
+  createdByAdmin   User?  @relation("AdminTrips", fields: [createdByAdminId], references: [id])
+
+  // 🆕 USER que solicitó el viaje (null si lo creó un admin directamente).
+  // Es lo que distingue el origen de un viaje en el Excel de resumen.
+  requestedById String?
+  requestedBy   User?   @relation("RequestedTrips", fields: [requestedById], references: [id])
+
+  // 🆕 Sello de aprobación. Se rellena al pasar a APROBADO y se limpia al salir.
+  approvedAt   DateTime?
+  approvedById String?
+  approvedBy   User?     @relation("ApprovedTrips", fields: [approvedById], references: [id])
 
   city      String
   startDate DateTime
@@ -53,16 +75,51 @@ model Trip {
   status    TripStatus @default(PENDIENTE)
   totalAmount Decimal  @default(0)
   numberInvoice String?
-  
+
   // ✅ NUEVO: usuarios asignados (many-to-many)
   assignedUsers TripAssignment[]
   expenses      Expense[]
-  
+  // 🆕 Billetes y reservas del viaje (Cloudinary, fuera de la migración a SharePoint)
+  documents     TripDocument[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@map("trips")
   @@index([createdByAdminId])
+  @@index([requestedById])
+  @@index([status])
+}
+
+// 🆕 Tipos de documento que el admin puede adjuntar a un viaje.
+enum TripDocumentType {
+  BILLETE
+  RESERVA
+  OTRO
+}
+
+// 🆕 Documentos del viaje (billete de avión/tren, reserva de hotel).
+// Se guardan en Cloudinary bajo el prefijo `trip-documents/`, FUERA de `tickets/`,
+// que es el único que recorre la migración a SharePoint. No se migran: son la
+// única copia, así que tampoco debe barrerlos la limpieza de Cloudinary.
+model TripDocument {
+  id     String           @id @default(cuid())
+  tripId String
+  trip   Trip             @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  type   TripDocumentType
+
+  url      String
+  publicId String // public_id de Cloudinary: necesario para poder borrar el fichero
+  fileName String
+  mimeType String
+  size     Int
+
+  uploadedById String?
+  createdAt    DateTime @default(now())
+
+  @@map("trip_documents")
+  @@index([tripId])
+  @@index([tripId, type])
 }
 
 // ✅ NUEVO: tabla intermedia
@@ -80,11 +137,51 @@ model TripAssignment {
   @@index([userId])
 }
 
-// ✅ Añadir categoría "Billete" a Expense
+// 🆕 Parte de gastos de oficina: el equivalente al Trip para gastos que NO son de
+// viaje. No pasa por aprobación — el USER lo crea y carga gastos directamente.
+// Sus categorías van a cuentas contables distintas (scope "office" en
+// lib/expense-categories.ts).
+enum OfficeExpenseStatus {
+  ABIERTO
+  CERRADO
+}
+
+model OfficeExpense {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  year  Int
+  month Int
+  title String?
+  notes String?
+
+  status      OfficeExpenseStatus @default(ABIERTO)
+  totalAmount Decimal             @default(0)
+
+  expenses Expense[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Un único parte por usuario y mes: cierra la puerta a duplicados
+  @@unique([userId, year, month])
+  @@map("office_expenses")
+  @@index([userId])
+}
+
+// Un Expense pertenece a un Trip O a un OfficeExpense, nunca a los dos ni a
+// ninguno. Prisma no puede expresar ese "exactamente uno": lo garantizan las
+// rutas, donde cada endpoint escribe solo su columna.
 model Expense {
   id            String   @id @default(cuid())
-  tripId        String
-  trip          Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  tripId        String?
+  trip          Trip?    @relation(fields: [tripId], references: [id], onDelete: Cascade)
+
+  // 🆕 Alternativa a tripId: gasto de oficina
+  officeExpenseId String?
+  officeExpense   OfficeExpense? @relation(fields: [officeExpenseId], references: [id], onDelete: Cascade)
+
   date          DateTime
   amount        Decimal
   category      String?  // Taxi, Comida, Hotel, Metrobus/Parking, Gasolina, Billete ← NUEVO
@@ -102,6 +199,7 @@ model Expense {
 
   @@map("expenses")
   @@index([tripId])
+  @@index([officeExpenseId])
 }
 
 // El resto (Session, Account, Verification) sin cambios...
