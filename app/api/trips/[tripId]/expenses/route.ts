@@ -5,6 +5,7 @@ import { createExpenseSchema } from "@/lib/validations";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { ZodError } from "zod";
+import { resolveExpenseStage, StageError } from "@/lib/trip-stages.server";
 
 type Params = {
   params: Promise<{ tripId: string }>;
@@ -99,12 +100,19 @@ export async function POST(request: Request, { params }: Params) {
 
     const body = await request.json();
     const validatedData = createExpenseSchema.parse(body);
+    // Fase 1: tramo elegido o, si no, el que toca por fecha
+    const stageId = await resolveExpenseStage(
+      tripId,
+      new Date(validatedData.date),
+      validatedData.stageId,
+    );
 
     // ✅ Crear expense y actualizar total en una transacción
     const [expense] = await prisma.$transaction([
       prisma.expense.create({
         data: {
           tripId,
+          stageId,
           amount: new Prisma.Decimal(validatedData.amount),
           date: new Date(validatedData.date),
           category: validatedData.category,
@@ -129,6 +137,9 @@ export async function POST(request: Request, { params }: Params) {
 
     return NextResponse.json(expense, { status: 201 });
   } catch (error) {
+    if (error instanceof StageError) {
+      return NextResponse.json({ error: error.message }, { status: error.status });
+    }
     if (error instanceof ZodError) {
       return NextResponse.json(
         { error: "Validation error", details: error },

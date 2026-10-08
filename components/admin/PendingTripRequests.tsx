@@ -49,11 +49,7 @@ export default function PendingTripRequests() {
     updateTrip.mutate(
       {
         tripId: editingTrip.id,
-        data: {
-          ...formData,
-          startDate: new Date(formData.startDate),
-          endDate: new Date(formData.endDate),
-        },
+        data: formData,
       },
       { onSuccess: () => setEditingTrip(null) },
     );

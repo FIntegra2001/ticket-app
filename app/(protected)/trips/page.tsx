@@ -44,9 +44,7 @@ export default function TripsPage() {
   // asignados vienen vacíos y el backend los ignora (usa requestTripSchema).
   const handleSubmit = (formData: CreateTripDto) => {
     const payload = {
-      city: formData.city,
-      startDate: new Date(formData.startDate),
-      endDate: new Date(formData.endDate),
+      stages: formData.stages,
       project: formData.project,
       notes: formData.notes,
     };

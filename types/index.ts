@@ -1,3 +1,6 @@
+import type { StageInput, TripStage } from "@/lib/trip-stages";
+export type { City, StageInput, TripStage } from "@/lib/trip-stages";
+
 export type UserRole = "USER" | "ADMIN";
 
 export type User = {
@@ -62,13 +65,14 @@ export interface Trip {
    * documento completo (url, fileName…) se pide a /api/trips/[id]/documents.
    */
   documents?: Pick<TripDocument, "id" | "type">[]
+  /** Fase 1: itinerario (ordenado por posición). */
+  stages?: TripStage[]
+  region?: string | null
 }
 
 // ✅ NUEVO: DTO para crear viaje (solo admin)
 export interface CreateTripDto {
-  city: string;
-  startDate: Date;
-  endDate: Date;
+  stages: StageInput[];
   project?: string;
   notes?: string;
   numberInvoice?: string;
@@ -77,17 +81,13 @@ export interface CreateTripDto {
 
 // 🆕 DTO para que un USER solicite un viaje: no elige nº de factura ni asignados
 export interface RequestTripDto {
-  city: string;
-  startDate: Date;
-  endDate: Date;
+  stages: StageInput[];
   project?: string;
   notes?: string;
 }
 
 export interface UpdateTripDto {
-  city?: string;
-  startDate?: Date;
-  endDate?: Date;
+  stages?: StageInput[];
   project?: string;
   notes?: string;
   status?: TripStatus;
@@ -95,15 +95,6 @@ export interface UpdateTripDto {
   assignedUserIds?: string[]       // ✅ NUEVO
 }
 
-export interface TripFormDto {
-  city: string;
-  startDate: string;
-  endDate: string;
-  project?: string;
-  notes?: string;
-  numberInvoice?: string ;
-  assignedUserIds: string[]        // ✅ NUEVO
-}
 
 // 🆕 Parte de gastos de oficina: la cabecera a la que se cuelgan los gastos que
 // NO son de viaje. Un único parte por usuario y mes.
@@ -150,6 +141,7 @@ export interface Expense {
   receiptUrl?: string | null;
   invoiceNumber?: string | null;
   paymentMethod?: string | null;
+  stageId?: string | null;          // Fase 1: tramo del viaje
   createdByAdminId?: string | null // ✅ NUEVO
   createdAt: Date;
   updatedAt: Date;
@@ -168,6 +160,7 @@ export interface CreateExpenseDto {
   receiptUrl?: string;
   invoiceNumber?: string;
   paymentMethod?: string;
+  stageId?: string;
 }
 
 export interface UpdateExpenseDto {
@@ -179,6 +172,7 @@ export interface UpdateExpenseDto {
   receiptUrl?: string;
   invoiceNumber?: string;
   paymentMethod?: string;
+  stageId?: string;
 }
 
 export interface PaginatedResponse<T> {

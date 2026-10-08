@@ -2,6 +2,12 @@ import { Prisma } from "@/app/generated/prisma/client";
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/db";
 import { createTripSchema, requestTripSchema } from "@/lib/validations";
+import {
+  createStagesInput,
+  prepareStages,
+  StageError,
+  stagesInclude,
+} from "@/lib/trip-stages.server";
 import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { ZodError } from "zod";
@@ -40,6 +46,7 @@ export async function GET(request: NextRequest) {
             },
           },
           expenses: true,
+          stages: stagesInclude,
         },
         orderBy: { createdAt: "desc" },
         skip,
@@ -80,14 +87,15 @@ export async function POST(request: Request) {
     //    asignados y nº de factura.
     //  - USER crea una SOLICITUD en PENDIENTE, autoasignada. No puede elegir
     //    asignados ni nº de factura: su esquema no los declara.
+    // Fase 1: el itinerario se valida contra el catálogo de ciudades y de él
+    // salen ciudad, fechas y comunidad del viaje.
     const data: Prisma.TripCreateInput = isAdmin
-      ? (() => {
+      ? await (async () => {
           const v = createTripSchema.parse(body);
           return {
             createdByAdmin: { connect: { id: session.user.id } },
-            city: v.city,
-            startDate: new Date(v.startDate),
-            endDate: new Date(v.endDate),
+            ...(await prepareStages(v.stages)),
+            stages: createStagesInput(v.stages),
             project: v.project,
             notes: v.notes,
             numberInvoice: v.numberInvoice,
@@ -99,13 +107,12 @@ export async function POST(request: Request) {
             },
           };
         })()
-      : (() => {
+      : await (async () => {
           const v = requestTripSchema.parse(body);
           return {
             requestedBy: { connect: { id: session.user.id } },
-            city: v.city,
-            startDate: new Date(v.startDate),
-            endDate: new Date(v.endDate),
+            ...(await prepareStages(v.stages)),
+            stages: createStagesInput(v.stages),
             project: v.project,
             notes: v.notes,
             status: "PENDIENTE",
@@ -124,11 +131,15 @@ export async function POST(request: Request) {
           },
         },
         expenses: true,
+        stages: stagesInclude,
       },
     });
 
     return NextResponse.json(trip, { status: 201 });
   } catch (error) {
+    if (error instanceof StageError) {
+      return NextResponse.json({ error: error.message }, { status: error.status });
+    }
     if (error instanceof ZodError) {
       return NextResponse.json(
         { error: "Validation error", details: error },

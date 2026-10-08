@@ -1,3 +1,4 @@
+import { stagesInclude } from "@/lib/trip-stages.server";
 import { Prisma } from "@/app/generated/prisma/client";
 import prisma from "@/lib/db";
 import { auth } from "@/lib/auth";
@@ -45,6 +46,7 @@ export async function GET(request: NextRequest) {
           // estado documental, que la card pinta como badges.
           requestedBy: { select: { id: true, name: true, email: true } },
           documents: { select: { id: true, type: true } },
+          stages: stagesInclude,
         },
         orderBy: { createdAt: "desc" },
         skip,

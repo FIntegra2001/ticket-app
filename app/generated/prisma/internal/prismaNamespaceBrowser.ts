@@ -54,6 +54,8 @@ export const ModelName = {
   User: 'User',
   Trip: 'Trip',
   TripDocument: 'TripDocument',
+  City: 'City',
+  TripStage: 'TripStage',
   TripAssignment: 'TripAssignment',
   OfficeExpense: 'OfficeExpense',
   Expense: 'Expense',
@@ -107,6 +109,7 @@ export const TripScalarFieldEnum = {
   status: 'status',
   totalAmount: 'totalAmount',
   numberInvoice: 'numberInvoice',
+  region: 'region',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -128,6 +131,35 @@ export const TripDocumentScalarFieldEnum = {
 } as const
 
 export type TripDocumentScalarFieldEnum = (typeof TripDocumentScalarFieldEnum)[keyof typeof TripDocumentScalarFieldEnum]
+
+
+export const CityScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  region: 'region',
+  isOther: 'isOther',
+  active: 'active',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CityScalarFieldEnum = (typeof CityScalarFieldEnum)[keyof typeof CityScalarFieldEnum]
+
+
+export const TripStageScalarFieldEnum = {
+  id: 'id',
+  tripId: 'tripId',
+  position: 'position',
+  cityId: 'cityId',
+  cityOther: 'cityOther',
+  arrivalDate: 'arrivalDate',
+  departureDate: 'departureDate',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TripStageScalarFieldEnum = (typeof TripStageScalarFieldEnum)[keyof typeof TripStageScalarFieldEnum]
 
 
 export const TripAssignmentScalarFieldEnum = {
@@ -168,6 +200,7 @@ export const ExpenseScalarFieldEnum = {
   receiptUrl: 'receiptUrl',
   invoiceNumber: 'invoiceNumber',
   paymentMethod: 'paymentMethod',
+  stageId: 'stageId',
   createdByAdminId: 'createdByAdminId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

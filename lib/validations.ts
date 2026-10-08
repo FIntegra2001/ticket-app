@@ -1,79 +1,47 @@
 import { z } from "zod";
-
-// Las fechas llegan como ISO string o Date. Refinamiento común: el fin no puede
-// ser anterior al inicio. Se aplica solo cuando ambas están presentes.
-const endAfterStart = <
-  T extends { startDate?: string | Date; endDate?: string | Date },
->(
-  data: T,
-) =>
-  data.startDate === undefined ||
-  data.endDate === undefined ||
-  new Date(data.endDate) >= new Date(data.startDate);
-
-// Se construye en cada llamada: zod exige `path` mutable, así que no vale un
-// objeto compartido con `as const`.
-const endAfterStartError = () => ({
-  message: "La fecha de fin no puede ser anterior a la de inicio",
-  path: ["endDate"] as PropertyKey[],
-});
+import { stagesSchema } from "@/lib/trip-stages";
 
 // ============= TRIP SCHEMAS =============
+// Fase 1: el destino y las fechas se envían como itinerario (`stages`). La
+// ciudad y las fechas del viaje se calculan en el servidor a partir de él.
+
 // Creación por ADMIN: exige asignados y admite el nº de factura interno.
-export const createTripSchema = z
-  .object({
-    city: z.string().min(1, "La ciudad es requerida"),
-    startDate: z.string().datetime().or(z.date()),
-    endDate: z.string().datetime().or(z.date()),
-    project: z.string().optional(),
-    notes: z.string().optional(),
-    assignedUserIds: z
-      .array(z.string())
-      .min(1, "Debes asignar al menos un usuario"), // ✅ NUEVO
-    numberInvoice: z.string().optional(),
-  })
-  .refine(endAfterStart, endAfterStartError());
+export const createTripSchema = z.object({
+  stages: stagesSchema,
+  project: z.string().optional(),
+  notes: z.string().optional(),
+  assignedUserIds: z
+    .array(z.string())
+    .min(1, "Debes asignar al menos un usuario"),
+  numberInvoice: z.string().optional(),
+});
 
-// 🆕 Solicitud de viaje por un USER. No lleva `assignedUserIds` (se autoasigna)
-// ni `numberInvoice` (lo pone el admin al aprobar). Si el cliente los manda, se
-// ignoran: zod sin `.strict()` descarta lo que no está declarado.
-export const requestTripSchema = z
-  .object({
-    city: z.string().min(1, "La ciudad es requerida"),
-    startDate: z.string().datetime().or(z.date()),
-    endDate: z.string().datetime().or(z.date()),
-    project: z.string().optional(),
-    notes: z.string().optional(),
-  })
-  .refine(endAfterStart, endAfterStartError());
+// Solicitud de viaje por un USER. No lleva `assignedUserIds` (se autoasigna)
+// ni `numberInvoice` (lo pone el admin al aprobar). zod sin `.strict()`
+// descarta lo que no está declarado.
+export const requestTripSchema = z.object({
+  stages: stagesSchema,
+  project: z.string().optional(),
+  notes: z.string().optional(),
+});
 
-// 🆕 Edición de su propia solicitud por parte del USER. Deliberadamente NO
-// incluye `status`, `totalAmount`, `assignedUserIds` ni `numberInvoice`: con el
-// esquema completo, un USER podía auto-aprobarse el viaje.
-export const updateTripRequestSchema = z
-  .object({
-    city: z.string().min(1).optional(),
-    startDate: z.string().datetime().or(z.date()).optional(),
-    endDate: z.string().datetime().or(z.date()).optional(),
-    project: z.string().optional(),
-    notes: z.string().optional(),
-  })
-  .refine(endAfterStart, endAfterStartError());
+// Edición de su propia solicitud por parte del USER. Deliberadamente NO
+// incluye `status`, `totalAmount`, `assignedUserIds` ni `numberInvoice`.
+export const updateTripRequestSchema = z.object({
+  stages: stagesSchema.optional(),
+  project: z.string().optional(),
+  notes: z.string().optional(),
+});
 
 // Edición completa: SOLO para las rutas de admin.
-export const updateTripSchema = z
-  .object({
-    city: z.string().min(1).optional(),
-    startDate: z.string().datetime().or(z.date()).optional(),
-    endDate: z.string().datetime().or(z.date()).optional(),
-    project: z.string().optional(),
-    notes: z.string().optional(),
-    status: z.enum(["PENDIENTE", "APROBADO", "RECHAZADO"]).optional(), // ✅ Corregido
-    totalAmount: z.number().optional(),
-    assignedUserIds: z.array(z.string()).optional(),
-    numberInvoice: z.string().optional(),
-  })
-  .refine(endAfterStart, endAfterStartError());
+export const updateTripSchema = z.object({
+  stages: stagesSchema.optional(),
+  project: z.string().optional(),
+  notes: z.string().optional(),
+  status: z.enum(["PENDIENTE", "APROBADO", "RECHAZADO"]).optional(),
+  assignedUserIds: z.array(z.string()).optional(),
+  numberInvoice: z.string().optional(),
+});
 
 // Schema específico para actualizar status
 export const updateStatusSchema = z.object({
@@ -97,6 +65,7 @@ export const updateOfficeExpenseSchema = z.object({
 
 // ============= EXPENSE SCHEMAS =============
 export const createExpenseSchema = z.object({
+  stageId: z.string().optional(), // Fase 1: tramo del viaje (si falta, por fecha)
   date: z.string().datetime().or(z.date()),
   amount: z.number().positive("El monto debe ser mayor a 0"),
   category: z.string().optional(),
@@ -108,6 +77,7 @@ export const createExpenseSchema = z.object({
 });
 
 export const updateExpenseSchema = z.object({
+  stageId: z.string().optional(),
   date: z.string().datetime().or(z.date()).optional(),
   amount: z.number().positive().optional(),
   category: z.string().optional(),

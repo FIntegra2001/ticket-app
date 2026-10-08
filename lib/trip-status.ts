@@ -13,14 +13,14 @@
 import type { TripStatus } from "@/types";
 
 export const TRIP_STATUS_LABEL: Record<TripStatus, string> = {
-  PENDIENTE: "Pendiente de aprobación",
+  PENDIENTE: "Solicitado (pendiente de aprobación)",
   APROBADO: "Aprobado",
   RECHAZADO: "Rechazado",
 };
 
 /** Etiqueta corta, para tablas y selects donde no cabe la larga. */
 export const TRIP_STATUS_SHORT_LABEL: Record<TripStatus, string> = {
-  PENDIENTE: "Pendiente",
+  PENDIENTE: "Solicitado",
   APROBADO: "Aprobado",
   RECHAZADO: "Rechazado",
 };

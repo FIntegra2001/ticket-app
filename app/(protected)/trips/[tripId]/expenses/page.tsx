@@ -1,6 +1,7 @@
 // app/trips/[tripId]/expenses/page.tsx
 "use client";
 
+import { TripItinerary } from "@/components/trips/TripItinerary";
 import { useParams } from "next/navigation";
 import { useTrip } from "@/hooks/useTrips";
 import {
@@ -107,6 +108,8 @@ export default function TripExpensesPage() {
         </div>
       </div>
 
+      {trip && <TripItinerary trip={trip} />}
+
       {/* 🆕 Billete y reserva, antes de los gastos */}
       <TripDocuments tripId={tripId} />
 
@@ -118,6 +121,7 @@ export default function TripExpensesPage() {
           <CardContent>
             <ExpenseForm
               tripId={tripId}
+              stages={trip?.stages}
               initialData={editing || undefined}
               onSubmit={(values) => {
                 if (editing) {

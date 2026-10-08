@@ -39,18 +39,10 @@ export default function AdminAllTripsPage() {
     if (editingTrip) {
       updateTrip.mutate({
         tripId: editingTrip.id,
-        data: {
-          ...formData,
-          startDate: new Date(formData.startDate),
-          endDate: new Date(formData.endDate),
-        },
+        data: formData,
       });
     } else {
-      createTrip.mutate({
-        ...formData,
-        startDate: new Date(formData.startDate),
-        endDate: new Date(formData.endDate),
-      });
+      createTrip.mutate(formData);
     }
     setIsOpen(false);
     setEditingTrip(null);

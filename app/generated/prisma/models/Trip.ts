@@ -48,6 +48,7 @@ export type TripMinAggregateOutputType = {
   status: $Enums.TripStatus | null
   totalAmount: runtime.Decimal | null
   numberInvoice: string | null
+  region: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -66,6 +67,7 @@ export type TripMaxAggregateOutputType = {
   status: $Enums.TripStatus | null
   totalAmount: runtime.Decimal | null
   numberInvoice: string | null
+  region: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -84,6 +86,7 @@ export type TripCountAggregateOutputType = {
   status: number
   totalAmount: number
   numberInvoice: number
+  region: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -112,6 +115,7 @@ export type TripMinAggregateInputType = {
   status?: true
   totalAmount?: true
   numberInvoice?: true
+  region?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -130,6 +134,7 @@ export type TripMaxAggregateInputType = {
   status?: true
   totalAmount?: true
   numberInvoice?: true
+  region?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -148,6 +153,7 @@ export type TripCountAggregateInputType = {
   status?: true
   totalAmount?: true
   numberInvoice?: true
+  region?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -253,6 +259,7 @@ export type TripGroupByOutputType = {
   status: $Enums.TripStatus
   totalAmount: runtime.Decimal
   numberInvoice: string | null
+  region: string | null
   createdAt: Date
   updatedAt: Date
   _count: TripCountAggregateOutputType | null
@@ -294,11 +301,13 @@ export type TripWhereInput = {
   status?: Prisma.EnumTripStatusFilter<"Trip"> | $Enums.TripStatus
   totalAmount?: Prisma.DecimalFilter<"Trip"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: Prisma.StringNullableFilter<"Trip"> | string | null
+  region?: Prisma.StringNullableFilter<"Trip"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Trip"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Trip"> | Date | string
   createdByAdmin?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   requestedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   approvedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  stages?: Prisma.TripStageListRelationFilter
   assignedUsers?: Prisma.TripAssignmentListRelationFilter
   expenses?: Prisma.ExpenseListRelationFilter
   documents?: Prisma.TripDocumentListRelationFilter
@@ -318,11 +327,13 @@ export type TripOrderByWithRelationInput = {
   status?: Prisma.SortOrder
   totalAmount?: Prisma.SortOrder
   numberInvoice?: Prisma.SortOrderInput | Prisma.SortOrder
+  region?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   createdByAdmin?: Prisma.UserOrderByWithRelationInput
   requestedBy?: Prisma.UserOrderByWithRelationInput
   approvedBy?: Prisma.UserOrderByWithRelationInput
+  stages?: Prisma.TripStageOrderByRelationAggregateInput
   assignedUsers?: Prisma.TripAssignmentOrderByRelationAggregateInput
   expenses?: Prisma.ExpenseOrderByRelationAggregateInput
   documents?: Prisma.TripDocumentOrderByRelationAggregateInput
@@ -345,11 +356,13 @@ export type TripWhereUniqueInput = Prisma.AtLeast<{
   status?: Prisma.EnumTripStatusFilter<"Trip"> | $Enums.TripStatus
   totalAmount?: Prisma.DecimalFilter<"Trip"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: Prisma.StringNullableFilter<"Trip"> | string | null
+  region?: Prisma.StringNullableFilter<"Trip"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Trip"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Trip"> | Date | string
   createdByAdmin?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   requestedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   approvedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  stages?: Prisma.TripStageListRelationFilter
   assignedUsers?: Prisma.TripAssignmentListRelationFilter
   expenses?: Prisma.ExpenseListRelationFilter
   documents?: Prisma.TripDocumentListRelationFilter
@@ -369,6 +382,7 @@ export type TripOrderByWithAggregationInput = {
   status?: Prisma.SortOrder
   totalAmount?: Prisma.SortOrder
   numberInvoice?: Prisma.SortOrderInput | Prisma.SortOrder
+  region?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.TripCountOrderByAggregateInput
@@ -395,6 +409,7 @@ export type TripScalarWhereWithAggregatesInput = {
   status?: Prisma.EnumTripStatusWithAggregatesFilter<"Trip"> | $Enums.TripStatus
   totalAmount?: Prisma.DecimalWithAggregatesFilter<"Trip"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: Prisma.StringNullableWithAggregatesFilter<"Trip"> | string | null
+  region?: Prisma.StringNullableWithAggregatesFilter<"Trip"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Trip"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Trip"> | Date | string
 }
@@ -410,11 +425,13 @@ export type TripCreateInput = {
   status?: $Enums.TripStatus
   totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: string | null
+  region?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   createdByAdmin?: Prisma.UserCreateNestedOneWithoutCreatedTripsInput
   requestedBy?: Prisma.UserCreateNestedOneWithoutRequestedTripsInput
   approvedBy?: Prisma.UserCreateNestedOneWithoutApprovedTripsInput
+  stages?: Prisma.TripStageCreateNestedManyWithoutTripInput
   assignedUsers?: Prisma.TripAssignmentCreateNestedManyWithoutTripInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutTripInput
   documents?: Prisma.TripDocumentCreateNestedManyWithoutTripInput
@@ -434,8 +451,10 @@ export type TripUncheckedCreateInput = {
   status?: $Enums.TripStatus
   totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: string | null
+  region?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  stages?: Prisma.TripStageUncheckedCreateNestedManyWithoutTripInput
   assignedUsers?: Prisma.TripAssignmentUncheckedCreateNestedManyWithoutTripInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTripInput
   documents?: Prisma.TripDocumentUncheckedCreateNestedManyWithoutTripInput
@@ -452,11 +471,13 @@ export type TripUpdateInput = {
   status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdByAdmin?: Prisma.UserUpdateOneWithoutCreatedTripsNestedInput
   requestedBy?: Prisma.UserUpdateOneWithoutRequestedTripsNestedInput
   approvedBy?: Prisma.UserUpdateOneWithoutApprovedTripsNestedInput
+  stages?: Prisma.TripStageUpdateManyWithoutTripNestedInput
   assignedUsers?: Prisma.TripAssignmentUpdateManyWithoutTripNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutTripNestedInput
   documents?: Prisma.TripDocumentUpdateManyWithoutTripNestedInput
@@ -476,8 +497,10 @@ export type TripUncheckedUpdateInput = {
   status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  stages?: Prisma.TripStageUncheckedUpdateManyWithoutTripNestedInput
   assignedUsers?: Prisma.TripAssignmentUncheckedUpdateManyWithoutTripNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTripNestedInput
   documents?: Prisma.TripDocumentUncheckedUpdateManyWithoutTripNestedInput
@@ -497,6 +520,7 @@ export type TripCreateManyInput = {
   status?: $Enums.TripStatus
   totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: string | null
+  region?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -512,6 +536,7 @@ export type TripUpdateManyMutationInput = {
   status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -530,6 +555,7 @@ export type TripUncheckedUpdateManyInput = {
   status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -558,6 +584,7 @@ export type TripCountOrderByAggregateInput = {
   status?: Prisma.SortOrder
   totalAmount?: Prisma.SortOrder
   numberInvoice?: Prisma.SortOrder
+  region?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -580,6 +607,7 @@ export type TripMaxOrderByAggregateInput = {
   status?: Prisma.SortOrder
   totalAmount?: Prisma.SortOrder
   numberInvoice?: Prisma.SortOrder
+  region?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -598,6 +626,7 @@ export type TripMinOrderByAggregateInput = {
   status?: Prisma.SortOrder
   totalAmount?: Prisma.SortOrder
   numberInvoice?: Prisma.SortOrder
+  region?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -772,6 +801,20 @@ export type TripUpdateOneRequiredWithoutDocumentsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.TripUpdateToOneWithWhereWithoutDocumentsInput, Prisma.TripUpdateWithoutDocumentsInput>, Prisma.TripUncheckedUpdateWithoutDocumentsInput>
 }
 
+export type TripCreateNestedOneWithoutStagesInput = {
+  create?: Prisma.XOR<Prisma.TripCreateWithoutStagesInput, Prisma.TripUncheckedCreateWithoutStagesInput>
+  connectOrCreate?: Prisma.TripCreateOrConnectWithoutStagesInput
+  connect?: Prisma.TripWhereUniqueInput
+}
+
+export type TripUpdateOneRequiredWithoutStagesNestedInput = {
+  create?: Prisma.XOR<Prisma.TripCreateWithoutStagesInput, Prisma.TripUncheckedCreateWithoutStagesInput>
+  connectOrCreate?: Prisma.TripCreateOrConnectWithoutStagesInput
+  upsert?: Prisma.TripUpsertWithoutStagesInput
+  connect?: Prisma.TripWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TripUpdateToOneWithWhereWithoutStagesInput, Prisma.TripUpdateWithoutStagesInput>, Prisma.TripUncheckedUpdateWithoutStagesInput>
+}
+
 export type TripCreateNestedOneWithoutAssignedUsersInput = {
   create?: Prisma.XOR<Prisma.TripCreateWithoutAssignedUsersInput, Prisma.TripUncheckedCreateWithoutAssignedUsersInput>
   connectOrCreate?: Prisma.TripCreateOrConnectWithoutAssignedUsersInput
@@ -813,10 +856,12 @@ export type TripCreateWithoutCreatedByAdminInput = {
   status?: $Enums.TripStatus
   totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: string | null
+  region?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   requestedBy?: Prisma.UserCreateNestedOneWithoutRequestedTripsInput
   approvedBy?: Prisma.UserCreateNestedOneWithoutApprovedTripsInput
+  stages?: Prisma.TripStageCreateNestedManyWithoutTripInput
   assignedUsers?: Prisma.TripAssignmentCreateNestedManyWithoutTripInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutTripInput
   documents?: Prisma.TripDocumentCreateNestedManyWithoutTripInput
@@ -835,8 +880,10 @@ export type TripUncheckedCreateWithoutCreatedByAdminInput = {
   status?: $Enums.TripStatus
   totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: string | null
+  region?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  stages?: Prisma.TripStageUncheckedCreateNestedManyWithoutTripInput
   assignedUsers?: Prisma.TripAssignmentUncheckedCreateNestedManyWithoutTripInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTripInput
   documents?: Prisma.TripDocumentUncheckedCreateNestedManyWithoutTripInput
@@ -863,10 +910,12 @@ export type TripCreateWithoutRequestedByInput = {
   status?: $Enums.TripStatus
   totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: string | null
+  region?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   createdByAdmin?: Prisma.UserCreateNestedOneWithoutCreatedTripsInput
   approvedBy?: Prisma.UserCreateNestedOneWithoutApprovedTripsInput
+  stages?: Prisma.TripStageCreateNestedManyWithoutTripInput
   assignedUsers?: Prisma.TripAssignmentCreateNestedManyWithoutTripInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutTripInput
   documents?: Prisma.TripDocumentCreateNestedManyWithoutTripInput
@@ -885,8 +934,10 @@ export type TripUncheckedCreateWithoutRequestedByInput = {
   status?: $Enums.TripStatus
   totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: string | null
+  region?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  stages?: Prisma.TripStageUncheckedCreateNestedManyWithoutTripInput
   assignedUsers?: Prisma.TripAssignmentUncheckedCreateNestedManyWithoutTripInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTripInput
   documents?: Prisma.TripDocumentUncheckedCreateNestedManyWithoutTripInput
@@ -913,10 +964,12 @@ export type TripCreateWithoutApprovedByInput = {
   status?: $Enums.TripStatus
   totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: string | null
+  region?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   createdByAdmin?: Prisma.UserCreateNestedOneWithoutCreatedTripsInput
   requestedBy?: Prisma.UserCreateNestedOneWithoutRequestedTripsInput
+  stages?: Prisma.TripStageCreateNestedManyWithoutTripInput
   assignedUsers?: Prisma.TripAssignmentCreateNestedManyWithoutTripInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutTripInput
   documents?: Prisma.TripDocumentCreateNestedManyWithoutTripInput
@@ -935,8 +988,10 @@ export type TripUncheckedCreateWithoutApprovedByInput = {
   status?: $Enums.TripStatus
   totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: string | null
+  region?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  stages?: Prisma.TripStageUncheckedCreateNestedManyWithoutTripInput
   assignedUsers?: Prisma.TripAssignmentUncheckedCreateNestedManyWithoutTripInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTripInput
   documents?: Prisma.TripDocumentUncheckedCreateNestedManyWithoutTripInput
@@ -985,6 +1040,7 @@ export type TripScalarWhereInput = {
   status?: Prisma.EnumTripStatusFilter<"Trip"> | $Enums.TripStatus
   totalAmount?: Prisma.DecimalFilter<"Trip"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: Prisma.StringNullableFilter<"Trip"> | string | null
+  region?: Prisma.StringNullableFilter<"Trip"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Trip"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Trip"> | Date | string
 }
@@ -1032,11 +1088,13 @@ export type TripCreateWithoutDocumentsInput = {
   status?: $Enums.TripStatus
   totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: string | null
+  region?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   createdByAdmin?: Prisma.UserCreateNestedOneWithoutCreatedTripsInput
   requestedBy?: Prisma.UserCreateNestedOneWithoutRequestedTripsInput
   approvedBy?: Prisma.UserCreateNestedOneWithoutApprovedTripsInput
+  stages?: Prisma.TripStageCreateNestedManyWithoutTripInput
   assignedUsers?: Prisma.TripAssignmentCreateNestedManyWithoutTripInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutTripInput
 }
@@ -1055,8 +1113,10 @@ export type TripUncheckedCreateWithoutDocumentsInput = {
   status?: $Enums.TripStatus
   totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: string | null
+  region?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  stages?: Prisma.TripStageUncheckedCreateNestedManyWithoutTripInput
   assignedUsers?: Prisma.TripAssignmentUncheckedCreateNestedManyWithoutTripInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTripInput
 }
@@ -1088,11 +1148,13 @@ export type TripUpdateWithoutDocumentsInput = {
   status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdByAdmin?: Prisma.UserUpdateOneWithoutCreatedTripsNestedInput
   requestedBy?: Prisma.UserUpdateOneWithoutRequestedTripsNestedInput
   approvedBy?: Prisma.UserUpdateOneWithoutApprovedTripsNestedInput
+  stages?: Prisma.TripStageUpdateManyWithoutTripNestedInput
   assignedUsers?: Prisma.TripAssignmentUpdateManyWithoutTripNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutTripNestedInput
 }
@@ -1111,10 +1173,116 @@ export type TripUncheckedUpdateWithoutDocumentsInput = {
   status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  stages?: Prisma.TripStageUncheckedUpdateManyWithoutTripNestedInput
+  assignedUsers?: Prisma.TripAssignmentUncheckedUpdateManyWithoutTripNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTripNestedInput
+}
+
+export type TripCreateWithoutStagesInput = {
+  id?: string
+  approvedAt?: Date | string | null
+  city: string
+  startDate: Date | string
+  endDate: Date | string
+  project?: string | null
+  notes?: string | null
+  status?: $Enums.TripStatus
+  totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  numberInvoice?: string | null
+  region?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  createdByAdmin?: Prisma.UserCreateNestedOneWithoutCreatedTripsInput
+  requestedBy?: Prisma.UserCreateNestedOneWithoutRequestedTripsInput
+  approvedBy?: Prisma.UserCreateNestedOneWithoutApprovedTripsInput
+  assignedUsers?: Prisma.TripAssignmentCreateNestedManyWithoutTripInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutTripInput
+  documents?: Prisma.TripDocumentCreateNestedManyWithoutTripInput
+}
+
+export type TripUncheckedCreateWithoutStagesInput = {
+  id?: string
+  createdByAdminId?: string | null
+  requestedById?: string | null
+  approvedAt?: Date | string | null
+  approvedById?: string | null
+  city: string
+  startDate: Date | string
+  endDate: Date | string
+  project?: string | null
+  notes?: string | null
+  status?: $Enums.TripStatus
+  totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  numberInvoice?: string | null
+  region?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  assignedUsers?: Prisma.TripAssignmentUncheckedCreateNestedManyWithoutTripInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTripInput
+  documents?: Prisma.TripDocumentUncheckedCreateNestedManyWithoutTripInput
+}
+
+export type TripCreateOrConnectWithoutStagesInput = {
+  where: Prisma.TripWhereUniqueInput
+  create: Prisma.XOR<Prisma.TripCreateWithoutStagesInput, Prisma.TripUncheckedCreateWithoutStagesInput>
+}
+
+export type TripUpsertWithoutStagesInput = {
+  update: Prisma.XOR<Prisma.TripUpdateWithoutStagesInput, Prisma.TripUncheckedUpdateWithoutStagesInput>
+  create: Prisma.XOR<Prisma.TripCreateWithoutStagesInput, Prisma.TripUncheckedCreateWithoutStagesInput>
+  where?: Prisma.TripWhereInput
+}
+
+export type TripUpdateToOneWithWhereWithoutStagesInput = {
+  where?: Prisma.TripWhereInput
+  data: Prisma.XOR<Prisma.TripUpdateWithoutStagesInput, Prisma.TripUncheckedUpdateWithoutStagesInput>
+}
+
+export type TripUpdateWithoutStagesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  project?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
+  totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  numberInvoice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdByAdmin?: Prisma.UserUpdateOneWithoutCreatedTripsNestedInput
+  requestedBy?: Prisma.UserUpdateOneWithoutRequestedTripsNestedInput
+  approvedBy?: Prisma.UserUpdateOneWithoutApprovedTripsNestedInput
+  assignedUsers?: Prisma.TripAssignmentUpdateManyWithoutTripNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutTripNestedInput
+  documents?: Prisma.TripDocumentUpdateManyWithoutTripNestedInput
+}
+
+export type TripUncheckedUpdateWithoutStagesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdByAdminId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requestedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  project?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
+  totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  numberInvoice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assignedUsers?: Prisma.TripAssignmentUncheckedUpdateManyWithoutTripNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTripNestedInput
+  documents?: Prisma.TripDocumentUncheckedUpdateManyWithoutTripNestedInput
 }
 
 export type TripCreateWithoutAssignedUsersInput = {
@@ -1128,11 +1296,13 @@ export type TripCreateWithoutAssignedUsersInput = {
   status?: $Enums.TripStatus
   totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: string | null
+  region?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   createdByAdmin?: Prisma.UserCreateNestedOneWithoutCreatedTripsInput
   requestedBy?: Prisma.UserCreateNestedOneWithoutRequestedTripsInput
   approvedBy?: Prisma.UserCreateNestedOneWithoutApprovedTripsInput
+  stages?: Prisma.TripStageCreateNestedManyWithoutTripInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutTripInput
   documents?: Prisma.TripDocumentCreateNestedManyWithoutTripInput
 }
@@ -1151,8 +1321,10 @@ export type TripUncheckedCreateWithoutAssignedUsersInput = {
   status?: $Enums.TripStatus
   totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: string | null
+  region?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  stages?: Prisma.TripStageUncheckedCreateNestedManyWithoutTripInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTripInput
   documents?: Prisma.TripDocumentUncheckedCreateNestedManyWithoutTripInput
 }
@@ -1184,11 +1356,13 @@ export type TripUpdateWithoutAssignedUsersInput = {
   status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdByAdmin?: Prisma.UserUpdateOneWithoutCreatedTripsNestedInput
   requestedBy?: Prisma.UserUpdateOneWithoutRequestedTripsNestedInput
   approvedBy?: Prisma.UserUpdateOneWithoutApprovedTripsNestedInput
+  stages?: Prisma.TripStageUpdateManyWithoutTripNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutTripNestedInput
   documents?: Prisma.TripDocumentUpdateManyWithoutTripNestedInput
 }
@@ -1207,8 +1381,10 @@ export type TripUncheckedUpdateWithoutAssignedUsersInput = {
   status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  stages?: Prisma.TripStageUncheckedUpdateManyWithoutTripNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTripNestedInput
   documents?: Prisma.TripDocumentUncheckedUpdateManyWithoutTripNestedInput
 }
@@ -1224,11 +1400,13 @@ export type TripCreateWithoutExpensesInput = {
   status?: $Enums.TripStatus
   totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: string | null
+  region?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   createdByAdmin?: Prisma.UserCreateNestedOneWithoutCreatedTripsInput
   requestedBy?: Prisma.UserCreateNestedOneWithoutRequestedTripsInput
   approvedBy?: Prisma.UserCreateNestedOneWithoutApprovedTripsInput
+  stages?: Prisma.TripStageCreateNestedManyWithoutTripInput
   assignedUsers?: Prisma.TripAssignmentCreateNestedManyWithoutTripInput
   documents?: Prisma.TripDocumentCreateNestedManyWithoutTripInput
 }
@@ -1247,8 +1425,10 @@ export type TripUncheckedCreateWithoutExpensesInput = {
   status?: $Enums.TripStatus
   totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: string | null
+  region?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  stages?: Prisma.TripStageUncheckedCreateNestedManyWithoutTripInput
   assignedUsers?: Prisma.TripAssignmentUncheckedCreateNestedManyWithoutTripInput
   documents?: Prisma.TripDocumentUncheckedCreateNestedManyWithoutTripInput
 }
@@ -1280,11 +1460,13 @@ export type TripUpdateWithoutExpensesInput = {
   status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdByAdmin?: Prisma.UserUpdateOneWithoutCreatedTripsNestedInput
   requestedBy?: Prisma.UserUpdateOneWithoutRequestedTripsNestedInput
   approvedBy?: Prisma.UserUpdateOneWithoutApprovedTripsNestedInput
+  stages?: Prisma.TripStageUpdateManyWithoutTripNestedInput
   assignedUsers?: Prisma.TripAssignmentUpdateManyWithoutTripNestedInput
   documents?: Prisma.TripDocumentUpdateManyWithoutTripNestedInput
 }
@@ -1303,8 +1485,10 @@ export type TripUncheckedUpdateWithoutExpensesInput = {
   status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  stages?: Prisma.TripStageUncheckedUpdateManyWithoutTripNestedInput
   assignedUsers?: Prisma.TripAssignmentUncheckedUpdateManyWithoutTripNestedInput
   documents?: Prisma.TripDocumentUncheckedUpdateManyWithoutTripNestedInput
 }
@@ -1322,6 +1506,7 @@ export type TripCreateManyCreatedByAdminInput = {
   status?: $Enums.TripStatus
   totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: string | null
+  region?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1339,6 +1524,7 @@ export type TripCreateManyRequestedByInput = {
   status?: $Enums.TripStatus
   totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: string | null
+  region?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1356,6 +1542,7 @@ export type TripCreateManyApprovedByInput = {
   status?: $Enums.TripStatus
   totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: string | null
+  region?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1371,10 +1558,12 @@ export type TripUpdateWithoutCreatedByAdminInput = {
   status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   requestedBy?: Prisma.UserUpdateOneWithoutRequestedTripsNestedInput
   approvedBy?: Prisma.UserUpdateOneWithoutApprovedTripsNestedInput
+  stages?: Prisma.TripStageUpdateManyWithoutTripNestedInput
   assignedUsers?: Prisma.TripAssignmentUpdateManyWithoutTripNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutTripNestedInput
   documents?: Prisma.TripDocumentUpdateManyWithoutTripNestedInput
@@ -1393,8 +1582,10 @@ export type TripUncheckedUpdateWithoutCreatedByAdminInput = {
   status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  stages?: Prisma.TripStageUncheckedUpdateManyWithoutTripNestedInput
   assignedUsers?: Prisma.TripAssignmentUncheckedUpdateManyWithoutTripNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTripNestedInput
   documents?: Prisma.TripDocumentUncheckedUpdateManyWithoutTripNestedInput
@@ -1413,6 +1604,7 @@ export type TripUncheckedUpdateManyWithoutCreatedByAdminInput = {
   status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1428,10 +1620,12 @@ export type TripUpdateWithoutRequestedByInput = {
   status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdByAdmin?: Prisma.UserUpdateOneWithoutCreatedTripsNestedInput
   approvedBy?: Prisma.UserUpdateOneWithoutApprovedTripsNestedInput
+  stages?: Prisma.TripStageUpdateManyWithoutTripNestedInput
   assignedUsers?: Prisma.TripAssignmentUpdateManyWithoutTripNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutTripNestedInput
   documents?: Prisma.TripDocumentUpdateManyWithoutTripNestedInput
@@ -1450,8 +1644,10 @@ export type TripUncheckedUpdateWithoutRequestedByInput = {
   status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  stages?: Prisma.TripStageUncheckedUpdateManyWithoutTripNestedInput
   assignedUsers?: Prisma.TripAssignmentUncheckedUpdateManyWithoutTripNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTripNestedInput
   documents?: Prisma.TripDocumentUncheckedUpdateManyWithoutTripNestedInput
@@ -1470,6 +1666,7 @@ export type TripUncheckedUpdateManyWithoutRequestedByInput = {
   status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1485,10 +1682,12 @@ export type TripUpdateWithoutApprovedByInput = {
   status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdByAdmin?: Prisma.UserUpdateOneWithoutCreatedTripsNestedInput
   requestedBy?: Prisma.UserUpdateOneWithoutRequestedTripsNestedInput
+  stages?: Prisma.TripStageUpdateManyWithoutTripNestedInput
   assignedUsers?: Prisma.TripAssignmentUpdateManyWithoutTripNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutTripNestedInput
   documents?: Prisma.TripDocumentUpdateManyWithoutTripNestedInput
@@ -1507,8 +1706,10 @@ export type TripUncheckedUpdateWithoutApprovedByInput = {
   status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  stages?: Prisma.TripStageUncheckedUpdateManyWithoutTripNestedInput
   assignedUsers?: Prisma.TripAssignmentUncheckedUpdateManyWithoutTripNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTripNestedInput
   documents?: Prisma.TripDocumentUncheckedUpdateManyWithoutTripNestedInput
@@ -1527,6 +1728,7 @@ export type TripUncheckedUpdateManyWithoutApprovedByInput = {
   status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1537,12 +1739,14 @@ export type TripUncheckedUpdateManyWithoutApprovedByInput = {
  */
 
 export type TripCountOutputType = {
+  stages: number
   assignedUsers: number
   expenses: number
   documents: number
 }
 
 export type TripCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  stages?: boolean | TripCountOutputTypeCountStagesArgs
   assignedUsers?: boolean | TripCountOutputTypeCountAssignedUsersArgs
   expenses?: boolean | TripCountOutputTypeCountExpensesArgs
   documents?: boolean | TripCountOutputTypeCountDocumentsArgs
@@ -1556,6 +1760,13 @@ export type TripCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensi
    * Select specific fields to fetch from the TripCountOutputType
    */
   select?: Prisma.TripCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * TripCountOutputType without action
+ */
+export type TripCountOutputTypeCountStagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TripStageWhereInput
 }
 
 /**
@@ -1594,11 +1805,13 @@ export type TripSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   status?: boolean
   totalAmount?: boolean
   numberInvoice?: boolean
+  region?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   createdByAdmin?: boolean | Prisma.Trip$createdByAdminArgs<ExtArgs>
   requestedBy?: boolean | Prisma.Trip$requestedByArgs<ExtArgs>
   approvedBy?: boolean | Prisma.Trip$approvedByArgs<ExtArgs>
+  stages?: boolean | Prisma.Trip$stagesArgs<ExtArgs>
   assignedUsers?: boolean | Prisma.Trip$assignedUsersArgs<ExtArgs>
   expenses?: boolean | Prisma.Trip$expensesArgs<ExtArgs>
   documents?: boolean | Prisma.Trip$documentsArgs<ExtArgs>
@@ -1619,6 +1832,7 @@ export type TripSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   status?: boolean
   totalAmount?: boolean
   numberInvoice?: boolean
+  region?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   createdByAdmin?: boolean | Prisma.Trip$createdByAdminArgs<ExtArgs>
@@ -1640,6 +1854,7 @@ export type TripSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   status?: boolean
   totalAmount?: boolean
   numberInvoice?: boolean
+  region?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   createdByAdmin?: boolean | Prisma.Trip$createdByAdminArgs<ExtArgs>
@@ -1661,15 +1876,17 @@ export type TripSelectScalar = {
   status?: boolean
   totalAmount?: boolean
   numberInvoice?: boolean
+  region?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type TripOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdByAdminId" | "requestedById" | "approvedAt" | "approvedById" | "city" | "startDate" | "endDate" | "project" | "notes" | "status" | "totalAmount" | "numberInvoice" | "createdAt" | "updatedAt", ExtArgs["result"]["trip"]>
+export type TripOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdByAdminId" | "requestedById" | "approvedAt" | "approvedById" | "city" | "startDate" | "endDate" | "project" | "notes" | "status" | "totalAmount" | "numberInvoice" | "region" | "createdAt" | "updatedAt", ExtArgs["result"]["trip"]>
 export type TripInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   createdByAdmin?: boolean | Prisma.Trip$createdByAdminArgs<ExtArgs>
   requestedBy?: boolean | Prisma.Trip$requestedByArgs<ExtArgs>
   approvedBy?: boolean | Prisma.Trip$approvedByArgs<ExtArgs>
+  stages?: boolean | Prisma.Trip$stagesArgs<ExtArgs>
   assignedUsers?: boolean | Prisma.Trip$assignedUsersArgs<ExtArgs>
   expenses?: boolean | Prisma.Trip$expensesArgs<ExtArgs>
   documents?: boolean | Prisma.Trip$documentsArgs<ExtArgs>
@@ -1692,6 +1909,7 @@ export type $TripPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     createdByAdmin: Prisma.$UserPayload<ExtArgs> | null
     requestedBy: Prisma.$UserPayload<ExtArgs> | null
     approvedBy: Prisma.$UserPayload<ExtArgs> | null
+    stages: Prisma.$TripStagePayload<ExtArgs>[]
     assignedUsers: Prisma.$TripAssignmentPayload<ExtArgs>[]
     expenses: Prisma.$ExpensePayload<ExtArgs>[]
     documents: Prisma.$TripDocumentPayload<ExtArgs>[]
@@ -1710,6 +1928,7 @@ export type $TripPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     status: $Enums.TripStatus
     totalAmount: runtime.Decimal
     numberInvoice: string | null
+    region: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["trip"]>
@@ -2109,6 +2328,7 @@ export interface Prisma__TripClient<T, Null = never, ExtArgs extends runtime.Typ
   createdByAdmin<T extends Prisma.Trip$createdByAdminArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Trip$createdByAdminArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   requestedBy<T extends Prisma.Trip$requestedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Trip$requestedByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   approvedBy<T extends Prisma.Trip$approvedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Trip$approvedByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  stages<T extends Prisma.Trip$stagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Trip$stagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TripStagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   assignedUsers<T extends Prisma.Trip$assignedUsersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Trip$assignedUsersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TripAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   expenses<T extends Prisma.Trip$expensesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Trip$expensesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExpensePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   documents<T extends Prisma.Trip$documentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Trip$documentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TripDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -2154,6 +2374,7 @@ export interface TripFieldRefs {
   readonly status: Prisma.FieldRef<"Trip", 'TripStatus'>
   readonly totalAmount: Prisma.FieldRef<"Trip", 'Decimal'>
   readonly numberInvoice: Prisma.FieldRef<"Trip", 'String'>
+  readonly region: Prisma.FieldRef<"Trip", 'String'>
   readonly createdAt: Prisma.FieldRef<"Trip", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Trip", 'DateTime'>
 }
@@ -2606,6 +2827,30 @@ export type Trip$approvedByArgs<ExtArgs extends runtime.Types.Extensions.Interna
    */
   include?: Prisma.UserInclude<ExtArgs> | null
   where?: Prisma.UserWhereInput
+}
+
+/**
+ * Trip.stages
+ */
+export type Trip$stagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TripStage
+   */
+  select?: Prisma.TripStageSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TripStage
+   */
+  omit?: Prisma.TripStageOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TripStageInclude<ExtArgs> | null
+  where?: Prisma.TripStageWhereInput
+  orderBy?: Prisma.TripStageOrderByWithRelationInput | Prisma.TripStageOrderByWithRelationInput[]
+  cursor?: Prisma.TripStageWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TripStageScalarFieldEnum | Prisma.TripStageScalarFieldEnum[]
 }
 
 /**

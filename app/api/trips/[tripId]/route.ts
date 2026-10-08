@@ -2,6 +2,12 @@ import { Prisma } from "@/app/generated/prisma/client";
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/db";
 import { updateTripRequestSchema } from "@/lib/validations";
+import {
+  prepareStages,
+  replaceStages,
+  StageError,
+  stagesInclude,
+} from "@/lib/trip-stages.server";
 import { destroyTripDocument } from "@/lib/trip-documents.server";
 import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
@@ -33,6 +39,7 @@ export async function GET(_: Request, { params }: Params) {
             date: "desc",
           },
         },
+        stages: stagesInclude,
       },
     });
 
@@ -92,20 +99,21 @@ export async function PUT(request: NextRequest, { params }: Params) {
 
     const updateData: Prisma.TripUpdateInput = {};
 
-    if (validatedData.city !== undefined) updateData.city = validatedData.city;
     if (validatedData.project !== undefined)
       updateData.project = validatedData.project;
     if (validatedData.notes !== undefined)
       updateData.notes = validatedData.notes;
 
-    if (validatedData.startDate !== undefined) {
-      updateData.startDate = new Date(validatedData.startDate);
-    }
-    if (validatedData.endDate !== undefined) {
-      updateData.endDate = new Date(validatedData.endDate);
+    // Fase 1: nuevo itinerario → se recalculan ciudad, fechas y comunidad
+    if (validatedData.stages !== undefined) {
+      Object.assign(updateData, await prepareStages(validatedData.stages));
     }
 
-    const trip = await prisma.trip.update({
+    const trip = await prisma.$transaction(async (tx) => {
+      if (validatedData.stages !== undefined) {
+        await replaceStages(tx, tripId, validatedData.stages);
+      }
+      return tx.trip.update({
       where: { id: tripId },
       data: updateData,
       include: {
@@ -114,11 +122,16 @@ export async function PUT(request: NextRequest, { params }: Params) {
             date: "desc",
           },
         },
+        stages: stagesInclude,
       },
+      });
     });
 
     return NextResponse.json(trip);
   } catch (error) {
+    if (error instanceof StageError) {
+      return NextResponse.json({ error: error.message }, { status: error.status });
+    }
     if (error instanceof ZodError) {
       return NextResponse.json(
         { error: "Validation error", details: error },

@@ -86,6 +86,13 @@ model Trip {
   totalAmount Decimal  @default(0)
   numberInvoice String?
 
+  // Fase 1: itinerario. Los tramos son la fuente de verdad; `city`, `startDate`
+  // y `endDate` de arriba se recalculan a partir de ellos (lib/trip-stages.ts)
+  // para que los listados y los Excel existentes sigan funcionando igual.
+  stages        TripStage[]
+  // Comunidad autónoma del viaje (todas sus ciudades son de la misma).
+  region        String?
+
   // ✅ NUEVO: usuarios asignados (many-to-many)
   assignedUsers TripAssignment[]
   expenses      Expense[]
@@ -133,6 +140,45 @@ model TripDocument {
 }
 
 // ✅ NUEVO: tabla intermedia
+// Fase 1: catálogo de ciudades (lo mantiene el ADMIN). `isOther` marca la
+// entrada "Otro (especificar)", que exige texto libre en el tramo.
+model City {
+  id        String      @id @default(cuid())
+  name      String      @unique
+  region    String?
+  isOther   Boolean     @default(false)
+  active    Boolean     @default(true)
+  sortOrder Int         @default(0)
+  stages    TripStage[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("cities")
+}
+
+// Fase 1: tramo (destino) de un viaje. Un viaje simple tiene un tramo.
+model TripStage {
+  id            String   @id @default(cuid())
+  tripId        String
+  trip          Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  position      Int      // 1, 2, 3… en orden de itinerario
+  cityId        String
+  city          City     @relation(fields: [cityId], references: [id])
+  // Texto libre cuando la ciudad es "Otro (especificar)"
+  cityOther     String?
+  arrivalDate   DateTime
+  departureDate DateTime
+  expenses      Expense[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([tripId])
+  @@index([cityId])
+  @@map("trip_stages")
+}
+
 model TripAssignment {
   id        String   @id @default(cuid())
   tripId    String
@@ -200,6 +246,10 @@ model Expense {
   receiptUrl    String?
   invoiceNumber String?
   paymentMethod String?
+
+  // Fase 1: tramo del viaje al que se imputa el gasto (null en gastos de oficina)
+  stageId       String?
+  stage         TripStage? @relation(fields: [stageId], references: [id], onDelete: SetNull)
   
   // ✅ NUEVO: gastos creados por admin (billete) son visibles pero editables por user
   createdByAdminId String? // null = creado por user, filled = creado por admin
@@ -210,6 +260,7 @@ model Expense {
   @@map("expenses")
   @@index([tripId])
   @@index([officeExpenseId])
+  @@index([stageId])
 }
 
 // El resto (Session, Account, Verification) sin cambios...

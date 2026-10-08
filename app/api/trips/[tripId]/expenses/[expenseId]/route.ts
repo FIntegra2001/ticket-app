@@ -5,6 +5,7 @@ import { updateExpenseSchema } from "@/lib/validations";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { ZodError } from "zod";
+import { resolveExpenseStage, StageError } from "@/lib/trip-stages.server";
 
 type Params = {
   params: Promise<{ tripId: string; expenseId: string }>;
@@ -115,6 +116,15 @@ export async function PUT(request: Request, { params }: Params) {
     if (validatedData.paymentMethod !== undefined) {
       updateData.paymentMethod = validatedData.paymentMethod;
     }
+    // Fase 1: cambio de tramo (debe ser de este viaje)
+    if (validatedData.stageId !== undefined) {
+      const stageId = await resolveExpenseStage(
+        tripId,
+        new Date(),
+        validatedData.stageId,
+      );
+      updateData.stage = stageId ? { connect: { id: stageId } } : { disconnect: true };
+    }
 
     // ✅ Si cambia el amount, actualizar el total del trip en transacción
     let expense;
@@ -146,6 +156,9 @@ export async function PUT(request: Request, { params }: Params) {
 
     return NextResponse.json(expense);
   } catch (error) {
+    if (error instanceof StageError) {
+      return NextResponse.json({ error: error.message }, { status: error.status });
+    }
     if (error instanceof ZodError) {
       return NextResponse.json(
         { error: "Validation error", details: error },

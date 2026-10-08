@@ -387,6 +387,8 @@ export const ModelName = {
   User: 'User',
   Trip: 'Trip',
   TripDocument: 'TripDocument',
+  City: 'City',
+  TripStage: 'TripStage',
   TripAssignment: 'TripAssignment',
   OfficeExpense: 'OfficeExpense',
   Expense: 'Expense',
@@ -408,7 +410,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "trip" | "tripDocument" | "tripAssignment" | "officeExpense" | "expense" | "session" | "account" | "verification"
+    modelProps: "user" | "trip" | "tripDocument" | "city" | "tripStage" | "tripAssignment" | "officeExpense" | "expense" | "session" | "account" | "verification"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -631,6 +633,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.TripDocumentCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.TripDocumentCountAggregateOutputType> | number
+        }
+      }
+    }
+    City: {
+      payload: Prisma.$CityPayload<ExtArgs>
+      fields: Prisma.CityFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CityFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CityPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CityFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CityPayload>
+        }
+        findFirst: {
+          args: Prisma.CityFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CityPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CityFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CityPayload>
+        }
+        findMany: {
+          args: Prisma.CityFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CityPayload>[]
+        }
+        create: {
+          args: Prisma.CityCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CityPayload>
+        }
+        createMany: {
+          args: Prisma.CityCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CityCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CityPayload>[]
+        }
+        delete: {
+          args: Prisma.CityDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CityPayload>
+        }
+        update: {
+          args: Prisma.CityUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CityPayload>
+        }
+        deleteMany: {
+          args: Prisma.CityDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CityUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CityUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CityPayload>[]
+        }
+        upsert: {
+          args: Prisma.CityUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CityPayload>
+        }
+        aggregate: {
+          args: Prisma.CityAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCity>
+        }
+        groupBy: {
+          args: Prisma.CityGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CityGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CityCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CityCountAggregateOutputType> | number
+        }
+      }
+    }
+    TripStage: {
+      payload: Prisma.$TripStagePayload<ExtArgs>
+      fields: Prisma.TripStageFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TripStageFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripStagePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TripStageFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripStagePayload>
+        }
+        findFirst: {
+          args: Prisma.TripStageFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripStagePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TripStageFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripStagePayload>
+        }
+        findMany: {
+          args: Prisma.TripStageFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripStagePayload>[]
+        }
+        create: {
+          args: Prisma.TripStageCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripStagePayload>
+        }
+        createMany: {
+          args: Prisma.TripStageCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.TripStageCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripStagePayload>[]
+        }
+        delete: {
+          args: Prisma.TripStageDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripStagePayload>
+        }
+        update: {
+          args: Prisma.TripStageUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripStagePayload>
+        }
+        deleteMany: {
+          args: Prisma.TripStageDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TripStageUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.TripStageUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripStagePayload>[]
+        }
+        upsert: {
+          args: Prisma.TripStageUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripStagePayload>
+        }
+        aggregate: {
+          args: Prisma.TripStageAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTripStage>
+        }
+        groupBy: {
+          args: Prisma.TripStageGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TripStageGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TripStageCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TripStageCountAggregateOutputType> | number
         }
       }
     }
@@ -1146,6 +1296,7 @@ export const TripScalarFieldEnum = {
   status: 'status',
   totalAmount: 'totalAmount',
   numberInvoice: 'numberInvoice',
+  region: 'region',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1167,6 +1318,35 @@ export const TripDocumentScalarFieldEnum = {
 } as const
 
 export type TripDocumentScalarFieldEnum = (typeof TripDocumentScalarFieldEnum)[keyof typeof TripDocumentScalarFieldEnum]
+
+
+export const CityScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  region: 'region',
+  isOther: 'isOther',
+  active: 'active',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CityScalarFieldEnum = (typeof CityScalarFieldEnum)[keyof typeof CityScalarFieldEnum]
+
+
+export const TripStageScalarFieldEnum = {
+  id: 'id',
+  tripId: 'tripId',
+  position: 'position',
+  cityId: 'cityId',
+  cityOther: 'cityOther',
+  arrivalDate: 'arrivalDate',
+  departureDate: 'departureDate',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TripStageScalarFieldEnum = (typeof TripStageScalarFieldEnum)[keyof typeof TripStageScalarFieldEnum]
 
 
 export const TripAssignmentScalarFieldEnum = {
@@ -1207,6 +1387,7 @@ export const ExpenseScalarFieldEnum = {
   receiptUrl: 'receiptUrl',
   invoiceNumber: 'invoiceNumber',
   paymentMethod: 'paymentMethod',
+  stageId: 'stageId',
   createdByAdminId: 'createdByAdminId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -1534,6 +1715,8 @@ export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
   trip?: Prisma.TripOmit
   tripDocument?: Prisma.TripDocumentOmit
+  city?: Prisma.CityOmit
+  tripStage?: Prisma.TripStageOmit
   tripAssignment?: Prisma.TripAssignmentOmit
   officeExpense?: Prisma.OfficeExpenseOmit
   expense?: Prisma.ExpenseOmit

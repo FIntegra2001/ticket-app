@@ -169,11 +169,7 @@ export function useRequestTrip() {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...data,
-          startDate: new Date(data.startDate).toISOString(),
-          endDate: new Date(data.endDate).toISOString(),
-        }),
+        body: JSON.stringify(data),
       });
 
       if (!res.ok) {

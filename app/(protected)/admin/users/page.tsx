@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useUserContext } from "@/context/userContext";
 import { formatDate } from "@/lib/utils";
+import Link from "next/link";
 
 type UserStatus = "PENDIENTE" | "ACTIVO" | "BLOQUEADO";
 type AdminUser = {
@@ -128,7 +129,12 @@ export default function AdminUsersPage() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-6 space-y-8">
-      <h1 className="text-2xl font-bold text-gray-900">Usuarios</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold text-gray-900">Usuarios</h1>
+        <Link href="/admin/cities" className="text-sm text-indigo-600 hover:underline">
+          Catálogo de ciudades →
+        </Link>
+      </div>
 
       {isLoading ? (
         <div className="space-y-3">

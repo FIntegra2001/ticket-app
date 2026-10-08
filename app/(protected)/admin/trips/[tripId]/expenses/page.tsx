@@ -1,5 +1,6 @@
 "use client";
 
+import { TripItinerary } from "@/components/trips/TripItinerary";
 import { use, useState } from "react";
 import { useAdminTrip, useUpdateTripStatus } from "@/hooks/useAdminTrips";
 import {
@@ -135,6 +136,7 @@ export default function AdminTripExpenses({
             {trip.project && (
               <p className="text-muted-foreground">Proyecto: {trip.project}</p>
             )}
+            <TripItinerary trip={trip} />
           </div>
 
           {/* Cambiar status */}
@@ -385,6 +387,7 @@ export default function AdminTripExpenses({
           </DialogHeader>
           <ExpenseForm
             tripId={tripId}
+            stages={trip?.stages}
             initialData={editingExpense}
             onSubmit={handleCreateOrUpdate}
             onCancel={() => {

@@ -2,6 +2,12 @@ import { Prisma } from "@/app/generated/prisma/client";
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/db";
 import { updateTripSchema } from "@/lib/validations";
+import {
+  prepareStages,
+  replaceStages,
+  StageError,
+  stagesInclude,
+} from "@/lib/trip-stages.server";
 import { destroyTripDocument } from "@/lib/trip-documents.server";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
@@ -46,6 +52,7 @@ const tripInclude = {
   requestedBy: { select: { id: true, name: true, email: true } },
   approvedBy: { select: { id: true, name: true, email: true } },
   documents: { select: { id: true, type: true } },
+  stages: stagesInclude,
 } as const;
 
 export async function GET(_: Request, { params }: Params) {
@@ -89,7 +96,6 @@ export async function PUT(request: Request, { params }: Params) {
     // Construir objeto de actualización
     const updateData: Prisma.TripUpdateInput = {};
 
-    if (validatedData.city !== undefined) updateData.city = validatedData.city;
     if (validatedData.project !== undefined)
       updateData.project = validatedData.project;
     if (validatedData.notes !== undefined)
@@ -98,31 +104,34 @@ export async function PUT(request: Request, { params }: Params) {
       updateData.status = validatedData.status;
     if (validatedData.numberInvoice !== undefined)
       updateData.numberInvoice = validatedData.numberInvoice;
-    if (validatedData.startDate !== undefined) {
-      updateData.startDate = new Date(validatedData.startDate);
-    }
-    if (validatedData.endDate !== undefined) {
-      updateData.endDate = new Date(validatedData.endDate);
+    // Fase 1: nuevo itinerario → se recalculan ciudad, fechas y comunidad
+    if (validatedData.stages !== undefined) {
+      Object.assign(updateData, await prepareStages(validatedData.stages));
     }
 
-    // ✅ Actualizar asignaciones si vienen
-    if (validatedData.assignedUserIds !== undefined) {
-      await prisma.$transaction([
-        prisma.tripAssignment.deleteMany({ where: { tripId } }),
-        ...validatedData.assignedUserIds.map((userId) =>
-          prisma.tripAssignment.create({ data: { tripId, userId } }),
-        ),
-      ]);
-    }
-
-    const trip = await prisma.trip.update({
-      where: { id: tripId },
-      data: updateData,
-      include: tripInclude,
+    const trip = await prisma.$transaction(async (tx) => {
+      if (validatedData.stages !== undefined) {
+        await replaceStages(tx, tripId, validatedData.stages);
+      }
+      // ✅ Actualizar asignaciones si vienen
+      if (validatedData.assignedUserIds !== undefined) {
+        await tx.tripAssignment.deleteMany({ where: { tripId } });
+        await tx.tripAssignment.createMany({
+          data: validatedData.assignedUserIds.map((userId) => ({ tripId, userId })),
+        });
+      }
+      return tx.trip.update({
+        where: { id: tripId },
+        data: updateData,
+        include: tripInclude,
+      });
     });
 
     return NextResponse.json(trip);
   } catch (error) {
+    if (error instanceof StageError) {
+      return NextResponse.json({ error: error.message }, { status: error.status });
+    }
     if (error instanceof ZodError) {
       return NextResponse.json(
         { error: "Validation error", details: error },

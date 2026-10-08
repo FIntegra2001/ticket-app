@@ -33,6 +33,16 @@ export type Trip = Prisma.TripModel
  */
 export type TripDocument = Prisma.TripDocumentModel
 /**
+ * Model City
+ * 
+ */
+export type City = Prisma.CityModel
+/**
+ * Model TripStage
+ * 
+ */
+export type TripStage = Prisma.TripStageModel
+/**
  * Model TripAssignment
  * 
  */

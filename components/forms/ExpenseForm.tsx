@@ -4,7 +4,7 @@ import * as React from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import type { Expense } from "@/types";
+import type { Expense, TripStage } from "@/types";
 import {
   Select,
   SelectContent,
@@ -18,6 +18,7 @@ import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { ImageCapture } from "./ImageCapture"; // ✅ nuevo componente
 import { compressImage } from "@/lib/compress-image";
+import { pickStageForDate, stageCityName } from "@/lib/trip-stages";
 import {
   getCategoriesByScope,
   type CategoryScope,
@@ -32,6 +33,7 @@ type ExpenseFormValues = {
   invoiceNumber?: string;
   paymentMethod?: string;
   receiptUrl?: string;
+  stageId?: string;
 };
 
 interface ExpenseFormProps {
@@ -46,6 +48,8 @@ interface ExpenseFormProps {
    */
   scope?: CategoryScope;
   initialData?: Expense | null;
+  /** Fase 1: tramos del viaje. Con 2 o más, se pide el destino del gasto. */
+  stages?: TripStage[];
   onSubmit: (values: ExpenseFormValues) => void;
   onCancel: () => void;
 }
@@ -57,6 +61,7 @@ export default function ExpenseForm({
   tripId,
   officeExpenseId,
   scope = "trip",
+  stages = [],
 }: ExpenseFormProps) {
   // Categorías del contexto: en un viaje solo salen las de viaje, en un parte de
   // oficina solo las de oficina.
@@ -73,6 +78,11 @@ export default function ExpenseForm({
   // ✅ Estado string separado para el input de monto — permite borrar y escribir libremente
   const [amountRaw, setAmountRaw] = React.useState<string>(
     initialData ? String(Number(initialData.amount)) : "",
+  );
+  // Fase 1: destino del gasto. Mientras el usuario no lo elija, se propone
+  // el que corresponde por fecha.
+  const [chosenStageId, setChosenStageId] = React.useState<string>(
+    initialData?.stageId || "",
   );
   // ✅ Estado para bloquear el botón de submit mientras se guarda
   const [isSubmitting, setIsSubmitting] = React.useState(false);
@@ -202,7 +212,12 @@ export default function ExpenseForm({
     if (isSubmitting) return; // guardia extra contra doble tap
     setIsSubmitting(true);
     try {
-      onSubmit({ ...values, amount: parsedAmount, receiptUrl });
+      onSubmit({
+        ...values,
+        amount: parsedAmount,
+        receiptUrl,
+        stageId: effectiveStageId,
+      });
     } finally {
       // El padre cierra el modal; si no lo hace, desbloqueamos tras 3s
       setTimeout(() => setIsSubmitting(false), 3000);
@@ -210,6 +225,10 @@ export default function ExpenseForm({
   }
 
   const isProcessing = ocrMutation.isPending || uploadMutation.isPending;
+
+  const sortedStages = [...stages].sort((a, b) => a.position - b.position);
+  const effectiveStageId =
+    chosenStageId || pickStageForDate(sortedStages, values.date)?.id || undefined;
 
   return (
     <form className="space-y-3" onSubmit={handleSubmit}>
@@ -234,6 +253,23 @@ export default function ExpenseForm({
             }
           />
         </div>
+        {sortedStages.length > 1 && (
+          <div>
+            <label className="text-sm font-medium">Destino</label>
+            <Select value={effectiveStageId} onValueChange={setChosenStageId}>
+              <SelectTrigger>
+                <SelectValue placeholder="Elige destino" />
+              </SelectTrigger>
+              <SelectContent>
+                {sortedStages.map((s) => (
+                  <SelectItem key={s.id} value={s.id}>
+                    {s.position}. {stageCityName(s)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
         <div>
           <label className="text-sm font-medium">Monto</label>
           {/* ✅ type="text" + inputMode="decimal" → teclado numérico en móvil,
