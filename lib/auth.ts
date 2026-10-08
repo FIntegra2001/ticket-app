@@ -20,6 +20,15 @@ export const auth = betterAuth({
       prompt: "select_account",
     },
   },
+  // Usuarios que antes entraban con contraseña: al entrar con Microsoft (mismo
+  // email) se vincula su cuenta en vez de rechazar el acceso. Seguro porque
+  // Microsoft solo admite cuentas del tenant de la fundación.
+  account: {
+    accountLinking: {
+      enabled: true,
+      trustedProviders: ["microsoft"],
+    },
+  },
   plugins: [nextCookies()],
   user: {
     additionalFields: {
