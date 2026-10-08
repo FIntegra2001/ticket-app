@@ -42,3 +42,4 @@ next-env.d.ts
 
 # Informes y copias de la migración (contienen datos personales)
 /scripts/out/
+.claude/launch.json
