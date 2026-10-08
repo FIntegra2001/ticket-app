@@ -394,7 +394,9 @@ export const ModelName = {
   Expense: 'Expense',
   Session: 'Session',
   Account: 'Account',
-  Verification: 'Verification'
+  Verification: 'Verification',
+  MileageRate: 'MileageRate',
+  Reimbursement: 'Reimbursement'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -410,7 +412,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "trip" | "tripDocument" | "city" | "tripStage" | "tripAssignment" | "officeExpense" | "expense" | "session" | "account" | "verification"
+    modelProps: "user" | "trip" | "tripDocument" | "city" | "tripStage" | "tripAssignment" | "officeExpense" | "expense" | "session" | "account" | "verification" | "mileageRate" | "reimbursement"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1228,6 +1230,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    MileageRate: {
+      payload: Prisma.$MileageRatePayload<ExtArgs>
+      fields: Prisma.MileageRateFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.MileageRateFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MileageRatePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.MileageRateFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MileageRatePayload>
+        }
+        findFirst: {
+          args: Prisma.MileageRateFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MileageRatePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.MileageRateFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MileageRatePayload>
+        }
+        findMany: {
+          args: Prisma.MileageRateFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MileageRatePayload>[]
+        }
+        create: {
+          args: Prisma.MileageRateCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MileageRatePayload>
+        }
+        createMany: {
+          args: Prisma.MileageRateCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.MileageRateCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MileageRatePayload>[]
+        }
+        delete: {
+          args: Prisma.MileageRateDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MileageRatePayload>
+        }
+        update: {
+          args: Prisma.MileageRateUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MileageRatePayload>
+        }
+        deleteMany: {
+          args: Prisma.MileageRateDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.MileageRateUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.MileageRateUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MileageRatePayload>[]
+        }
+        upsert: {
+          args: Prisma.MileageRateUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MileageRatePayload>
+        }
+        aggregate: {
+          args: Prisma.MileageRateAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateMileageRate>
+        }
+        groupBy: {
+          args: Prisma.MileageRateGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MileageRateGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.MileageRateCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MileageRateCountAggregateOutputType> | number
+        }
+      }
+    }
+    Reimbursement: {
+      payload: Prisma.$ReimbursementPayload<ExtArgs>
+      fields: Prisma.ReimbursementFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ReimbursementFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReimbursementPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ReimbursementFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReimbursementPayload>
+        }
+        findFirst: {
+          args: Prisma.ReimbursementFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReimbursementPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ReimbursementFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReimbursementPayload>
+        }
+        findMany: {
+          args: Prisma.ReimbursementFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReimbursementPayload>[]
+        }
+        create: {
+          args: Prisma.ReimbursementCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReimbursementPayload>
+        }
+        createMany: {
+          args: Prisma.ReimbursementCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ReimbursementCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReimbursementPayload>[]
+        }
+        delete: {
+          args: Prisma.ReimbursementDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReimbursementPayload>
+        }
+        update: {
+          args: Prisma.ReimbursementUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReimbursementPayload>
+        }
+        deleteMany: {
+          args: Prisma.ReimbursementDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ReimbursementUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ReimbursementUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReimbursementPayload>[]
+        }
+        upsert: {
+          args: Prisma.ReimbursementUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReimbursementPayload>
+        }
+        aggregate: {
+          args: Prisma.ReimbursementAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateReimbursement>
+        }
+        groupBy: {
+          args: Prisma.ReimbursementGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ReimbursementGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ReimbursementCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ReimbursementCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1387,6 +1537,13 @@ export const ExpenseScalarFieldEnum = {
   receiptUrl: 'receiptUrl',
   invoiceNumber: 'invoiceNumber',
   paymentMethod: 'paymentMethod',
+  createdById: 'createdById',
+  justification: 'justification',
+  originOffice: 'originOffice',
+  destinationAddress: 'destinationAddress',
+  kmOneWay: 'kmOneWay',
+  kmTotal: 'kmTotal',
+  ratePerKm: 'ratePerKm',
   stageId: 'stageId',
   createdByAdminId: 'createdByAdminId',
   createdAt: 'createdAt',
@@ -1439,6 +1596,31 @@ export const VerificationScalarFieldEnum = {
 } as const
 
 export type VerificationScalarFieldEnum = (typeof VerificationScalarFieldEnum)[keyof typeof VerificationScalarFieldEnum]
+
+
+export const MileageRateScalarFieldEnum = {
+  id: 'id',
+  ratePerKm: 'ratePerKm',
+  validFrom: 'validFrom',
+  createdById: 'createdById',
+  createdAt: 'createdAt'
+} as const
+
+export type MileageRateScalarFieldEnum = (typeof MileageRateScalarFieldEnum)[keyof typeof MileageRateScalarFieldEnum]
+
+
+export const ReimbursementScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  year: 'year',
+  month: 'month',
+  amount: 'amount',
+  paidAt: 'paidAt',
+  paidById: 'paidById',
+  note: 'note'
+} as const
+
+export type ReimbursementScalarFieldEnum = (typeof ReimbursementScalarFieldEnum)[keyof typeof ReimbursementScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1723,6 +1905,8 @@ export type GlobalOmitConfig = {
   session?: Prisma.SessionOmit
   account?: Prisma.AccountOmit
   verification?: Prisma.VerificationOmit
+  mileageRate?: Prisma.MileageRateOmit
+  reimbursement?: Prisma.ReimbursementOmit
 }
 
 /* Types for Logging */

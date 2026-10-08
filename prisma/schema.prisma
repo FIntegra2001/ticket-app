@@ -45,6 +45,7 @@ model User {
 
   // 🆕 Partes de gastos de oficina de este usuario
   officeExpenses OfficeExpense[]
+  reimbursements Reimbursement[]
 
   @@map("user")
 }
@@ -247,6 +248,19 @@ model Expense {
   invoiceNumber String?
   paymentMethod String?
 
+  // Fase 2: quién registró el gasto (a quién se reembolsa un adelanto personal).
+  // null en gastos anteriores a la Fase 2.
+  createdById        String?
+  // Fase 2: proyecto o empresa a la que se acudió (obligatorio en oficina)
+  justification      String?
+  // Fase 2: kilometraje. km de ida × 2 = km computables; importe = km × tarifa.
+  // La tarifa se guarda en cada gasto: un cambio futuro no altera los antiguos.
+  originOffice       String?
+  destinationAddress String?
+  kmOneWay           Decimal?
+  kmTotal            Decimal?
+  ratePerKm          Decimal?
+
   // Fase 1: tramo del viaje al que se imputa el gasto (null en gastos de oficina)
   stageId       String?
   stage         TripStage? @relation(fields: [stageId], references: [id], onDelete: SetNull)
@@ -310,4 +324,33 @@ model Verification {
 
   @@map("verification")
   @@index([identifier])
+}
+// Fase 2: tarifa de kilometraje (€/km) con fecha de vigencia. Se aplica la
+// última cuya `validFrom` sea <= fecha del gasto.
+model MileageRate {
+  id          String   @id @default(cuid())
+  ratePerKm   Decimal
+  validFrom   DateTime
+  createdById String?
+  createdAt   DateTime @default(now())
+
+  @@index([validFrom])
+  @@map("mileage_rates")
+}
+
+// Fase 2: transferencia de fin de mes a un empleado por sus adelantos
+// personales. Guarda el importe pagado para detectar gastos añadidos después.
+model Reimbursement {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  year      Int
+  month     Int
+  amount    Decimal
+  paidAt    DateTime @default(now())
+  paidById  String?
+  note      String?
+
+  @@unique([userId, year, month])
+  @@map("reimbursements")
 }

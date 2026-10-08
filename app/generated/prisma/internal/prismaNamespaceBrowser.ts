@@ -61,7 +61,9 @@ export const ModelName = {
   Expense: 'Expense',
   Session: 'Session',
   Account: 'Account',
-  Verification: 'Verification'
+  Verification: 'Verification',
+  MileageRate: 'MileageRate',
+  Reimbursement: 'Reimbursement'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -200,6 +202,13 @@ export const ExpenseScalarFieldEnum = {
   receiptUrl: 'receiptUrl',
   invoiceNumber: 'invoiceNumber',
   paymentMethod: 'paymentMethod',
+  createdById: 'createdById',
+  justification: 'justification',
+  originOffice: 'originOffice',
+  destinationAddress: 'destinationAddress',
+  kmOneWay: 'kmOneWay',
+  kmTotal: 'kmTotal',
+  ratePerKm: 'ratePerKm',
   stageId: 'stageId',
   createdByAdminId: 'createdByAdminId',
   createdAt: 'createdAt',
@@ -252,6 +261,31 @@ export const VerificationScalarFieldEnum = {
 } as const
 
 export type VerificationScalarFieldEnum = (typeof VerificationScalarFieldEnum)[keyof typeof VerificationScalarFieldEnum]
+
+
+export const MileageRateScalarFieldEnum = {
+  id: 'id',
+  ratePerKm: 'ratePerKm',
+  validFrom: 'validFrom',
+  createdById: 'createdById',
+  createdAt: 'createdAt'
+} as const
+
+export type MileageRateScalarFieldEnum = (typeof MileageRateScalarFieldEnum)[keyof typeof MileageRateScalarFieldEnum]
+
+
+export const ReimbursementScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  year: 'year',
+  month: 'month',
+  amount: 'amount',
+  paidAt: 'paidAt',
+  paidById: 'paidById',
+  note: 'note'
+} as const
+
+export type ReimbursementScalarFieldEnum = (typeof ReimbursementScalarFieldEnum)[keyof typeof ReimbursementScalarFieldEnum]
 
 
 export const SortOrder = {

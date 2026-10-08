@@ -1,4 +1,6 @@
 "use client";
+import { expenseDetail } from "@/lib/mileage";
+import { categoryLabel } from "@/lib/expense-categories";
 
 import { use, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -19,14 +21,8 @@ import { ConfirmDeleteDialog } from "@/components/ui/confirm-delete-dialog";
 import { SkeletonExpenses } from "@/components/SkeletonExpenses";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { officeExpenseTitle } from "@/lib/office-expenses";
-import { EXPENSE_CATEGORIES } from "@/lib/expense-categories";
 import { Lock, LockOpen } from "lucide-react";
 
-/** Label de la categoría tal y como se muestra en el select de oficina. */
-function categoryLabel(value?: string | null): string {
-  if (!value) return "Sin categoría";
-  return EXPENSE_CATEGORIES.find((c) => c.value === value)?.label ?? value;
-}
 
 export default function OfficeExpenseDetailPage({
   params,
@@ -185,6 +181,9 @@ export default function OfficeExpenseDetailPage({
                     {formatDate(exp.date)} · {categoryLabel(exp.category)}
                     {exp.description ? ` · ${exp.description}` : ""}
                   </p>
+                  {expenseDetail(exp) && (
+                    <p className="text-xs text-muted-foreground">{expenseDetail(exp)}</p>
+                  )}
                 </div>
                 <div className="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center">
                   <span className="text-center font-semibold sm:text-right">

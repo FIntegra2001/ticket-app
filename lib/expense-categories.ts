@@ -61,12 +61,12 @@ export const EXPENSE_CATEGORIES = [
   },
   {
     value: "Gasolina",
-    label: "Gasolina",
+    label: "Kilometraje",
     concepto: "GASTOS DE VIAJE",
     subconcepto: "Gasolina viajes",
     subcuenta: "62900000031",
     scope: "trip",
-    ocr: true,
+    ocr: false,
   },
   {
     value: "Ave",
@@ -132,12 +132,12 @@ export const EXPENSE_CATEGORIES = [
   },
   {
     value: "GasolinaOficina",
-    label: "gasolina",
+    label: "Kilometraje",
     concepto: "FUNCIONAMIENTO OFICINA",
     subconcepto: "gasolina oficina",
     subcuenta: "62900000029",
     scope: "office",
-    ocr: true,
+    ocr: false,
   },
   {
     value: "Material",
@@ -229,4 +229,10 @@ export function isValidCategoryForScope(
     isValidCategory(value) &&
     getCategoriesByScope(scope).some((c) => c.value === value)
   );
+}
+
+/** Label visible de una categoría (el `value` guardado si no está en el catálogo). */
+export function categoryLabel(value?: string | null): string {
+  if (!value) return "Sin categoría";
+  return EXPENSE_CATEGORIES.find((c) => c.value === value)?.label ?? value;
 }

@@ -139,6 +139,13 @@ export interface Expense {
   vendor?: string | null;
   description?: string | null;
   receiptUrl?: string | null;
+  // Fase 2
+  justification?: string | null;
+  originOffice?: string | null;
+  destinationAddress?: string | null;
+  kmOneWay?: number | string | null;
+  kmTotal?: number | string | null;
+  ratePerKm?: number | string | null;
   invoiceNumber?: string | null;
   paymentMethod?: string | null;
   stageId?: string | null;          // Fase 1: tramo del viaje
@@ -161,6 +168,10 @@ export interface CreateExpenseDto {
   invoiceNumber?: string;
   paymentMethod?: string;
   stageId?: string;
+  justification?: string;
+  kmOneWay?: number;
+  originOffice?: string;
+  destinationAddress?: string;
 }
 
 export interface UpdateExpenseDto {
@@ -173,6 +184,10 @@ export interface UpdateExpenseDto {
   invoiceNumber?: string;
   paymentMethod?: string;
   stageId?: string;
+  justification?: string;
+  kmOneWay?: number;
+  originOffice?: string;
+  destinationAddress?: string;
 }
 
 export interface PaginatedResponse<T> {

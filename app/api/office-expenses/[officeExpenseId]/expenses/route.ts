@@ -6,6 +6,7 @@ import { createExpenseSchema } from "@/lib/validations";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { ZodError } from "zod";
+import { buildMileageData, MileageError } from "@/lib/mileage.server";
 
 type Params = {
   params: Promise<{ officeExpenseId: string }>;
@@ -108,29 +109,57 @@ export async function POST(request: Request, { params }: Params) {
       );
     }
 
+    // Fase 2: justificación obligatoria; ticket obligatorio salvo kilometraje
+    if (!validatedData.justification) {
+      return NextResponse.json(
+        { error: "Indica la justificación: proyecto o empresa a la que acudiste." },
+        { status: 400 },
+      );
+    }
+    const km = await buildMileageData(validatedData);
+    if (!km && !validatedData.receiptUrl) {
+      return NextResponse.json(
+        { error: "La foto del ticket es obligatoria." },
+        { status: 400 },
+      );
+    }
+    const amount = km?.amountNumber ?? validatedData.amount;
+
     const [expense] = await prisma.$transaction([
       prisma.expense.create({
         data: {
           officeExpenseId,
-          amount: new Prisma.Decimal(validatedData.amount),
+          amount: new Prisma.Decimal(amount),
+          justification: validatedData.justification,
+          createdById: session.user.id,
+          ...(km && {
+            originOffice: km.originOffice,
+            destinationAddress: km.destinationAddress,
+            kmOneWay: km.kmOneWay,
+            kmTotal: km.kmTotal,
+            ratePerKm: km.ratePerKm,
+          }),
           date: new Date(validatedData.date),
           category: validatedData.category,
           vendor: validatedData.vendor,
           description: validatedData.description,
-          receiptUrl: validatedData.receiptUrl,
+          receiptUrl: km ? null : validatedData.receiptUrl,
           invoiceNumber: validatedData.invoiceNumber,
-          paymentMethod: validatedData.paymentMethod,
+          paymentMethod: km ? km.paymentMethod : validatedData.paymentMethod,
           createdByAdminId: isAdmin ? session.user.id : null,
         },
       }),
       prisma.officeExpense.update({
         where: { id: officeExpenseId },
-        data: { totalAmount: { increment: validatedData.amount } },
+        data: { totalAmount: { increment: amount } },
       }),
     ]);
 
     return NextResponse.json(expense, { status: 201 });
   } catch (error) {
+    if (error instanceof MileageError) {
+      return NextResponse.json({ error: error.message }, { status: 400 });
+    }
     if (error instanceof ZodError) {
       return NextResponse.json(
         { error: "Validation error", details: error },

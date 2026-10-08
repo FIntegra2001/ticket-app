@@ -1,5 +1,6 @@
 "use client";
 
+import { paymentMethodLabel } from "@/lib/mileage";
 import { TripItinerary } from "@/components/trips/TripItinerary";
 import { use, useState } from "react";
 import { useAdminTrip, useUpdateTripStatus } from "@/hooks/useAdminTrips";
@@ -278,7 +279,7 @@ export default function AdminTripExpenses({
                       {expense.invoiceNumber ?? "-"}
                     </TableCell>
                     <TableCell className="text-xs">
-                      {expense.paymentMethod ?? "-"}
+                      {paymentMethodLabel(expense.paymentMethod)}
                     </TableCell>
                     <TableCell className="text-right font-semibold">
                       {formatCurrency(expense.amount)}

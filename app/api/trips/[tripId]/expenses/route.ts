@@ -5,6 +5,7 @@ import { createExpenseSchema } from "@/lib/validations";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { ZodError } from "zod";
+import { buildMileageData, MileageError } from "@/lib/mileage.server";
 import { resolveExpenseStage, StageError } from "@/lib/trip-stages.server";
 
 type Params = {
@@ -107,20 +108,33 @@ export async function POST(request: Request, { params }: Params) {
       validatedData.stageId,
     );
 
+    // Fase 2: kilometraje calculado en el servidor
+    const km = await buildMileageData(validatedData);
+    const amount = km?.amountNumber ?? validatedData.amount;
+
     // ✅ Crear expense y actualizar total en una transacción
     const [expense] = await prisma.$transaction([
       prisma.expense.create({
         data: {
           tripId,
           stageId,
-          amount: new Prisma.Decimal(validatedData.amount),
+          amount: new Prisma.Decimal(amount),
+          justification: validatedData.justification,
+          createdById: session.user.id,
+          ...(km && {
+            originOffice: km.originOffice,
+            destinationAddress: km.destinationAddress,
+            kmOneWay: km.kmOneWay,
+            kmTotal: km.kmTotal,
+            ratePerKm: km.ratePerKm,
+          }),
           date: new Date(validatedData.date),
           category: validatedData.category,
           vendor: validatedData.vendor,
           description: validatedData.description,
-          receiptUrl: validatedData.receiptUrl,
+          receiptUrl: km ? null : validatedData.receiptUrl,
           invoiceNumber: validatedData.invoiceNumber,
-          paymentMethod: validatedData.paymentMethod,
+          paymentMethod: km ? km.paymentMethod : validatedData.paymentMethod,
           // ✅ Guardar quién creó el gasto (null si es user)
           createdByAdminId: isAdmin ? session.user.id : null,
         },
@@ -129,7 +143,7 @@ export async function POST(request: Request, { params }: Params) {
         where: { id: tripId },
         data: {
           totalAmount: {
-            increment: validatedData.amount,
+            increment: amount,
           },
         },
       }),
@@ -137,6 +151,9 @@ export async function POST(request: Request, { params }: Params) {
 
     return NextResponse.json(expense, { status: 201 });
   } catch (error) {
+    if (error instanceof MileageError) {
+      return NextResponse.json({ error: error.message }, { status: 400 });
+    }
     if (error instanceof StageError) {
       return NextResponse.json({ error: error.message }, { status: error.status });
     }

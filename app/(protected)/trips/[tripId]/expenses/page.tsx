@@ -1,6 +1,8 @@
 // app/trips/[tripId]/expenses/page.tsx
 "use client";
 
+import { expenseDetail } from "@/lib/mileage";
+import { categoryLabel } from "@/lib/expense-categories";
 import { TripItinerary } from "@/components/trips/TripItinerary";
 import { useParams } from "next/navigation";
 import { useTrip } from "@/hooks/useTrips";
@@ -164,11 +166,14 @@ export default function TripExpensesPage() {
               >
                 <div className="flex-1">
                   <p className="font-medium">
-                    {exp.vendor || exp.category || "Sin categoría"}
+                    {exp.vendor || categoryLabel(exp.category) || "Sin categoría"}
                   </p>
                   <p className="text-xs text-muted-foreground">
                     {formatDate(exp.date)} • {exp.description}
                   </p>
+                  {expenseDetail(exp) && (
+                    <p className="text-xs text-muted-foreground">{expenseDetail(exp)}</p>
+                  )}
                 </div>
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
                   <span className="font-semibold text-center sm:text-right">

@@ -6,6 +6,7 @@ import { updateExpenseSchema } from "@/lib/validations";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { ZodError } from "zod";
+import { buildMileageData, MileageError } from "@/lib/mileage.server";
 
 type Params = {
   params: Promise<{ officeExpenseId: string; expenseId: string }>;
@@ -89,6 +90,27 @@ export async function PUT(request: Request, { params }: Params) {
     if (validatedData.paymentMethod !== undefined)
       updateData.paymentMethod = validatedData.paymentMethod;
 
+    if (validatedData.justification !== undefined)
+      updateData.justification = validatedData.justification;
+    // Fase 2: kilometraje recalculado en el servidor (importe, tarifa, pago)
+    const km = await buildMileageData(
+      { ...validatedData, category: validatedData.category ?? existing.category ?? undefined },
+      existing.date,
+    );
+    if (km) {
+      Object.assign(updateData, {
+        originOffice: km.originOffice,
+        destinationAddress: km.destinationAddress,
+        kmOneWay: km.kmOneWay,
+        kmTotal: km.kmTotal,
+        ratePerKm: km.ratePerKm,
+        paymentMethod: km.paymentMethod,
+        receiptUrl: null,
+        amount: km.amount,
+      });
+      validatedData.amount = km.amountNumber;
+    }
+
     let expense;
     if (validatedData.amount !== undefined) {
       const amountDifference =
@@ -111,6 +133,9 @@ export async function PUT(request: Request, { params }: Params) {
 
     return NextResponse.json(expense);
   } catch (error) {
+    if (error instanceof MileageError) {
+      return NextResponse.json({ error: error.message }, { status: 400 });
+    }
     if (error instanceof ZodError) {
       return NextResponse.json(
         { error: "Validation error", details: error },

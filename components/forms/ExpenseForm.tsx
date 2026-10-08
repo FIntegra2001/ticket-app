@@ -20,6 +20,15 @@ import { ImageCapture } from "./ImageCapture"; // ✅ nuevo componente
 import { compressImage } from "@/lib/compress-image";
 import { pickStageForDate, stageCityName } from "@/lib/trip-stages";
 import {
+  computeMileage,
+  formatKm,
+  isKmCategory,
+  OFFICES,
+  PAYMENT_METHODS,
+  PERSONAL_ADVANCE,
+} from "@/lib/mileage";
+import { useQuery } from "@tanstack/react-query";
+import {
   getCategoriesByScope,
   type CategoryScope,
 } from "@/lib/expense-categories";
@@ -34,6 +43,10 @@ type ExpenseFormValues = {
   paymentMethod?: string;
   receiptUrl?: string;
   stageId?: string;
+  justification?: string;
+  kmOneWay?: number;
+  originOffice?: string;
+  destinationAddress?: string;
 };
 
 interface ExpenseFormProps {
@@ -96,7 +109,33 @@ export default function ExpenseForm({
     invoiceNumber: initialData?.invoiceNumber || "",
     paymentMethod: initialData?.paymentMethod || "Tarjeta",
     receiptUrl: initialData?.receiptUrl || "",
+    justification: initialData?.justification || "",
+    originOffice: initialData?.originOffice || OFFICES[0].value,
+    destinationAddress: initialData?.destinationAddress || "",
   });
+
+  // Fase 2: kilometraje. Un gasto antiguo de "Gasolina" sin km registrados
+  // se sigue editando como gasto con ticket.
+  const legacyFuel =
+    !!initialData && isKmCategory(initialData.category) && initialData.kmOneWay == null;
+  const kmMode = isKmCategory(values.category) && !legacyFuel;
+  const kmCategory = categories.find((c) => isKmCategory(c.value))?.value;
+  const [kmRaw, setKmRaw] = React.useState<string>(
+    initialData?.kmOneWay != null ? String(Number(initialData.kmOneWay)) : "",
+  );
+  const kmOneWay = parseFloat(kmRaw.replace(",", ".")) || 0;
+  const dateKey = values.date.toISOString().slice(0, 10);
+  const { data: rate } = useQuery<{ ratePerKm: number }>({
+    queryKey: ["mileage-rate", dateKey],
+    enabled: kmMode,
+    queryFn: async () => {
+      const res = await fetch(`/api/mileage-rate?date=${dateKey}`);
+      if (!res.ok) throw new Error("Error al cargar la tarifa");
+      return res.json();
+    },
+  });
+  const mileage = computeMileage(kmOneWay, rate?.ratePerKm ?? 0);
+  const needsJustification = scope === "office" || kmMode;
 
   function handleChange(
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -203,9 +242,24 @@ export default function ExpenseForm({
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    // Validar que el monto sea un número válido > 0
-    const parsedAmount = parseFloat(amountRaw.replace(",", "."));
-    if (!amountRaw || isNaN(parsedAmount) || parsedAmount <= 0) {
+    if (needsJustification && !values.justification?.trim()) {
+      toast.error("Indica la justificación (proyecto o empresa)");
+      return;
+    }
+    if (kmMode) {
+      if (kmOneWay <= 0) return void toast.error("Indica los km de ida");
+      if (!values.destinationAddress?.trim())
+        return void toast.error("Indica la dirección de destino");
+      if (!rate) return void toast.error("Cargando la tarifa, espera un momento");
+    } else if (scope === "office" && !receiptUrl) {
+      toast.error("La foto del ticket es obligatoria");
+      return;
+    }
+    // Validar que el monto sea un número válido > 0 (en km lo calcula la app)
+    const parsedAmount = kmMode
+      ? mileage.amount
+      : parseFloat(amountRaw.replace(",", "."));
+    if (isNaN(parsedAmount) || parsedAmount <= 0) {
       toast.error("Introduce un monto válido");
       return;
     }
@@ -215,8 +269,11 @@ export default function ExpenseForm({
       onSubmit({
         ...values,
         amount: parsedAmount,
-        receiptUrl,
+        receiptUrl: kmMode ? undefined : receiptUrl,
         stageId: effectiveStageId,
+        ...(kmMode
+          ? { kmOneWay, paymentMethod: PERSONAL_ADVANCE }
+          : { kmOneWay: undefined, originOffice: undefined, destinationAddress: undefined }),
       });
     } finally {
       // El padre cierra el modal; si no lo hace, desbloqueamos tras 3s
@@ -232,14 +289,110 @@ export default function ExpenseForm({
 
   return (
     <form className="space-y-3" onSubmit={handleSubmit}>
+      {/* Fase 2: tipo de gasto. El kilometraje no lleva ticket. */}
+      {kmCategory && !legacyFuel && (
+        <div className="grid grid-cols-2 gap-2">
+          <Button
+            type="button"
+            variant={!kmMode ? "default" : "outline"}
+            onClick={() =>
+              kmMode && setValues((prev) => ({ ...prev, category: "" }))
+            }
+          >
+            Con ticket
+          </Button>
+          <Button
+            type="button"
+            variant={kmMode ? "default" : "outline"}
+            onClick={() =>
+              setValues((prev) => ({ ...prev, category: kmCategory }))
+            }
+          >
+            Kilometraje
+          </Button>
+        </div>
+      )}
+
       {/* ✅ Componente de captura extraído */}
-      <ImageCapture
-        previewUrl={previewUrl}
-        receiptUrl={receiptUrl}
-        isProcessing={isProcessing}
-        onFileSelected={handleFileSelected}
-        onRemove={handleRemoveImage}
-      />
+      {!kmMode && (
+        <ImageCapture
+          previewUrl={previewUrl}
+          receiptUrl={receiptUrl}
+          isProcessing={isProcessing}
+          onFileSelected={handleFileSelected}
+          onRemove={handleRemoveImage}
+        />
+      )}
+
+      {needsJustification && (
+        <div>
+          <Label htmlFor="justification">Justificación (proyecto o empresa) *</Label>
+          <Input
+            id="justification"
+            name="justification"
+            value={values.justification}
+            onChange={handleChange}
+            placeholder="¿A qué proyecto o empresa fuiste?"
+          />
+        </div>
+      )}
+
+      {kmMode && (
+        <div className="space-y-3 border rounded-lg p-3 bg-muted/30">
+          <div>
+            <Label>Oficina de origen (ida y vuelta)</Label>
+            <Select
+              value={values.originOffice}
+              onValueChange={(v) => setValues((prev) => ({ ...prev, originOffice: v }))}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {OFFICES.map((o) => (
+                  <SelectItem key={o.value} value={o.value}>
+                    {o.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <Label htmlFor="destinationAddress">Dirección de destino *</Label>
+            <Input
+              id="destinationAddress"
+              name="destinationAddress"
+              value={values.destinationAddress}
+              onChange={handleChange}
+              placeholder="Calle, número, ciudad"
+            />
+          </div>
+          <div>
+            <Label htmlFor="kmOneWay">Km de ida *</Label>
+            <Input
+              id="kmOneWay"
+              type="text"
+              inputMode="decimal"
+              value={kmRaw}
+              onChange={(e) => setKmRaw(e.target.value.replace(/[^0-9.,]/g, ""))}
+              placeholder="Solo la ida"
+            />
+          </div>
+          <div className="text-sm bg-white border rounded-md p-3 space-y-1">
+            <p>
+              Ida: <strong>{formatKm(kmOneWay)} km</strong> · Total ida y vuelta:{" "}
+              <strong>{formatKm(mileage.kmTotal)} km</strong>
+            </p>
+            <p>
+              {formatKm(mileage.kmTotal)} km × {rate ? rate.ratePerKm.toFixed(2) : "…"} €/km ={" "}
+              <strong>{mileage.amount.toFixed(2)} €</strong>
+            </p>
+            <p className="text-xs text-muted-foreground">
+              Se paga como adelanto personal (se te reembolsa). No necesita ticket.
+            </p>
+          </div>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         <div>
@@ -270,6 +423,7 @@ export default function ExpenseForm({
             </Select>
           </div>
         )}
+        {!kmMode && (
         <div>
           <label className="text-sm font-medium">Monto</label>
           {/* ✅ type="text" + inputMode="decimal" → teclado numérico en móvil,
@@ -295,8 +449,11 @@ export default function ExpenseForm({
             required
           />
         </div>
+        )}
       </div>
 
+      {!kmMode && (
+      <>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         <div>
           <label className="text-sm font-medium">Categoría</label>
@@ -311,7 +468,7 @@ export default function ExpenseForm({
               <SelectValue placeholder="Selecciona una categoría" />
             </SelectTrigger>
             <SelectContent>
-              {categories.map((cat) => (
+              {categories.filter((cat) => legacyFuel || !isKmCategory(cat.value)).map((cat) => (
                 <SelectItem key={cat.value} value={cat.value}>
                   {cat.label}
                 </SelectItem>
@@ -355,19 +512,18 @@ export default function ExpenseForm({
               <SelectValue placeholder="Selecciona método" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="Tarjeta">Santander tarj debito</SelectItem>
-              <SelectItem value="Efectivo">Efectivo</SelectItem>
-              <SelectItem value="Transferencia">
-                Santander transferencia
-              </SelectItem>
-              <SelectItem value="Domiciliacion">
-                Santander domiciliacion
-              </SelectItem>
-              <SelectItem value="Bankinter">Bankinter</SelectItem>
+              {PAYMENT_METHODS.map((p) => (
+                <SelectItem key={p.value} value={p.value}>
+                  {p.label}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
       </div>
+
+      </>
+      )}
 
       <div>
         <label className="text-sm font-medium">Descripción</label>

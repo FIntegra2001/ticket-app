@@ -6,6 +6,7 @@ import { useAdminTripStats } from "@/hooks/useAdminTrips";
 import { useUsers } from "@/hooks/useUser";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { ReimbursementAlert } from "@/components/admin/ReimbursementAlert";
 
 export default function AdminDashboard() {
   const router = useRouter();
@@ -71,6 +72,7 @@ export default function AdminDashboard() {
 
   return (
     <main className="flex flex-col gap-6 p-6">
+      <ReimbursementAlert />
       <section className="flex flex-col items-center gap-4 md:flex-row md:items-center md:justify-between">
         <div className="text-center md:text-left">
           <h1 className="text-3xl font-bold">Dashboard Administrador</h1>

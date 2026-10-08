@@ -221,6 +221,7 @@ export type UserWhereInput = {
   requestedTrips?: Prisma.TripListRelationFilter
   approvedTrips?: Prisma.TripListRelationFilter
   officeExpenses?: Prisma.OfficeExpenseListRelationFilter
+  reimbursements?: Prisma.ReimbursementListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -240,6 +241,7 @@ export type UserOrderByWithRelationInput = {
   requestedTrips?: Prisma.TripOrderByRelationAggregateInput
   approvedTrips?: Prisma.TripOrderByRelationAggregateInput
   officeExpenses?: Prisma.OfficeExpenseOrderByRelationAggregateInput
+  reimbursements?: Prisma.ReimbursementOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -262,6 +264,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   requestedTrips?: Prisma.TripListRelationFilter
   approvedTrips?: Prisma.TripListRelationFilter
   officeExpenses?: Prisma.OfficeExpenseListRelationFilter
+  reimbursements?: Prisma.ReimbursementListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -311,6 +314,7 @@ export type UserCreateInput = {
   requestedTrips?: Prisma.TripCreateNestedManyWithoutRequestedByInput
   approvedTrips?: Prisma.TripCreateNestedManyWithoutApprovedByInput
   officeExpenses?: Prisma.OfficeExpenseCreateNestedManyWithoutUserInput
+  reimbursements?: Prisma.ReimbursementCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -330,6 +334,7 @@ export type UserUncheckedCreateInput = {
   requestedTrips?: Prisma.TripUncheckedCreateNestedManyWithoutRequestedByInput
   approvedTrips?: Prisma.TripUncheckedCreateNestedManyWithoutApprovedByInput
   officeExpenses?: Prisma.OfficeExpenseUncheckedCreateNestedManyWithoutUserInput
+  reimbursements?: Prisma.ReimbursementUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -349,6 +354,7 @@ export type UserUpdateInput = {
   requestedTrips?: Prisma.TripUpdateManyWithoutRequestedByNestedInput
   approvedTrips?: Prisma.TripUpdateManyWithoutApprovedByNestedInput
   officeExpenses?: Prisma.OfficeExpenseUpdateManyWithoutUserNestedInput
+  reimbursements?: Prisma.ReimbursementUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -368,6 +374,7 @@ export type UserUncheckedUpdateInput = {
   requestedTrips?: Prisma.TripUncheckedUpdateManyWithoutRequestedByNestedInput
   approvedTrips?: Prisma.TripUncheckedUpdateManyWithoutApprovedByNestedInput
   officeExpenses?: Prisma.OfficeExpenseUncheckedUpdateManyWithoutUserNestedInput
+  reimbursements?: Prisma.ReimbursementUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -580,6 +587,20 @@ export type UserUpdateOneRequiredWithoutAccountsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAccountsInput, Prisma.UserUpdateWithoutAccountsInput>, Prisma.UserUncheckedUpdateWithoutAccountsInput>
 }
 
+export type UserCreateNestedOneWithoutReimbursementsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutReimbursementsInput, Prisma.UserUncheckedCreateWithoutReimbursementsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReimbursementsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutReimbursementsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutReimbursementsInput, Prisma.UserUncheckedCreateWithoutReimbursementsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReimbursementsInput
+  upsert?: Prisma.UserUpsertWithoutReimbursementsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutReimbursementsInput, Prisma.UserUpdateWithoutReimbursementsInput>, Prisma.UserUncheckedUpdateWithoutReimbursementsInput>
+}
+
 export type UserCreateWithoutCreatedTripsInput = {
   id?: string
   name?: string | null
@@ -596,6 +617,7 @@ export type UserCreateWithoutCreatedTripsInput = {
   requestedTrips?: Prisma.TripCreateNestedManyWithoutRequestedByInput
   approvedTrips?: Prisma.TripCreateNestedManyWithoutApprovedByInput
   officeExpenses?: Prisma.OfficeExpenseCreateNestedManyWithoutUserInput
+  reimbursements?: Prisma.ReimbursementCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCreatedTripsInput = {
@@ -614,6 +636,7 @@ export type UserUncheckedCreateWithoutCreatedTripsInput = {
   requestedTrips?: Prisma.TripUncheckedCreateNestedManyWithoutRequestedByInput
   approvedTrips?: Prisma.TripUncheckedCreateNestedManyWithoutApprovedByInput
   officeExpenses?: Prisma.OfficeExpenseUncheckedCreateNestedManyWithoutUserInput
+  reimbursements?: Prisma.ReimbursementUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCreatedTripsInput = {
@@ -637,6 +660,7 @@ export type UserCreateWithoutRequestedTripsInput = {
   tripAssignments?: Prisma.TripAssignmentCreateNestedManyWithoutUserInput
   approvedTrips?: Prisma.TripCreateNestedManyWithoutApprovedByInput
   officeExpenses?: Prisma.OfficeExpenseCreateNestedManyWithoutUserInput
+  reimbursements?: Prisma.ReimbursementCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutRequestedTripsInput = {
@@ -655,6 +679,7 @@ export type UserUncheckedCreateWithoutRequestedTripsInput = {
   tripAssignments?: Prisma.TripAssignmentUncheckedCreateNestedManyWithoutUserInput
   approvedTrips?: Prisma.TripUncheckedCreateNestedManyWithoutApprovedByInput
   officeExpenses?: Prisma.OfficeExpenseUncheckedCreateNestedManyWithoutUserInput
+  reimbursements?: Prisma.ReimbursementUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutRequestedTripsInput = {
@@ -678,6 +703,7 @@ export type UserCreateWithoutApprovedTripsInput = {
   tripAssignments?: Prisma.TripAssignmentCreateNestedManyWithoutUserInput
   requestedTrips?: Prisma.TripCreateNestedManyWithoutRequestedByInput
   officeExpenses?: Prisma.OfficeExpenseCreateNestedManyWithoutUserInput
+  reimbursements?: Prisma.ReimbursementCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutApprovedTripsInput = {
@@ -696,6 +722,7 @@ export type UserUncheckedCreateWithoutApprovedTripsInput = {
   tripAssignments?: Prisma.TripAssignmentUncheckedCreateNestedManyWithoutUserInput
   requestedTrips?: Prisma.TripUncheckedCreateNestedManyWithoutRequestedByInput
   officeExpenses?: Prisma.OfficeExpenseUncheckedCreateNestedManyWithoutUserInput
+  reimbursements?: Prisma.ReimbursementUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutApprovedTripsInput = {
@@ -730,6 +757,7 @@ export type UserUpdateWithoutCreatedTripsInput = {
   requestedTrips?: Prisma.TripUpdateManyWithoutRequestedByNestedInput
   approvedTrips?: Prisma.TripUpdateManyWithoutApprovedByNestedInput
   officeExpenses?: Prisma.OfficeExpenseUpdateManyWithoutUserNestedInput
+  reimbursements?: Prisma.ReimbursementUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCreatedTripsInput = {
@@ -748,6 +776,7 @@ export type UserUncheckedUpdateWithoutCreatedTripsInput = {
   requestedTrips?: Prisma.TripUncheckedUpdateManyWithoutRequestedByNestedInput
   approvedTrips?: Prisma.TripUncheckedUpdateManyWithoutApprovedByNestedInput
   officeExpenses?: Prisma.OfficeExpenseUncheckedUpdateManyWithoutUserNestedInput
+  reimbursements?: Prisma.ReimbursementUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutRequestedTripsInput = {
@@ -777,6 +806,7 @@ export type UserUpdateWithoutRequestedTripsInput = {
   tripAssignments?: Prisma.TripAssignmentUpdateManyWithoutUserNestedInput
   approvedTrips?: Prisma.TripUpdateManyWithoutApprovedByNestedInput
   officeExpenses?: Prisma.OfficeExpenseUpdateManyWithoutUserNestedInput
+  reimbursements?: Prisma.ReimbursementUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutRequestedTripsInput = {
@@ -795,6 +825,7 @@ export type UserUncheckedUpdateWithoutRequestedTripsInput = {
   tripAssignments?: Prisma.TripAssignmentUncheckedUpdateManyWithoutUserNestedInput
   approvedTrips?: Prisma.TripUncheckedUpdateManyWithoutApprovedByNestedInput
   officeExpenses?: Prisma.OfficeExpenseUncheckedUpdateManyWithoutUserNestedInput
+  reimbursements?: Prisma.ReimbursementUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutApprovedTripsInput = {
@@ -824,6 +855,7 @@ export type UserUpdateWithoutApprovedTripsInput = {
   tripAssignments?: Prisma.TripAssignmentUpdateManyWithoutUserNestedInput
   requestedTrips?: Prisma.TripUpdateManyWithoutRequestedByNestedInput
   officeExpenses?: Prisma.OfficeExpenseUpdateManyWithoutUserNestedInput
+  reimbursements?: Prisma.ReimbursementUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutApprovedTripsInput = {
@@ -842,6 +874,7 @@ export type UserUncheckedUpdateWithoutApprovedTripsInput = {
   tripAssignments?: Prisma.TripAssignmentUncheckedUpdateManyWithoutUserNestedInput
   requestedTrips?: Prisma.TripUncheckedUpdateManyWithoutRequestedByNestedInput
   officeExpenses?: Prisma.OfficeExpenseUncheckedUpdateManyWithoutUserNestedInput
+  reimbursements?: Prisma.ReimbursementUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutTripAssignmentsInput = {
@@ -860,6 +893,7 @@ export type UserCreateWithoutTripAssignmentsInput = {
   requestedTrips?: Prisma.TripCreateNestedManyWithoutRequestedByInput
   approvedTrips?: Prisma.TripCreateNestedManyWithoutApprovedByInput
   officeExpenses?: Prisma.OfficeExpenseCreateNestedManyWithoutUserInput
+  reimbursements?: Prisma.ReimbursementCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTripAssignmentsInput = {
@@ -878,6 +912,7 @@ export type UserUncheckedCreateWithoutTripAssignmentsInput = {
   requestedTrips?: Prisma.TripUncheckedCreateNestedManyWithoutRequestedByInput
   approvedTrips?: Prisma.TripUncheckedCreateNestedManyWithoutApprovedByInput
   officeExpenses?: Prisma.OfficeExpenseUncheckedCreateNestedManyWithoutUserInput
+  reimbursements?: Prisma.ReimbursementUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTripAssignmentsInput = {
@@ -912,6 +947,7 @@ export type UserUpdateWithoutTripAssignmentsInput = {
   requestedTrips?: Prisma.TripUpdateManyWithoutRequestedByNestedInput
   approvedTrips?: Prisma.TripUpdateManyWithoutApprovedByNestedInput
   officeExpenses?: Prisma.OfficeExpenseUpdateManyWithoutUserNestedInput
+  reimbursements?: Prisma.ReimbursementUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTripAssignmentsInput = {
@@ -930,6 +966,7 @@ export type UserUncheckedUpdateWithoutTripAssignmentsInput = {
   requestedTrips?: Prisma.TripUncheckedUpdateManyWithoutRequestedByNestedInput
   approvedTrips?: Prisma.TripUncheckedUpdateManyWithoutApprovedByNestedInput
   officeExpenses?: Prisma.OfficeExpenseUncheckedUpdateManyWithoutUserNestedInput
+  reimbursements?: Prisma.ReimbursementUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutOfficeExpensesInput = {
@@ -948,6 +985,7 @@ export type UserCreateWithoutOfficeExpensesInput = {
   tripAssignments?: Prisma.TripAssignmentCreateNestedManyWithoutUserInput
   requestedTrips?: Prisma.TripCreateNestedManyWithoutRequestedByInput
   approvedTrips?: Prisma.TripCreateNestedManyWithoutApprovedByInput
+  reimbursements?: Prisma.ReimbursementCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutOfficeExpensesInput = {
@@ -966,6 +1004,7 @@ export type UserUncheckedCreateWithoutOfficeExpensesInput = {
   tripAssignments?: Prisma.TripAssignmentUncheckedCreateNestedManyWithoutUserInput
   requestedTrips?: Prisma.TripUncheckedCreateNestedManyWithoutRequestedByInput
   approvedTrips?: Prisma.TripUncheckedCreateNestedManyWithoutApprovedByInput
+  reimbursements?: Prisma.ReimbursementUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutOfficeExpensesInput = {
@@ -1000,6 +1039,7 @@ export type UserUpdateWithoutOfficeExpensesInput = {
   tripAssignments?: Prisma.TripAssignmentUpdateManyWithoutUserNestedInput
   requestedTrips?: Prisma.TripUpdateManyWithoutRequestedByNestedInput
   approvedTrips?: Prisma.TripUpdateManyWithoutApprovedByNestedInput
+  reimbursements?: Prisma.ReimbursementUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOfficeExpensesInput = {
@@ -1018,6 +1058,7 @@ export type UserUncheckedUpdateWithoutOfficeExpensesInput = {
   tripAssignments?: Prisma.TripAssignmentUncheckedUpdateManyWithoutUserNestedInput
   requestedTrips?: Prisma.TripUncheckedUpdateManyWithoutRequestedByNestedInput
   approvedTrips?: Prisma.TripUncheckedUpdateManyWithoutApprovedByNestedInput
+  reimbursements?: Prisma.ReimbursementUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSessionsInput = {
@@ -1036,6 +1077,7 @@ export type UserCreateWithoutSessionsInput = {
   requestedTrips?: Prisma.TripCreateNestedManyWithoutRequestedByInput
   approvedTrips?: Prisma.TripCreateNestedManyWithoutApprovedByInput
   officeExpenses?: Prisma.OfficeExpenseCreateNestedManyWithoutUserInput
+  reimbursements?: Prisma.ReimbursementCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -1054,6 +1096,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   requestedTrips?: Prisma.TripUncheckedCreateNestedManyWithoutRequestedByInput
   approvedTrips?: Prisma.TripUncheckedCreateNestedManyWithoutApprovedByInput
   officeExpenses?: Prisma.OfficeExpenseUncheckedCreateNestedManyWithoutUserInput
+  reimbursements?: Prisma.ReimbursementUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -1088,6 +1131,7 @@ export type UserUpdateWithoutSessionsInput = {
   requestedTrips?: Prisma.TripUpdateManyWithoutRequestedByNestedInput
   approvedTrips?: Prisma.TripUpdateManyWithoutApprovedByNestedInput
   officeExpenses?: Prisma.OfficeExpenseUpdateManyWithoutUserNestedInput
+  reimbursements?: Prisma.ReimbursementUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -1106,6 +1150,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   requestedTrips?: Prisma.TripUncheckedUpdateManyWithoutRequestedByNestedInput
   approvedTrips?: Prisma.TripUncheckedUpdateManyWithoutApprovedByNestedInput
   officeExpenses?: Prisma.OfficeExpenseUncheckedUpdateManyWithoutUserNestedInput
+  reimbursements?: Prisma.ReimbursementUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAccountsInput = {
@@ -1124,6 +1169,7 @@ export type UserCreateWithoutAccountsInput = {
   requestedTrips?: Prisma.TripCreateNestedManyWithoutRequestedByInput
   approvedTrips?: Prisma.TripCreateNestedManyWithoutApprovedByInput
   officeExpenses?: Prisma.OfficeExpenseCreateNestedManyWithoutUserInput
+  reimbursements?: Prisma.ReimbursementCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAccountsInput = {
@@ -1142,6 +1188,7 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   requestedTrips?: Prisma.TripUncheckedCreateNestedManyWithoutRequestedByInput
   approvedTrips?: Prisma.TripUncheckedCreateNestedManyWithoutApprovedByInput
   officeExpenses?: Prisma.OfficeExpenseUncheckedCreateNestedManyWithoutUserInput
+  reimbursements?: Prisma.ReimbursementUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAccountsInput = {
@@ -1176,6 +1223,7 @@ export type UserUpdateWithoutAccountsInput = {
   requestedTrips?: Prisma.TripUpdateManyWithoutRequestedByNestedInput
   approvedTrips?: Prisma.TripUpdateManyWithoutApprovedByNestedInput
   officeExpenses?: Prisma.OfficeExpenseUpdateManyWithoutUserNestedInput
+  reimbursements?: Prisma.ReimbursementUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -1189,6 +1237,99 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  createdTrips?: Prisma.TripUncheckedUpdateManyWithoutCreatedByAdminNestedInput
+  tripAssignments?: Prisma.TripAssignmentUncheckedUpdateManyWithoutUserNestedInput
+  requestedTrips?: Prisma.TripUncheckedUpdateManyWithoutRequestedByNestedInput
+  approvedTrips?: Prisma.TripUncheckedUpdateManyWithoutApprovedByNestedInput
+  officeExpenses?: Prisma.OfficeExpenseUncheckedUpdateManyWithoutUserNestedInput
+  reimbursements?: Prisma.ReimbursementUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutReimbursementsInput = {
+  id?: string
+  name?: string | null
+  email: string
+  emailVerified: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  createdTrips?: Prisma.TripCreateNestedManyWithoutCreatedByAdminInput
+  tripAssignments?: Prisma.TripAssignmentCreateNestedManyWithoutUserInput
+  requestedTrips?: Prisma.TripCreateNestedManyWithoutRequestedByInput
+  approvedTrips?: Prisma.TripCreateNestedManyWithoutApprovedByInput
+  officeExpenses?: Prisma.OfficeExpenseCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutReimbursementsInput = {
+  id?: string
+  name?: string | null
+  email: string
+  emailVerified: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  createdTrips?: Prisma.TripUncheckedCreateNestedManyWithoutCreatedByAdminInput
+  tripAssignments?: Prisma.TripAssignmentUncheckedCreateNestedManyWithoutUserInput
+  requestedTrips?: Prisma.TripUncheckedCreateNestedManyWithoutRequestedByInput
+  approvedTrips?: Prisma.TripUncheckedCreateNestedManyWithoutApprovedByInput
+  officeExpenses?: Prisma.OfficeExpenseUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutReimbursementsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutReimbursementsInput, Prisma.UserUncheckedCreateWithoutReimbursementsInput>
+}
+
+export type UserUpsertWithoutReimbursementsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutReimbursementsInput, Prisma.UserUncheckedUpdateWithoutReimbursementsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutReimbursementsInput, Prisma.UserUncheckedCreateWithoutReimbursementsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutReimbursementsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutReimbursementsInput, Prisma.UserUncheckedUpdateWithoutReimbursementsInput>
+}
+
+export type UserUpdateWithoutReimbursementsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  createdTrips?: Prisma.TripUpdateManyWithoutCreatedByAdminNestedInput
+  tripAssignments?: Prisma.TripAssignmentUpdateManyWithoutUserNestedInput
+  requestedTrips?: Prisma.TripUpdateManyWithoutRequestedByNestedInput
+  approvedTrips?: Prisma.TripUpdateManyWithoutApprovedByNestedInput
+  officeExpenses?: Prisma.OfficeExpenseUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutReimbursementsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   createdTrips?: Prisma.TripUncheckedUpdateManyWithoutCreatedByAdminNestedInput
   tripAssignments?: Prisma.TripAssignmentUncheckedUpdateManyWithoutUserNestedInput
   requestedTrips?: Prisma.TripUncheckedUpdateManyWithoutRequestedByNestedInput
@@ -1209,6 +1350,7 @@ export type UserCountOutputType = {
   requestedTrips: number
   approvedTrips: number
   officeExpenses: number
+  reimbursements: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1219,6 +1361,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   requestedTrips?: boolean | UserCountOutputTypeCountRequestedTripsArgs
   approvedTrips?: boolean | UserCountOutputTypeCountApprovedTripsArgs
   officeExpenses?: boolean | UserCountOutputTypeCountOfficeExpensesArgs
+  reimbursements?: boolean | UserCountOutputTypeCountReimbursementsArgs
 }
 
 /**
@@ -1280,6 +1423,13 @@ export type UserCountOutputTypeCountOfficeExpensesArgs<ExtArgs extends runtime.T
   where?: Prisma.OfficeExpenseWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountReimbursementsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ReimbursementWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1298,6 +1448,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   requestedTrips?: boolean | Prisma.User$requestedTripsArgs<ExtArgs>
   approvedTrips?: boolean | Prisma.User$approvedTripsArgs<ExtArgs>
   officeExpenses?: boolean | Prisma.User$officeExpensesArgs<ExtArgs>
+  reimbursements?: boolean | Prisma.User$reimbursementsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -1346,6 +1497,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   requestedTrips?: boolean | Prisma.User$requestedTripsArgs<ExtArgs>
   approvedTrips?: boolean | Prisma.User$approvedTripsArgs<ExtArgs>
   officeExpenses?: boolean | Prisma.User$officeExpensesArgs<ExtArgs>
+  reimbursements?: boolean | Prisma.User$reimbursementsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1361,6 +1513,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     requestedTrips: Prisma.$TripPayload<ExtArgs>[]
     approvedTrips: Prisma.$TripPayload<ExtArgs>[]
     officeExpenses: Prisma.$OfficeExpensePayload<ExtArgs>[]
+    reimbursements: Prisma.$ReimbursementPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1773,6 +1926,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   requestedTrips<T extends Prisma.User$requestedTripsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$requestedTripsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TripPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   approvedTrips<T extends Prisma.User$approvedTripsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$approvedTripsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TripPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   officeExpenses<T extends Prisma.User$officeExpensesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$officeExpensesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OfficeExpensePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  reimbursements<T extends Prisma.User$reimbursementsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reimbursementsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReimbursementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2364,6 +2518,30 @@ export type User$officeExpensesArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   distinct?: Prisma.OfficeExpenseScalarFieldEnum | Prisma.OfficeExpenseScalarFieldEnum[]
+}
+
+/**
+ * User.reimbursements
+ */
+export type User$reimbursementsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Reimbursement
+   */
+  select?: Prisma.ReimbursementSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Reimbursement
+   */
+  omit?: Prisma.ReimbursementOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ReimbursementInclude<ExtArgs> | null
+  where?: Prisma.ReimbursementWhereInput
+  orderBy?: Prisma.ReimbursementOrderByWithRelationInput | Prisma.ReimbursementOrderByWithRelationInput[]
+  cursor?: Prisma.ReimbursementWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ReimbursementScalarFieldEnum | Prisma.ReimbursementScalarFieldEnum[]
 }
 
 /**

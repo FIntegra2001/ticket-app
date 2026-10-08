@@ -76,14 +76,14 @@ export default function Navigation() {
             )}
             {user?.role === "ADMIN" && (
               <Link
-                href="/admin/users"
+                href="/admin/settings"
                 className={`relative px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                  isActive("/admin/users")
+                  isActive("/admin/settings") || isActive("/admin/users")
                     ? "text-indigo-600 bg-indigo-50"
                     : "text-gray-600 hover:text-gray-900"
                 }`}
               >
-                Usuarios
+                Ajustes
                 {pendingUsers > 0 && (
                   <span className="absolute -top-1 -right-1 min-w-5 h-5 px-1 rounded-full bg-amber-500 text-white text-xs flex items-center justify-center">
                     {pendingUsers}

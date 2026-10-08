@@ -72,3 +72,13 @@ export type Account = Prisma.AccountModel
  * 
  */
 export type Verification = Prisma.VerificationModel
+/**
+ * Model MileageRate
+ * 
+ */
+export type MileageRate = Prisma.MileageRateModel
+/**
+ * Model Reimbursement
+ * 
+ */
+export type Reimbursement = Prisma.ReimbursementModel

@@ -64,8 +64,18 @@ export const updateOfficeExpenseSchema = z.object({
 });
 
 // ============= EXPENSE SCHEMAS =============
+// Fase 2: justificación y kilometraje. El importe de un kilometraje lo
+// calcula el servidor (lib/mileage.server.ts), no se fía del cliente.
+const phase2ExpenseFields = {
+  justification: z.string().trim().optional(),
+  kmOneWay: z.number().positive().optional(),
+  originOffice: z.string().optional(),
+  destinationAddress: z.string().optional(),
+};
+
 export const createExpenseSchema = z.object({
   stageId: z.string().optional(), // Fase 1: tramo del viaje (si falta, por fecha)
+  ...phase2ExpenseFields,
   date: z.string().datetime().or(z.date()),
   amount: z.number().positive("El monto debe ser mayor a 0"),
   category: z.string().optional(),
@@ -78,6 +88,7 @@ export const createExpenseSchema = z.object({
 
 export const updateExpenseSchema = z.object({
   stageId: z.string().optional(),
+  ...phase2ExpenseFields,
   date: z.string().datetime().or(z.date()).optional(),
   amount: z.number().positive().optional(),
   category: z.string().optional(),
