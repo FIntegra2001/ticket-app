@@ -11,9 +11,9 @@ interface UseUsersResult {
   error: string | null;
 }
 
-export function useUsers(): UseUsersResult {
+export function useUsers(enabled = true): UseUsersResult {
   const [users, setUsers] = useState<User[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(enabled);
   const [error, setError] = useState<string | null>(null);
 
   const fetchUsers = async () => {
@@ -35,8 +35,8 @@ export function useUsers(): UseUsersResult {
   };
 
   useEffect(() => {
-    fetchUsers();
-  }, []);
+    if (enabled) fetchUsers();
+  }, [enabled]);
 
   return { users, isLoading, error };
 }

@@ -17,6 +17,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    const isAdmin = session.user.role === "ADMIN";
     const formData = await request.formData();
     const image = formData.get("image") as File;
     const tripId = formData.get("tripId") as string | null;
@@ -44,8 +45,11 @@ export async function POST(request: NextRequest) {
     let folder: string;
 
     if (tripId) {
-      const trip = await prisma.trip.findUnique({
-        where: { id: tripId },
+      // Solo un usuario asignado al viaje (o un ADMIN) puede subirle tickets
+      const trip = await prisma.trip.findFirst({
+        where: isAdmin
+          ? { id: tripId }
+          : { id: tripId, assignedUsers: { some: { userId: session.user.id } } },
         select: { numberInvoice: true, city: true, createdAt: true },
       });
 
@@ -60,8 +64,11 @@ export async function POST(request: NextRequest) {
 
       folder = `tickets/${year}/${month}/${folderName}`;
     } else {
-      const parte = await prisma.officeExpense.findUnique({
-        where: { id: officeExpenseId! },
+      // Solo el dueño del parte (o un ADMIN) puede subirle tickets
+      const parte = await prisma.officeExpense.findFirst({
+        where: isAdmin
+          ? { id: officeExpenseId! }
+          : { id: officeExpenseId!, userId: session.user.id },
         select: {
           userId: true,
           year: true,

@@ -7,6 +7,12 @@ datasource db {
   provider = "postgresql"
 }
 
+enum UserStatus {
+  PENDIENTE
+  ACTIVO
+  BLOQUEADO
+}
+
 enum UserRole {
   USER
   ADMIN
@@ -21,6 +27,10 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @default(now()) @updatedAt
   role          UserRole  @default(USER)
+  // Fase 0: las cuentas nuevas nacen PENDIENTE (lo fija lib/auth.ts) hasta que
+  // un ADMIN las aprueba. El default de BD es ACTIVO para que los usuarios que
+  // ya existían no pierdan el acceso al aplicar el cambio.
+  status        UserStatus @default(ACTIVO)
   sessions      Session[]
   accounts      Account[]
 

@@ -51,7 +51,8 @@ export default function TripForm({
   mode = "admin",
 }: TripFormProps) {
   const isRequest = mode === "request";
-  const { users } = useUsers();
+  // La lista de usuarios solo la puede pedir un ADMIN (modo "admin")
+  const { users } = useUsers(!isRequest);
 
   // ✅ Inicializar usuarios asignados desde datos existentes
   const [selectedUserIds, setSelectedUserIds] = React.useState<string[]>(

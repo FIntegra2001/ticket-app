@@ -85,7 +85,8 @@ export default async function RootLayout({
 
   let currentUser: User | null = null;
 
-  if (session?.user) {
+  // Un usuario PENDIENTE/BLOQUEADO no ve navegación (solo la pantalla /pendiente)
+  if (session?.user && session.user.status === "ACTIVO") {
     const sessionUserRole = session.user.role;
 
     if (isValidUserRole(sessionUserRole)) {

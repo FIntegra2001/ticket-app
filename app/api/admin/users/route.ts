@@ -3,7 +3,7 @@ import prisma from "@/lib/db";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 
-// Lista de usuarios ACTIVOS para asignarlos a viajes. Solo ADMIN.
+// Gestión de usuarios (pantalla /admin/users). Solo ADMIN.
 export async function GET() {
   try {
     const session = await auth.api.getSession({ headers: await headers() });
@@ -15,18 +15,21 @@ export async function GET() {
     }
 
     const users = await prisma.user.findMany({
-      where: { status: "ACTIVO" },
       select: {
         id: true,
         name: true,
         email: true,
         role: true,
+        status: true,
+        createdAt: true,
       },
-    })
+      // Pendientes primero, luego por fecha de alta
+      orderBy: [{ status: "asc" }, { createdAt: "desc" }],
+    });
 
-    return NextResponse.json(users)
+    return NextResponse.json(users);
   } catch (error) {
-    console.error("Error fetching users:", error)
-    return NextResponse.json({ error: "Error al cargar usuarios" }, { status: 500 })
+    console.error("Error fetching users:", error);
+    return NextResponse.json({ error: "Error al cargar usuarios" }, { status: 500 });
   }
 }

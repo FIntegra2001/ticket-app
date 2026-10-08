@@ -3,12 +3,26 @@
 
 import { useUserContext } from "@/context/userContext";
 import Link from "next/link";
+import { useQuery } from "@tanstack/react-query";
 import { usePathname } from "next/navigation";
 import { UserBadge } from "./UserBadge";
 
 export default function Navigation() {
   const pathname = usePathname();
   const { user } = useUserContext();
+
+  // Aviso al ADMIN de cuentas pendientes de aprobar (comparte caché con /admin/users)
+  const { data: pendingUsers = 0 } = useQuery({
+    queryKey: ["admin-users-pending"],
+    enabled: user?.role === "ADMIN",
+    refetchInterval: 60_000,
+    queryFn: async () => {
+      const res = await fetch("/api/admin/users");
+      if (!res.ok) return 0;
+      const users: { status: string }[] = await res.json();
+      return users.filter((u) => u.status === "PENDIENTE").length;
+    },
+  });
 
   const isActive = (path: string) => {
     return pathname === path;
@@ -58,6 +72,23 @@ export default function Navigation() {
                 }`}
               >
                 Viajes
+              </Link>
+            )}
+            {user?.role === "ADMIN" && (
+              <Link
+                href="/admin/users"
+                className={`relative px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                  isActive("/admin/users")
+                    ? "text-indigo-600 bg-indigo-50"
+                    : "text-gray-600 hover:text-gray-900"
+                }`}
+              >
+                Usuarios
+                {pendingUsers > 0 && (
+                  <span className="absolute -top-1 -right-1 min-w-5 h-5 px-1 rounded-full bg-amber-500 text-white text-xs flex items-center justify-center">
+                    {pendingUsers}
+                  </span>
+                )}
               </Link>
             )}
             {user?.role === "USER" && (
