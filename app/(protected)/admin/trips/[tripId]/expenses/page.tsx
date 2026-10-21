@@ -1,6 +1,8 @@
 "use client";
 
 import { paymentMethodLabel } from "@/lib/mileage";
+import { InvoiceField } from "@/components/trips/InvoiceField";
+import { HotelStatus } from "@/components/trips/HotelStatus";
 import { TripItinerary } from "@/components/trips/TripItinerary";
 import { use, useState } from "react";
 import { useAdminTrip, useUpdateTripStatus } from "@/hooks/useAdminTrips";
@@ -113,7 +115,7 @@ export default function AdminTripExpenses({
       <div className="max-w-6xl mx-auto p-8 text-center py-12">
         <h2 className="text-2xl font-bold mb-4">Viaje no encontrado</h2>
         <Button asChild>
-          <Link href="/admin">Volver al panel</Link>
+          <Link href="/admin/alltrips">Volver a viajes</Link>
         </Button>
       </div>
     );
@@ -123,9 +125,9 @@ export default function AdminTripExpenses({
     <div className="max-w-6xl mx-auto p-8">
       {/* Volver */}
       <Button variant="outline" asChild className="mb-6">
-        <Link href="/admin">
+        <Link href="/admin/alltrips">
           <ArrowLeft className="w-4 h-4 mr-2" />
-          Volver al panel
+          Volver a viajes
         </Link>
       </Button>
 
@@ -137,6 +139,8 @@ export default function AdminTripExpenses({
             {trip.project && (
               <p className="text-muted-foreground">Proyecto: {trip.project}</p>
             )}
+            <InvoiceField key={trip.numberInvoice ?? ""} trip={trip} />
+            {trip.status !== "RECHAZADO" && <HotelStatus trip={trip} />}
             <TripItinerary trip={trip} />
           </div>
 

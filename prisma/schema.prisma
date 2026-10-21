@@ -94,6 +94,11 @@ model Trip {
   // Comunidad autónoma del viaje (todas sus ciudades son de la misma).
   region        String?
 
+  // Fase 3: seguimiento del hotel para el reporte semanal. "Pedido" lo marca
+  // el ADMIN; "confirmado" se pone solo al subir un documento RESERVA.
+  hotelRequestedAt DateTime?
+  hotelConfirmedAt DateTime?
+
   // ✅ NUEVO: usuarios asignados (many-to-many)
   assignedUsers TripAssignment[]
   expenses      Expense[]

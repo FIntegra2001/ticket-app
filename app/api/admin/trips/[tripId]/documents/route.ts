@@ -111,6 +111,15 @@ export async function POST(request: NextRequest, { params }: Params) {
       },
     });
 
+    // Fase 3: subir la reserva (el correo de confirmación del hotel) marca el
+    // hotel como confirmado, si no lo estaba ya.
+    if (type === "RESERVA") {
+      await prisma.trip.updateMany({
+        where: { id: tripId, hotelConfirmedAt: null },
+        data: { hotelConfirmedAt: new Date() },
+      });
+    }
+
     return NextResponse.json(document, { status: 201 });
   } catch (error) {
     console.error("Error uploading trip document:", error);

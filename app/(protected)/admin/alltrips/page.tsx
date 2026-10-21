@@ -1,6 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import PendingTripRequests from "@/components/admin/PendingTripRequests";
+import { ExportDialog } from "@/components/admin/ExportDialog";
+import { isTripTab, TRIP_TABS, type TripTab } from "@/lib/trip-tabs";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -21,9 +25,26 @@ import TripForm from "@/components/forms/TripForm";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Loader2, Plus, Map } from "lucide-react";
 
+// useSearchParams exige un límite de Suspense en Next 16
 export default function AdminAllTripsPage() {
+  return (
+    <Suspense>
+      <AdminAllTrips />
+    </Suspense>
+  );
+}
+
+function AdminAllTrips() {
+  // Fase 3: pestaña activa en la URL (?tab=), para volver a ella desde el detalle
+  const router = useRouter();
+  const pathname = usePathname();
+  const tabParam = useSearchParams().get("tab");
+  const tab: TripTab = isTripTab(tabParam) ? tabParam : "proximos";
+  const setTab = (t: TripTab) => router.replace(`${pathname}?tab=${t}`, { scroll: false });
+
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useAdminTrips();
+    useAdminTrips(tab);
+  const counts = data?.pages[0]?.counts;
 
   const createTrip = useCreateTrip();
   const updateTrip = useUpdateTrip();
@@ -77,14 +98,15 @@ export default function AdminAllTripsPage() {
     <div className="max-w-7xl mx-auto p-8">
       <div className="flex flex-col items-center gap-4 md:flex-row md:items-center md:justify-between">
         <div className="text-center md:text-left">
-          <h1 className="text-4xl font-bold text-gray-900">Todos los Viajes</h1>
+          <h1 className="text-4xl font-bold text-gray-900">Viajes</h1>
           <p className="text-muted-foreground mt-1">
-            Crea, edita y gestiona los viajes de todos los usuarios
+            Solicitudes por aprobar, próximos viajes y realizados
           </p>
         </div>
 
         {/* ✅ Dialog para crear/editar viaje — solo visible para ADMIN */}
         <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto mb-4">
+          <ExportDialog />
           <Dialog
             open={isOpen}
             onOpenChange={(open) => {
@@ -117,7 +139,43 @@ export default function AdminAllTripsPage() {
         </div>
       </div>
 
-      {allTrips.length > 0 ? (
+      {/* Fase 3: pestañas */}
+      <div className="flex gap-1 border-b mb-6 overflow-x-auto">
+        {TRIP_TABS.map((t) => (
+          <button
+            key={t.value}
+            onClick={() => setTab(t.value)}
+            className={`px-4 py-2 -mb-px border-b-2 text-sm font-medium whitespace-nowrap ${
+              tab === t.value
+                ? "border-indigo-600 text-indigo-700"
+                : "border-transparent text-gray-500 hover:text-gray-800"
+            }`}
+          >
+            {t.label}
+            {counts?.[t.value] !== undefined && (
+              <span
+                className={`ml-2 rounded-full px-2 py-0.5 text-xs ${
+                  t.value === "solicitudes" && counts[t.value] > 0
+                    ? "bg-amber-500 text-white"
+                    : "bg-gray-100 text-gray-600"
+                }`}
+              >
+                {counts[t.value]}
+              </span>
+            )}
+          </button>
+        ))}
+      </div>
+
+      {tab === "solicitudes" ? (
+        allTrips.length > 0 ? (
+          <PendingTripRequests />
+        ) : (
+          <p className="text-muted-foreground py-12 text-center">
+            No hay solicitudes pendientes de aprobar.
+          </p>
+        )
+      ) : allTrips.length > 0 ? (
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {allTrips.map((trip: Trip) => (
@@ -157,13 +215,15 @@ export default function AdminAllTripsPage() {
       ) : (
         <div className="flex flex-col items-center justify-center py-24 text-center">
           <Map className="w-16 h-16 text-muted-foreground mb-4" />
-          <h2 className="text-xl font-semibold mb-2">No hay viajes creados</h2>
+          <h2 className="text-xl font-semibold mb-2">
+            {tab === "proximos" ? "No hay viajes próximos" : "No hay viajes realizados"}
+          </h2>
           <p className="text-muted-foreground max-w-sm mb-6">
-            Crea el primer viaje y asígnalo a un usuario.
+            Crea un viaje y asígnalo a un usuario.
           </p>
           <Button onClick={() => setIsOpen(true)} className="gap-2">
             <Plus className="w-4 h-4" />
-            Crear primer viaje
+            Nuevo viaje
           </Button>
         </div>
       )}

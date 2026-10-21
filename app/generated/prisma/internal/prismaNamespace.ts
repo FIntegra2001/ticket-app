@@ -1447,6 +1447,8 @@ export const TripScalarFieldEnum = {
   totalAmount: 'totalAmount',
   numberInvoice: 'numberInvoice',
   region: 'region',
+  hotelRequestedAt: 'hotelRequestedAt',
+  hotelConfirmedAt: 'hotelConfirmedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

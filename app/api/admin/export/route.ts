@@ -22,7 +22,7 @@ const BANCOS: Record<string, string> = {
   Bankinter: "Bankinter",
 };
 
-export async function GET() {
+export async function GET(request: Request) {
     const session = await auth.api.getSession({ headers: await headers() });
 
   if (!session?.user || session.user.role !== "ADMIN") {
@@ -33,8 +33,17 @@ export async function GET() {
   // 🆕 Solo gastos DE VIAJE: `tripId` es nullable desde que existen los partes de
   // gastos de oficina, que cuelgan de `officeExpenseId` y van a otras cuentas
   // contables. Sin este filtro se colarían aquí con el fallback a "Taxi".
+  // Fase 3: filtro opcional por mes del gasto (?month=YYYY-MM). Las columnas
+  // no cambian: este Excel se importa en otro programa.
+  const month = new URL(request.url).searchParams.get("month");
+  let dateFilter = {};
+  if (month && /^\d{4}-\d{2}$/.test(month)) {
+    const [y, m] = month.split("-").map(Number);
+    dateFilter = { date: { gte: new Date(Date.UTC(y, m - 1, 1)), lt: new Date(Date.UTC(y, m, 1)) } };
+  }
+
   const expenses = await prisma.expense.findMany({
-    where: { tripId: { not: null } },
+    where: { tripId: { not: null }, ...dateFilter },
     include: {
       trip: {
         include: {

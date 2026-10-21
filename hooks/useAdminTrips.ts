@@ -9,11 +9,15 @@ import {
 import { Trip, TripStatus, PaginatedResponse, CreateTripDto, UpdateTripDto } from "@/types";
 import { toast } from "sonner";
 
-export function useAdminTrips() {
+/** Fase 3: listado por pestaña (solicitudes | proximos | realizados). */
+export function useAdminTrips(tab?: string) {
   return useInfiniteQuery<PaginatedResponse<Trip>>({
-    queryKey: ["adminTrips"],
+    queryKey: ["adminTrips", tab ?? "all"],
+    // Al cambiar de pestaña se mantiene la lista anterior hasta que llega la nueva
+    placeholderData: (prev) => prev,
     queryFn: async ({ pageParam = 1 }) => {
-      const res = await fetch(`/api/admin/trips?page=${pageParam}&limit=9`, {
+      const tabParam = tab ? `&tab=${tab}` : "";
+      const res = await fetch(`/api/admin/trips?page=${pageParam}&limit=9${tabParam}`, {
         credentials: "include",
         headers: { "Content-Type": "application/json" },
       });
@@ -247,15 +251,26 @@ async function downloadBlob(res: Response, fileName: string) {
   URL.revokeObjectURL(url);
 }
 
+/** Filtros de exportación (Fase 3). month = "YYYY-MM"; tab = pestaña. */
+export type ExportFilters = { month?: string; tab?: string };
+
+function exportQuery(f: ExportFilters = {}) {
+  const p = new URLSearchParams();
+  if (f.month) p.set("month", f.month);
+  if (f.tab) p.set("tab", f.tab);
+  const q = p.toString();
+  return q ? `?${q}` : "";
+}
+
 export function useExportExcel() {
   return useMutation({
-    mutationFn: async () => {
-      const res = await fetch("/api/admin/export", { credentials: "include" });
+    mutationFn: async (filters: ExportFilters = {}) => {
+      const res = await fetch(`/api/admin/export${exportQuery(filters)}`, { credentials: "include" });
       if (!res.ok) throw new Error("Error exporting Excel");
 
       await downloadBlob(
         res,
-        `gastos-completos-${new Date().toISOString().slice(0, 10)}.xlsx`,
+        `gastos-${filters.month ?? "todos"}.xlsx`,
       );
     },
     onError: (error) => {
@@ -271,15 +286,15 @@ export function useExportExcel() {
  */
 export function useExportTripsSummary() {
   return useMutation({
-    mutationFn: async () => {
-      const res = await fetch("/api/admin/export/trips-summary", {
+    mutationFn: async (filters: ExportFilters = {}) => {
+      const res = await fetch(`/api/admin/export/trips-summary${exportQuery(filters)}`, {
         credentials: "include",
       });
       if (!res.ok) throw new Error("Error exporting trips summary");
 
       await downloadBlob(
         res,
-        `resumen-viajes-${new Date().toISOString().slice(0, 10)}.xlsx`,
+        `resumen-viajes-${filters.tab ?? "todos"}${filters.month ? "-" + filters.month : ""}-${new Date().toISOString().slice(0, 10)}.xlsx`,
       );
     },
     onError: (error) => {

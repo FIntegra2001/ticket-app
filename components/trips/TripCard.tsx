@@ -9,6 +9,7 @@ import Link from "next/link";
 import { useTrip, useDeleteTrip } from "@/hooks/useTrips";
 import { useAdminTrip } from "@/hooks/useAdminTrips";
 import type { Trip } from "@/types";
+import { HotelStatus } from "@/components/trips/HotelStatus";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import {
   TRIP_STATUS_LABEL,
@@ -59,10 +60,6 @@ function TripCardContent({
     .filter(Boolean)
     .join(", ");
 
-  // 🆕 Estado documental de un vistazo. Las rutas de admin devuelven
-  // `documents` con solo `id` y `type`, que es cuanto hace falta aquí.
-  const hasBillete = trip.documents?.some((d) => d.type === "BILLETE") ?? false;
-  const hasReserva = trip.documents?.some((d) => d.type === "RESERVA") ?? false;
 
   const handleDelete = () => {
     if (onDelete) {
@@ -127,15 +124,10 @@ function TripCardContent({
             {trip.notes && <p className="truncate italic">📝 {trip.notes}</p>}
           </div>
 
-          {/* 🆕 Estado documental: ¿billete comprado? ¿hotel reservado? */}
-          {isAdmin && (
-            <div className="flex flex-wrap gap-2 pt-1">
-              <Badge variant={hasBillete ? "default" : "outline"}>
-                {hasBillete ? "✓" : "✗"} Billete
-              </Badge>
-              <Badge variant={hasReserva ? "default" : "outline"}>
-                {hasReserva ? "✓" : "✗"} Reserva
-              </Badge>
+          {/* Fase 3: billete (fecha del último subido) y seguimiento del hotel */}
+          {isAdmin && trip.status !== "RECHAZADO" && (
+            <div className="pt-1">
+              <HotelStatus trip={trip} />
             </div>
           )}
         </CardHeader>

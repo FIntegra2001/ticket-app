@@ -51,7 +51,7 @@ const tripInclude = {
   // aprobó y el estado documental que pintan los badges de la card.
   requestedBy: { select: { id: true, name: true, email: true } },
   approvedBy: { select: { id: true, name: true, email: true } },
-  documents: { select: { id: true, type: true } },
+  documents: { select: { id: true, type: true, createdAt: true } },
   stages: stagesInclude,
 } as const;
 

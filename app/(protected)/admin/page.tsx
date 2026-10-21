@@ -113,7 +113,7 @@ export default function AdminPage() {
           {/* 🆕 Resumen de viajes: una fila por viaje, sin gastos */}
           <Button
             variant="outline"
-            onClick={() => exportSummary.mutate()}
+            onClick={() => exportSummary.mutate({})}
             disabled={exportSummary.isPending}
           >
             {exportSummary.isPending ? (
@@ -131,7 +131,7 @@ export default function AdminPage() {
 
           {/* Exportar Excel de gastos (una fila por gasto, 27 columnas) */}
           <Button
-            onClick={() => exportExcel.mutate()}
+            onClick={() => exportExcel.mutate({})}
             disabled={exportExcel.isPending}
           >
             {exportExcel.isPending ? (

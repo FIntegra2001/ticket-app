@@ -49,6 +49,8 @@ export type TripMinAggregateOutputType = {
   totalAmount: runtime.Decimal | null
   numberInvoice: string | null
   region: string | null
+  hotelRequestedAt: Date | null
+  hotelConfirmedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -68,6 +70,8 @@ export type TripMaxAggregateOutputType = {
   totalAmount: runtime.Decimal | null
   numberInvoice: string | null
   region: string | null
+  hotelRequestedAt: Date | null
+  hotelConfirmedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -87,6 +91,8 @@ export type TripCountAggregateOutputType = {
   totalAmount: number
   numberInvoice: number
   region: number
+  hotelRequestedAt: number
+  hotelConfirmedAt: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -116,6 +122,8 @@ export type TripMinAggregateInputType = {
   totalAmount?: true
   numberInvoice?: true
   region?: true
+  hotelRequestedAt?: true
+  hotelConfirmedAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -135,6 +143,8 @@ export type TripMaxAggregateInputType = {
   totalAmount?: true
   numberInvoice?: true
   region?: true
+  hotelRequestedAt?: true
+  hotelConfirmedAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -154,6 +164,8 @@ export type TripCountAggregateInputType = {
   totalAmount?: true
   numberInvoice?: true
   region?: true
+  hotelRequestedAt?: true
+  hotelConfirmedAt?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -260,6 +272,8 @@ export type TripGroupByOutputType = {
   totalAmount: runtime.Decimal
   numberInvoice: string | null
   region: string | null
+  hotelRequestedAt: Date | null
+  hotelConfirmedAt: Date | null
   createdAt: Date
   updatedAt: Date
   _count: TripCountAggregateOutputType | null
@@ -302,6 +316,8 @@ export type TripWhereInput = {
   totalAmount?: Prisma.DecimalFilter<"Trip"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: Prisma.StringNullableFilter<"Trip"> | string | null
   region?: Prisma.StringNullableFilter<"Trip"> | string | null
+  hotelRequestedAt?: Prisma.DateTimeNullableFilter<"Trip"> | Date | string | null
+  hotelConfirmedAt?: Prisma.DateTimeNullableFilter<"Trip"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Trip"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Trip"> | Date | string
   createdByAdmin?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
@@ -328,6 +344,8 @@ export type TripOrderByWithRelationInput = {
   totalAmount?: Prisma.SortOrder
   numberInvoice?: Prisma.SortOrderInput | Prisma.SortOrder
   region?: Prisma.SortOrderInput | Prisma.SortOrder
+  hotelRequestedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  hotelConfirmedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   createdByAdmin?: Prisma.UserOrderByWithRelationInput
@@ -357,6 +375,8 @@ export type TripWhereUniqueInput = Prisma.AtLeast<{
   totalAmount?: Prisma.DecimalFilter<"Trip"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: Prisma.StringNullableFilter<"Trip"> | string | null
   region?: Prisma.StringNullableFilter<"Trip"> | string | null
+  hotelRequestedAt?: Prisma.DateTimeNullableFilter<"Trip"> | Date | string | null
+  hotelConfirmedAt?: Prisma.DateTimeNullableFilter<"Trip"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Trip"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Trip"> | Date | string
   createdByAdmin?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
@@ -383,6 +403,8 @@ export type TripOrderByWithAggregationInput = {
   totalAmount?: Prisma.SortOrder
   numberInvoice?: Prisma.SortOrderInput | Prisma.SortOrder
   region?: Prisma.SortOrderInput | Prisma.SortOrder
+  hotelRequestedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  hotelConfirmedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.TripCountOrderByAggregateInput
@@ -410,6 +432,8 @@ export type TripScalarWhereWithAggregatesInput = {
   totalAmount?: Prisma.DecimalWithAggregatesFilter<"Trip"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: Prisma.StringNullableWithAggregatesFilter<"Trip"> | string | null
   region?: Prisma.StringNullableWithAggregatesFilter<"Trip"> | string | null
+  hotelRequestedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Trip"> | Date | string | null
+  hotelConfirmedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Trip"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Trip"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Trip"> | Date | string
 }
@@ -426,6 +450,8 @@ export type TripCreateInput = {
   totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: string | null
   region?: string | null
+  hotelRequestedAt?: Date | string | null
+  hotelConfirmedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   createdByAdmin?: Prisma.UserCreateNestedOneWithoutCreatedTripsInput
@@ -452,6 +478,8 @@ export type TripUncheckedCreateInput = {
   totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: string | null
   region?: string | null
+  hotelRequestedAt?: Date | string | null
+  hotelConfirmedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   stages?: Prisma.TripStageUncheckedCreateNestedManyWithoutTripInput
@@ -472,6 +500,8 @@ export type TripUpdateInput = {
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hotelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hotelConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdByAdmin?: Prisma.UserUpdateOneWithoutCreatedTripsNestedInput
@@ -498,6 +528,8 @@ export type TripUncheckedUpdateInput = {
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hotelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hotelConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   stages?: Prisma.TripStageUncheckedUpdateManyWithoutTripNestedInput
@@ -521,6 +553,8 @@ export type TripCreateManyInput = {
   totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: string | null
   region?: string | null
+  hotelRequestedAt?: Date | string | null
+  hotelConfirmedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -537,6 +571,8 @@ export type TripUpdateManyMutationInput = {
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hotelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hotelConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -556,6 +592,8 @@ export type TripUncheckedUpdateManyInput = {
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hotelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hotelConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -585,6 +623,8 @@ export type TripCountOrderByAggregateInput = {
   totalAmount?: Prisma.SortOrder
   numberInvoice?: Prisma.SortOrder
   region?: Prisma.SortOrder
+  hotelRequestedAt?: Prisma.SortOrder
+  hotelConfirmedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -608,6 +648,8 @@ export type TripMaxOrderByAggregateInput = {
   totalAmount?: Prisma.SortOrder
   numberInvoice?: Prisma.SortOrder
   region?: Prisma.SortOrder
+  hotelRequestedAt?: Prisma.SortOrder
+  hotelConfirmedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -627,6 +669,8 @@ export type TripMinOrderByAggregateInput = {
   totalAmount?: Prisma.SortOrder
   numberInvoice?: Prisma.SortOrder
   region?: Prisma.SortOrder
+  hotelRequestedAt?: Prisma.SortOrder
+  hotelConfirmedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -857,6 +901,8 @@ export type TripCreateWithoutCreatedByAdminInput = {
   totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: string | null
   region?: string | null
+  hotelRequestedAt?: Date | string | null
+  hotelConfirmedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   requestedBy?: Prisma.UserCreateNestedOneWithoutRequestedTripsInput
@@ -881,6 +927,8 @@ export type TripUncheckedCreateWithoutCreatedByAdminInput = {
   totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: string | null
   region?: string | null
+  hotelRequestedAt?: Date | string | null
+  hotelConfirmedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   stages?: Prisma.TripStageUncheckedCreateNestedManyWithoutTripInput
@@ -911,6 +959,8 @@ export type TripCreateWithoutRequestedByInput = {
   totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: string | null
   region?: string | null
+  hotelRequestedAt?: Date | string | null
+  hotelConfirmedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   createdByAdmin?: Prisma.UserCreateNestedOneWithoutCreatedTripsInput
@@ -935,6 +985,8 @@ export type TripUncheckedCreateWithoutRequestedByInput = {
   totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: string | null
   region?: string | null
+  hotelRequestedAt?: Date | string | null
+  hotelConfirmedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   stages?: Prisma.TripStageUncheckedCreateNestedManyWithoutTripInput
@@ -965,6 +1017,8 @@ export type TripCreateWithoutApprovedByInput = {
   totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: string | null
   region?: string | null
+  hotelRequestedAt?: Date | string | null
+  hotelConfirmedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   createdByAdmin?: Prisma.UserCreateNestedOneWithoutCreatedTripsInput
@@ -989,6 +1043,8 @@ export type TripUncheckedCreateWithoutApprovedByInput = {
   totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: string | null
   region?: string | null
+  hotelRequestedAt?: Date | string | null
+  hotelConfirmedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   stages?: Prisma.TripStageUncheckedCreateNestedManyWithoutTripInput
@@ -1041,6 +1097,8 @@ export type TripScalarWhereInput = {
   totalAmount?: Prisma.DecimalFilter<"Trip"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: Prisma.StringNullableFilter<"Trip"> | string | null
   region?: Prisma.StringNullableFilter<"Trip"> | string | null
+  hotelRequestedAt?: Prisma.DateTimeNullableFilter<"Trip"> | Date | string | null
+  hotelConfirmedAt?: Prisma.DateTimeNullableFilter<"Trip"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Trip"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Trip"> | Date | string
 }
@@ -1089,6 +1147,8 @@ export type TripCreateWithoutDocumentsInput = {
   totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: string | null
   region?: string | null
+  hotelRequestedAt?: Date | string | null
+  hotelConfirmedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   createdByAdmin?: Prisma.UserCreateNestedOneWithoutCreatedTripsInput
@@ -1114,6 +1174,8 @@ export type TripUncheckedCreateWithoutDocumentsInput = {
   totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: string | null
   region?: string | null
+  hotelRequestedAt?: Date | string | null
+  hotelConfirmedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   stages?: Prisma.TripStageUncheckedCreateNestedManyWithoutTripInput
@@ -1149,6 +1211,8 @@ export type TripUpdateWithoutDocumentsInput = {
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hotelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hotelConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdByAdmin?: Prisma.UserUpdateOneWithoutCreatedTripsNestedInput
@@ -1174,6 +1238,8 @@ export type TripUncheckedUpdateWithoutDocumentsInput = {
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hotelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hotelConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   stages?: Prisma.TripStageUncheckedUpdateManyWithoutTripNestedInput
@@ -1193,6 +1259,8 @@ export type TripCreateWithoutStagesInput = {
   totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: string | null
   region?: string | null
+  hotelRequestedAt?: Date | string | null
+  hotelConfirmedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   createdByAdmin?: Prisma.UserCreateNestedOneWithoutCreatedTripsInput
@@ -1218,6 +1286,8 @@ export type TripUncheckedCreateWithoutStagesInput = {
   totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: string | null
   region?: string | null
+  hotelRequestedAt?: Date | string | null
+  hotelConfirmedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   assignedUsers?: Prisma.TripAssignmentUncheckedCreateNestedManyWithoutTripInput
@@ -1253,6 +1323,8 @@ export type TripUpdateWithoutStagesInput = {
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hotelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hotelConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdByAdmin?: Prisma.UserUpdateOneWithoutCreatedTripsNestedInput
@@ -1278,6 +1350,8 @@ export type TripUncheckedUpdateWithoutStagesInput = {
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hotelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hotelConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assignedUsers?: Prisma.TripAssignmentUncheckedUpdateManyWithoutTripNestedInput
@@ -1297,6 +1371,8 @@ export type TripCreateWithoutAssignedUsersInput = {
   totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: string | null
   region?: string | null
+  hotelRequestedAt?: Date | string | null
+  hotelConfirmedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   createdByAdmin?: Prisma.UserCreateNestedOneWithoutCreatedTripsInput
@@ -1322,6 +1398,8 @@ export type TripUncheckedCreateWithoutAssignedUsersInput = {
   totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: string | null
   region?: string | null
+  hotelRequestedAt?: Date | string | null
+  hotelConfirmedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   stages?: Prisma.TripStageUncheckedCreateNestedManyWithoutTripInput
@@ -1357,6 +1435,8 @@ export type TripUpdateWithoutAssignedUsersInput = {
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hotelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hotelConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdByAdmin?: Prisma.UserUpdateOneWithoutCreatedTripsNestedInput
@@ -1382,6 +1462,8 @@ export type TripUncheckedUpdateWithoutAssignedUsersInput = {
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hotelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hotelConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   stages?: Prisma.TripStageUncheckedUpdateManyWithoutTripNestedInput
@@ -1401,6 +1483,8 @@ export type TripCreateWithoutExpensesInput = {
   totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: string | null
   region?: string | null
+  hotelRequestedAt?: Date | string | null
+  hotelConfirmedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   createdByAdmin?: Prisma.UserCreateNestedOneWithoutCreatedTripsInput
@@ -1426,6 +1510,8 @@ export type TripUncheckedCreateWithoutExpensesInput = {
   totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: string | null
   region?: string | null
+  hotelRequestedAt?: Date | string | null
+  hotelConfirmedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   stages?: Prisma.TripStageUncheckedCreateNestedManyWithoutTripInput
@@ -1461,6 +1547,8 @@ export type TripUpdateWithoutExpensesInput = {
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hotelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hotelConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdByAdmin?: Prisma.UserUpdateOneWithoutCreatedTripsNestedInput
@@ -1486,6 +1574,8 @@ export type TripUncheckedUpdateWithoutExpensesInput = {
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hotelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hotelConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   stages?: Prisma.TripStageUncheckedUpdateManyWithoutTripNestedInput
@@ -1507,6 +1597,8 @@ export type TripCreateManyCreatedByAdminInput = {
   totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: string | null
   region?: string | null
+  hotelRequestedAt?: Date | string | null
+  hotelConfirmedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1525,6 +1617,8 @@ export type TripCreateManyRequestedByInput = {
   totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: string | null
   region?: string | null
+  hotelRequestedAt?: Date | string | null
+  hotelConfirmedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1543,6 +1637,8 @@ export type TripCreateManyApprovedByInput = {
   totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: string | null
   region?: string | null
+  hotelRequestedAt?: Date | string | null
+  hotelConfirmedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1559,6 +1655,8 @@ export type TripUpdateWithoutCreatedByAdminInput = {
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hotelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hotelConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   requestedBy?: Prisma.UserUpdateOneWithoutRequestedTripsNestedInput
@@ -1583,6 +1681,8 @@ export type TripUncheckedUpdateWithoutCreatedByAdminInput = {
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hotelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hotelConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   stages?: Prisma.TripStageUncheckedUpdateManyWithoutTripNestedInput
@@ -1605,6 +1705,8 @@ export type TripUncheckedUpdateManyWithoutCreatedByAdminInput = {
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hotelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hotelConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1621,6 +1723,8 @@ export type TripUpdateWithoutRequestedByInput = {
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hotelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hotelConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdByAdmin?: Prisma.UserUpdateOneWithoutCreatedTripsNestedInput
@@ -1645,6 +1749,8 @@ export type TripUncheckedUpdateWithoutRequestedByInput = {
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hotelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hotelConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   stages?: Prisma.TripStageUncheckedUpdateManyWithoutTripNestedInput
@@ -1667,6 +1773,8 @@ export type TripUncheckedUpdateManyWithoutRequestedByInput = {
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hotelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hotelConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1683,6 +1791,8 @@ export type TripUpdateWithoutApprovedByInput = {
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hotelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hotelConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdByAdmin?: Prisma.UserUpdateOneWithoutCreatedTripsNestedInput
@@ -1707,6 +1817,8 @@ export type TripUncheckedUpdateWithoutApprovedByInput = {
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hotelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hotelConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   stages?: Prisma.TripStageUncheckedUpdateManyWithoutTripNestedInput
@@ -1729,6 +1841,8 @@ export type TripUncheckedUpdateManyWithoutApprovedByInput = {
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   numberInvoice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hotelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hotelConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1806,6 +1920,8 @@ export type TripSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   totalAmount?: boolean
   numberInvoice?: boolean
   region?: boolean
+  hotelRequestedAt?: boolean
+  hotelConfirmedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   createdByAdmin?: boolean | Prisma.Trip$createdByAdminArgs<ExtArgs>
@@ -1833,6 +1949,8 @@ export type TripSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   totalAmount?: boolean
   numberInvoice?: boolean
   region?: boolean
+  hotelRequestedAt?: boolean
+  hotelConfirmedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   createdByAdmin?: boolean | Prisma.Trip$createdByAdminArgs<ExtArgs>
@@ -1855,6 +1973,8 @@ export type TripSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   totalAmount?: boolean
   numberInvoice?: boolean
   region?: boolean
+  hotelRequestedAt?: boolean
+  hotelConfirmedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   createdByAdmin?: boolean | Prisma.Trip$createdByAdminArgs<ExtArgs>
@@ -1877,11 +1997,13 @@ export type TripSelectScalar = {
   totalAmount?: boolean
   numberInvoice?: boolean
   region?: boolean
+  hotelRequestedAt?: boolean
+  hotelConfirmedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type TripOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdByAdminId" | "requestedById" | "approvedAt" | "approvedById" | "city" | "startDate" | "endDate" | "project" | "notes" | "status" | "totalAmount" | "numberInvoice" | "region" | "createdAt" | "updatedAt", ExtArgs["result"]["trip"]>
+export type TripOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdByAdminId" | "requestedById" | "approvedAt" | "approvedById" | "city" | "startDate" | "endDate" | "project" | "notes" | "status" | "totalAmount" | "numberInvoice" | "region" | "hotelRequestedAt" | "hotelConfirmedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["trip"]>
 export type TripInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   createdByAdmin?: boolean | Prisma.Trip$createdByAdminArgs<ExtArgs>
   requestedBy?: boolean | Prisma.Trip$requestedByArgs<ExtArgs>
@@ -1929,6 +2051,8 @@ export type $TripPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     totalAmount: runtime.Decimal
     numberInvoice: string | null
     region: string | null
+    hotelRequestedAt: Date | null
+    hotelConfirmedAt: Date | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["trip"]>
@@ -2375,6 +2499,8 @@ export interface TripFieldRefs {
   readonly totalAmount: Prisma.FieldRef<"Trip", 'Decimal'>
   readonly numberInvoice: Prisma.FieldRef<"Trip", 'String'>
   readonly region: Prisma.FieldRef<"Trip", 'String'>
+  readonly hotelRequestedAt: Prisma.FieldRef<"Trip", 'DateTime'>
+  readonly hotelConfirmedAt: Prisma.FieldRef<"Trip", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Trip", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Trip", 'DateTime'>
 }

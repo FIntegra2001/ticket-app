@@ -1,3 +1,4 @@
+import { isTripTab, TRIP_TABS, tripTabOrder, tripTabWhere } from "@/lib/trip-tabs";
 import { stagesInclude } from "@/lib/trip-stages.server";
 import { Prisma } from "@/app/generated/prisma/client";
 import prisma from "@/lib/db";
@@ -22,10 +23,14 @@ export async function GET(request: NextRequest) {
     // 🆕 Filtro opcional por estado: lo usa el panel para listar las solicitudes
     // pendientes de aprobación sin traerse todos los viajes.
     const statusParam = searchParams.get("status");
-    const where: Prisma.TripWhereInput =
-      statusParam === "PENDIENTE" ||
-      statusParam === "APROBADO" ||
-      statusParam === "RECHAZADO"
+    // Fase 3: pestaña del listado (solicitudes | proximos | realizados)
+    const tabParam = searchParams.get("tab");
+    const tab = isTripTab(tabParam) ? tabParam : null;
+    const where: Prisma.TripWhereInput = tab
+      ? tripTabWhere(tab)
+      : statusParam === "PENDIENTE" ||
+          statusParam === "APROBADO" ||
+          statusParam === "RECHAZADO"
         ? { status: statusParam }
         : {};
 
@@ -45,18 +50,26 @@ export async function GET(request: NextRequest) {
           // 🆕 Quién solicitó el viaje (para el bloque de aprobaciones) y el
           // estado documental, que la card pinta como badges.
           requestedBy: { select: { id: true, name: true, email: true } },
-          documents: { select: { id: true, type: true } },
+          documents: { select: { id: true, type: true, createdAt: true } },
           stages: stagesInclude,
         },
-        orderBy: { createdAt: "desc" },
+        orderBy: tab ? tripTabOrder(tab) : { createdAt: "desc" },
         skip,
         take: limit,
       }),
       prisma.trip.count({ where }),
     ]);
 
+    // Contadores de las tres pestañas (para los números junto a cada una)
+    const counts = Object.fromEntries(
+      await Promise.all(
+        TRIP_TABS.map(async (t) => [t.value, await prisma.trip.count({ where: tripTabWhere(t.value) })]),
+      ),
+    );
+
     return NextResponse.json({
       trips,
+      counts,
       pagination: {
         page,
         limit,

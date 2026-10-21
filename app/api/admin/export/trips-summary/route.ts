@@ -4,6 +4,7 @@ import prisma from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { TRIP_STATUS_SHORT_LABEL } from "@/lib/trip-status";
+import { isTripTab, monthWhere, tripTabOrder, tripTabWhere } from "@/lib/trip-tabs";
 
 /**
  * Excel de RESUMEN DE VIAJES: una fila por viaje, sin gastos.
@@ -16,24 +17,31 @@ import { TRIP_STATUS_SHORT_LABEL } from "@/lib/trip-status";
  * No lleva importes desglosados ni IVA, así que no le afecta la divergencia de
  * IVA_RATE pendiente con financiero.
  */
-export async function GET() {
+export async function GET(request: Request) {
   const session = await auth.api.getSession({ headers: await headers() });
 
   if (!session?.user || session.user.role !== "ADMIN") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  // Fase 3: filtros (?tab=proximos|realizados|solicitudes, ?month=YYYY-MM)
+  const params = new URL(request.url).searchParams;
+  const tabParam = params.get("tab");
+  const tab = isTripTab(tabParam) ? tabParam : null;
+  const where = { ...(tab ? tripTabWhere(tab) : {}), ...monthWhere(params.get("month")) };
+
   const trips = await prisma.trip.findMany({
+    where,
     include: {
       assignedUsers: {
         include: { user: { select: { name: true, email: true } } },
       },
       requestedBy: { select: { name: true, email: true } },
       approvedBy: { select: { name: true, email: true } },
-      documents: { select: { type: true } },
+      documents: { select: { type: true, createdAt: true } },
       _count: { select: { expenses: true } },
     },
-    orderBy: { startDate: "desc" },
+    orderBy: tab ? tripTabOrder(tab) : { startDate: "desc" },
   });
 
   const workbook = new ExcelJS.Workbook();
@@ -58,6 +66,10 @@ export async function GET() {
     { header: "Nº GASTOS",         key: "nGastos",        width: 10 },
     { header: "TOTAL",             key: "total",          width: 14 },
     { header: "NOTAS",             key: "notas",          width: 50 },
+    // Fase 3: seguimiento para el reporte semanal (al final, sin mover las demás)
+    { header: "FECHA ÚLTIMO BILLETE", key: "fechaBillete", width: 18 },
+    { header: "FECHA SOLICITUD HOTEL", key: "fechaPedidoHotel", width: 18 },
+    { header: "FECHA CONFIRMACIÓN HOTEL", key: "fechaConfirmHotel", width: 20 },
   ];
 
   trips.forEach((trip) => {
@@ -77,6 +89,11 @@ export async function GET() {
           msPorDia,
       ),
     );
+
+    const billetes = trip.documents.filter((d) => d.type === "BILLETE");
+    const lastBillete = billetes.length
+      ? new Date(Math.max(...billetes.map((d) => d.createdAt.getTime())))
+      : null;
 
     const tieneDoc = (type: "BILLETE" | "RESERVA") =>
       trip.documents.some((d) => d.type === type) ? "Sí" : "No";
@@ -103,6 +120,9 @@ export async function GET() {
       nGastos: trip._count.expenses,
       total: Number(trip.totalAmount),
       notas: trip.notes ?? "",
+      fechaBillete: lastBillete ? formatDate(lastBillete) : "",
+      fechaPedidoHotel: trip.hotelRequestedAt ? formatDate(trip.hotelRequestedAt) : "",
+      fechaConfirmHotel: trip.hotelConfirmedAt ? formatDate(trip.hotelConfirmedAt) : "",
     });
   });
 

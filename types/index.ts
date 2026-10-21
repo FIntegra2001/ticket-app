@@ -64,10 +64,13 @@ export interface Trip {
    * `id` y `type`, lo justo para los badges "Billete ✓ / Reserva ✓". El
    * documento completo (url, fileName…) se pide a /api/trips/[id]/documents.
    */
-  documents?: Pick<TripDocument, "id" | "type">[]
+  documents?: (Pick<TripDocument, "id" | "type"> & { createdAt?: Date | string })[]
   /** Fase 1: itinerario (ordenado por posición). */
   stages?: TripStage[]
   region?: string | null
+  /** Fase 3: seguimiento del hotel */
+  hotelRequestedAt?: Date | string | null
+  hotelConfirmedAt?: Date | string | null
 }
 
 // ✅ NUEVO: DTO para crear viaje (solo admin)
@@ -192,6 +195,8 @@ export interface UpdateExpenseDto {
 
 export interface PaginatedResponse<T> {
   trips: T[];
+  /** Fase 3: nº de viajes por pestaña (solicitudes, proximos, realizados) */
+  counts?: Record<string, number>;
   pagination: {
     page: number;
     limit: number;
