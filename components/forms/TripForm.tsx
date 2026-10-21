@@ -268,8 +268,14 @@ export default function TripForm({
       {/* 1. Motivo */}
       <div className="space-y-3">
         <div>
-          <Label htmlFor="notes">{isRequest ? "Motivo del viaje" : "Notas"}</Label>
-          <Textarea id="notes" value={notes} onChange={(e) => setNotes(e.target.value)} rows={2} />
+          <Label htmlFor="notes">Notas para la reserva</Label>
+          <Textarea
+            id="notes"
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            rows={3}
+            placeholder="Motivo del viaje y todo lo importante para reservar: horarios de tren o vuelo especiales, llegada tarde al hotel…"
+          />
         </div>
       </div>
 
