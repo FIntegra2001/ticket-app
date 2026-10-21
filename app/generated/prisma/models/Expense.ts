@@ -59,6 +59,9 @@ export type ExpenseMinAggregateOutputType = {
   kmOneWay: runtime.Decimal | null
   kmTotal: runtime.Decimal | null
   ratePerKm: runtime.Decimal | null
+  projectId: string | null
+  delegation: string | null
+  accountingCode: string | null
   stageId: string | null
   createdByAdminId: string | null
   createdAt: Date | null
@@ -84,6 +87,9 @@ export type ExpenseMaxAggregateOutputType = {
   kmOneWay: runtime.Decimal | null
   kmTotal: runtime.Decimal | null
   ratePerKm: runtime.Decimal | null
+  projectId: string | null
+  delegation: string | null
+  accountingCode: string | null
   stageId: string | null
   createdByAdminId: string | null
   createdAt: Date | null
@@ -109,6 +115,9 @@ export type ExpenseCountAggregateOutputType = {
   kmOneWay: number
   kmTotal: number
   ratePerKm: number
+  projectId: number
+  delegation: number
+  accountingCode: number
   stageId: number
   createdByAdminId: number
   createdAt: number
@@ -150,6 +159,9 @@ export type ExpenseMinAggregateInputType = {
   kmOneWay?: true
   kmTotal?: true
   ratePerKm?: true
+  projectId?: true
+  delegation?: true
+  accountingCode?: true
   stageId?: true
   createdByAdminId?: true
   createdAt?: true
@@ -175,6 +187,9 @@ export type ExpenseMaxAggregateInputType = {
   kmOneWay?: true
   kmTotal?: true
   ratePerKm?: true
+  projectId?: true
+  delegation?: true
+  accountingCode?: true
   stageId?: true
   createdByAdminId?: true
   createdAt?: true
@@ -200,6 +215,9 @@ export type ExpenseCountAggregateInputType = {
   kmOneWay?: true
   kmTotal?: true
   ratePerKm?: true
+  projectId?: true
+  delegation?: true
+  accountingCode?: true
   stageId?: true
   createdByAdminId?: true
   createdAt?: true
@@ -312,6 +330,9 @@ export type ExpenseGroupByOutputType = {
   kmOneWay: runtime.Decimal | null
   kmTotal: runtime.Decimal | null
   ratePerKm: runtime.Decimal | null
+  projectId: string | null
+  delegation: string | null
+  accountingCode: string | null
   stageId: string | null
   createdByAdminId: string | null
   createdAt: Date
@@ -360,12 +381,16 @@ export type ExpenseWhereInput = {
   kmOneWay?: Prisma.DecimalNullableFilter<"Expense"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   kmTotal?: Prisma.DecimalNullableFilter<"Expense"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   ratePerKm?: Prisma.DecimalNullableFilter<"Expense"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  projectId?: Prisma.StringNullableFilter<"Expense"> | string | null
+  delegation?: Prisma.StringNullableFilter<"Expense"> | string | null
+  accountingCode?: Prisma.StringNullableFilter<"Expense"> | string | null
   stageId?: Prisma.StringNullableFilter<"Expense"> | string | null
   createdByAdminId?: Prisma.StringNullableFilter<"Expense"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Expense"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Expense"> | Date | string
   trip?: Prisma.XOR<Prisma.TripNullableScalarRelationFilter, Prisma.TripWhereInput> | null
   officeExpense?: Prisma.XOR<Prisma.OfficeExpenseNullableScalarRelationFilter, Prisma.OfficeExpenseWhereInput> | null
+  project?: Prisma.XOR<Prisma.ProjectNullableScalarRelationFilter, Prisma.ProjectWhereInput> | null
   stage?: Prisma.XOR<Prisma.TripStageNullableScalarRelationFilter, Prisma.TripStageWhereInput> | null
 }
 
@@ -388,12 +413,16 @@ export type ExpenseOrderByWithRelationInput = {
   kmOneWay?: Prisma.SortOrderInput | Prisma.SortOrder
   kmTotal?: Prisma.SortOrderInput | Prisma.SortOrder
   ratePerKm?: Prisma.SortOrderInput | Prisma.SortOrder
+  projectId?: Prisma.SortOrderInput | Prisma.SortOrder
+  delegation?: Prisma.SortOrderInput | Prisma.SortOrder
+  accountingCode?: Prisma.SortOrderInput | Prisma.SortOrder
   stageId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdByAdminId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   trip?: Prisma.TripOrderByWithRelationInput
   officeExpense?: Prisma.OfficeExpenseOrderByWithRelationInput
+  project?: Prisma.ProjectOrderByWithRelationInput
   stage?: Prisma.TripStageOrderByWithRelationInput
 }
 
@@ -419,12 +448,16 @@ export type ExpenseWhereUniqueInput = Prisma.AtLeast<{
   kmOneWay?: Prisma.DecimalNullableFilter<"Expense"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   kmTotal?: Prisma.DecimalNullableFilter<"Expense"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   ratePerKm?: Prisma.DecimalNullableFilter<"Expense"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  projectId?: Prisma.StringNullableFilter<"Expense"> | string | null
+  delegation?: Prisma.StringNullableFilter<"Expense"> | string | null
+  accountingCode?: Prisma.StringNullableFilter<"Expense"> | string | null
   stageId?: Prisma.StringNullableFilter<"Expense"> | string | null
   createdByAdminId?: Prisma.StringNullableFilter<"Expense"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Expense"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Expense"> | Date | string
   trip?: Prisma.XOR<Prisma.TripNullableScalarRelationFilter, Prisma.TripWhereInput> | null
   officeExpense?: Prisma.XOR<Prisma.OfficeExpenseNullableScalarRelationFilter, Prisma.OfficeExpenseWhereInput> | null
+  project?: Prisma.XOR<Prisma.ProjectNullableScalarRelationFilter, Prisma.ProjectWhereInput> | null
   stage?: Prisma.XOR<Prisma.TripStageNullableScalarRelationFilter, Prisma.TripStageWhereInput> | null
 }, "id">
 
@@ -447,6 +480,9 @@ export type ExpenseOrderByWithAggregationInput = {
   kmOneWay?: Prisma.SortOrderInput | Prisma.SortOrder
   kmTotal?: Prisma.SortOrderInput | Prisma.SortOrder
   ratePerKm?: Prisma.SortOrderInput | Prisma.SortOrder
+  projectId?: Prisma.SortOrderInput | Prisma.SortOrder
+  delegation?: Prisma.SortOrderInput | Prisma.SortOrder
+  accountingCode?: Prisma.SortOrderInput | Prisma.SortOrder
   stageId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdByAdminId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -480,6 +516,9 @@ export type ExpenseScalarWhereWithAggregatesInput = {
   kmOneWay?: Prisma.DecimalNullableWithAggregatesFilter<"Expense"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   kmTotal?: Prisma.DecimalNullableWithAggregatesFilter<"Expense"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   ratePerKm?: Prisma.DecimalNullableWithAggregatesFilter<"Expense"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  projectId?: Prisma.StringNullableWithAggregatesFilter<"Expense"> | string | null
+  delegation?: Prisma.StringNullableWithAggregatesFilter<"Expense"> | string | null
+  accountingCode?: Prisma.StringNullableWithAggregatesFilter<"Expense"> | string | null
   stageId?: Prisma.StringNullableWithAggregatesFilter<"Expense"> | string | null
   createdByAdminId?: Prisma.StringNullableWithAggregatesFilter<"Expense"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Expense"> | Date | string
@@ -503,11 +542,14 @@ export type ExpenseCreateInput = {
   kmOneWay?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   kmTotal?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   ratePerKm?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  delegation?: string | null
+  accountingCode?: string | null
   createdByAdminId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   trip?: Prisma.TripCreateNestedOneWithoutExpensesInput
   officeExpense?: Prisma.OfficeExpenseCreateNestedOneWithoutExpensesInput
+  project?: Prisma.ProjectCreateNestedOneWithoutExpensesInput
   stage?: Prisma.TripStageCreateNestedOneWithoutExpensesInput
 }
 
@@ -530,6 +572,9 @@ export type ExpenseUncheckedCreateInput = {
   kmOneWay?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   kmTotal?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   ratePerKm?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  projectId?: string | null
+  delegation?: string | null
+  accountingCode?: string | null
   stageId?: string | null
   createdByAdminId?: string | null
   createdAt?: Date | string
@@ -553,11 +598,14 @@ export type ExpenseUpdateInput = {
   kmOneWay?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   kmTotal?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   ratePerKm?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  delegation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountingCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdByAdminId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   trip?: Prisma.TripUpdateOneWithoutExpensesNestedInput
   officeExpense?: Prisma.OfficeExpenseUpdateOneWithoutExpensesNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutExpensesNestedInput
   stage?: Prisma.TripStageUpdateOneWithoutExpensesNestedInput
 }
 
@@ -580,6 +628,9 @@ export type ExpenseUncheckedUpdateInput = {
   kmOneWay?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   kmTotal?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   ratePerKm?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delegation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountingCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdByAdminId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -605,6 +656,9 @@ export type ExpenseCreateManyInput = {
   kmOneWay?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   kmTotal?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   ratePerKm?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  projectId?: string | null
+  delegation?: string | null
+  accountingCode?: string | null
   stageId?: string | null
   createdByAdminId?: string | null
   createdAt?: Date | string
@@ -628,6 +682,8 @@ export type ExpenseUpdateManyMutationInput = {
   kmOneWay?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   kmTotal?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   ratePerKm?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  delegation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountingCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdByAdminId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -652,6 +708,9 @@ export type ExpenseUncheckedUpdateManyInput = {
   kmOneWay?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   kmTotal?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   ratePerKm?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delegation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountingCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdByAdminId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -687,6 +746,9 @@ export type ExpenseCountOrderByAggregateInput = {
   kmOneWay?: Prisma.SortOrder
   kmTotal?: Prisma.SortOrder
   ratePerKm?: Prisma.SortOrder
+  projectId?: Prisma.SortOrder
+  delegation?: Prisma.SortOrder
+  accountingCode?: Prisma.SortOrder
   stageId?: Prisma.SortOrder
   createdByAdminId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -719,6 +781,9 @@ export type ExpenseMaxOrderByAggregateInput = {
   kmOneWay?: Prisma.SortOrder
   kmTotal?: Prisma.SortOrder
   ratePerKm?: Prisma.SortOrder
+  projectId?: Prisma.SortOrder
+  delegation?: Prisma.SortOrder
+  accountingCode?: Prisma.SortOrder
   stageId?: Prisma.SortOrder
   createdByAdminId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -744,6 +809,9 @@ export type ExpenseMinOrderByAggregateInput = {
   kmOneWay?: Prisma.SortOrder
   kmTotal?: Prisma.SortOrder
   ratePerKm?: Prisma.SortOrder
+  projectId?: Prisma.SortOrder
+  delegation?: Prisma.SortOrder
+  accountingCode?: Prisma.SortOrder
   stageId?: Prisma.SortOrder
   createdByAdminId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -891,6 +959,48 @@ export type NullableDecimalFieldUpdateOperationsInput = {
   divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
+export type ExpenseCreateNestedManyWithoutProjectInput = {
+  create?: Prisma.XOR<Prisma.ExpenseCreateWithoutProjectInput, Prisma.ExpenseUncheckedCreateWithoutProjectInput> | Prisma.ExpenseCreateWithoutProjectInput[] | Prisma.ExpenseUncheckedCreateWithoutProjectInput[]
+  connectOrCreate?: Prisma.ExpenseCreateOrConnectWithoutProjectInput | Prisma.ExpenseCreateOrConnectWithoutProjectInput[]
+  createMany?: Prisma.ExpenseCreateManyProjectInputEnvelope
+  connect?: Prisma.ExpenseWhereUniqueInput | Prisma.ExpenseWhereUniqueInput[]
+}
+
+export type ExpenseUncheckedCreateNestedManyWithoutProjectInput = {
+  create?: Prisma.XOR<Prisma.ExpenseCreateWithoutProjectInput, Prisma.ExpenseUncheckedCreateWithoutProjectInput> | Prisma.ExpenseCreateWithoutProjectInput[] | Prisma.ExpenseUncheckedCreateWithoutProjectInput[]
+  connectOrCreate?: Prisma.ExpenseCreateOrConnectWithoutProjectInput | Prisma.ExpenseCreateOrConnectWithoutProjectInput[]
+  createMany?: Prisma.ExpenseCreateManyProjectInputEnvelope
+  connect?: Prisma.ExpenseWhereUniqueInput | Prisma.ExpenseWhereUniqueInput[]
+}
+
+export type ExpenseUpdateManyWithoutProjectNestedInput = {
+  create?: Prisma.XOR<Prisma.ExpenseCreateWithoutProjectInput, Prisma.ExpenseUncheckedCreateWithoutProjectInput> | Prisma.ExpenseCreateWithoutProjectInput[] | Prisma.ExpenseUncheckedCreateWithoutProjectInput[]
+  connectOrCreate?: Prisma.ExpenseCreateOrConnectWithoutProjectInput | Prisma.ExpenseCreateOrConnectWithoutProjectInput[]
+  upsert?: Prisma.ExpenseUpsertWithWhereUniqueWithoutProjectInput | Prisma.ExpenseUpsertWithWhereUniqueWithoutProjectInput[]
+  createMany?: Prisma.ExpenseCreateManyProjectInputEnvelope
+  set?: Prisma.ExpenseWhereUniqueInput | Prisma.ExpenseWhereUniqueInput[]
+  disconnect?: Prisma.ExpenseWhereUniqueInput | Prisma.ExpenseWhereUniqueInput[]
+  delete?: Prisma.ExpenseWhereUniqueInput | Prisma.ExpenseWhereUniqueInput[]
+  connect?: Prisma.ExpenseWhereUniqueInput | Prisma.ExpenseWhereUniqueInput[]
+  update?: Prisma.ExpenseUpdateWithWhereUniqueWithoutProjectInput | Prisma.ExpenseUpdateWithWhereUniqueWithoutProjectInput[]
+  updateMany?: Prisma.ExpenseUpdateManyWithWhereWithoutProjectInput | Prisma.ExpenseUpdateManyWithWhereWithoutProjectInput[]
+  deleteMany?: Prisma.ExpenseScalarWhereInput | Prisma.ExpenseScalarWhereInput[]
+}
+
+export type ExpenseUncheckedUpdateManyWithoutProjectNestedInput = {
+  create?: Prisma.XOR<Prisma.ExpenseCreateWithoutProjectInput, Prisma.ExpenseUncheckedCreateWithoutProjectInput> | Prisma.ExpenseCreateWithoutProjectInput[] | Prisma.ExpenseUncheckedCreateWithoutProjectInput[]
+  connectOrCreate?: Prisma.ExpenseCreateOrConnectWithoutProjectInput | Prisma.ExpenseCreateOrConnectWithoutProjectInput[]
+  upsert?: Prisma.ExpenseUpsertWithWhereUniqueWithoutProjectInput | Prisma.ExpenseUpsertWithWhereUniqueWithoutProjectInput[]
+  createMany?: Prisma.ExpenseCreateManyProjectInputEnvelope
+  set?: Prisma.ExpenseWhereUniqueInput | Prisma.ExpenseWhereUniqueInput[]
+  disconnect?: Prisma.ExpenseWhereUniqueInput | Prisma.ExpenseWhereUniqueInput[]
+  delete?: Prisma.ExpenseWhereUniqueInput | Prisma.ExpenseWhereUniqueInput[]
+  connect?: Prisma.ExpenseWhereUniqueInput | Prisma.ExpenseWhereUniqueInput[]
+  update?: Prisma.ExpenseUpdateWithWhereUniqueWithoutProjectInput | Prisma.ExpenseUpdateWithWhereUniqueWithoutProjectInput[]
+  updateMany?: Prisma.ExpenseUpdateManyWithWhereWithoutProjectInput | Prisma.ExpenseUpdateManyWithWhereWithoutProjectInput[]
+  deleteMany?: Prisma.ExpenseScalarWhereInput | Prisma.ExpenseScalarWhereInput[]
+}
+
 export type ExpenseCreateWithoutTripInput = {
   id?: string
   date: Date | string
@@ -908,10 +1018,13 @@ export type ExpenseCreateWithoutTripInput = {
   kmOneWay?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   kmTotal?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   ratePerKm?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  delegation?: string | null
+  accountingCode?: string | null
   createdByAdminId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   officeExpense?: Prisma.OfficeExpenseCreateNestedOneWithoutExpensesInput
+  project?: Prisma.ProjectCreateNestedOneWithoutExpensesInput
   stage?: Prisma.TripStageCreateNestedOneWithoutExpensesInput
 }
 
@@ -933,6 +1046,9 @@ export type ExpenseUncheckedCreateWithoutTripInput = {
   kmOneWay?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   kmTotal?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   ratePerKm?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  projectId?: string | null
+  delegation?: string | null
+  accountingCode?: string | null
   stageId?: string | null
   createdByAdminId?: string | null
   createdAt?: Date | string
@@ -987,6 +1103,9 @@ export type ExpenseScalarWhereInput = {
   kmOneWay?: Prisma.DecimalNullableFilter<"Expense"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   kmTotal?: Prisma.DecimalNullableFilter<"Expense"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   ratePerKm?: Prisma.DecimalNullableFilter<"Expense"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  projectId?: Prisma.StringNullableFilter<"Expense"> | string | null
+  delegation?: Prisma.StringNullableFilter<"Expense"> | string | null
+  accountingCode?: Prisma.StringNullableFilter<"Expense"> | string | null
   stageId?: Prisma.StringNullableFilter<"Expense"> | string | null
   createdByAdminId?: Prisma.StringNullableFilter<"Expense"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Expense"> | Date | string
@@ -1010,11 +1129,14 @@ export type ExpenseCreateWithoutStageInput = {
   kmOneWay?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   kmTotal?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   ratePerKm?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  delegation?: string | null
+  accountingCode?: string | null
   createdByAdminId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   trip?: Prisma.TripCreateNestedOneWithoutExpensesInput
   officeExpense?: Prisma.OfficeExpenseCreateNestedOneWithoutExpensesInput
+  project?: Prisma.ProjectCreateNestedOneWithoutExpensesInput
 }
 
 export type ExpenseUncheckedCreateWithoutStageInput = {
@@ -1036,6 +1158,9 @@ export type ExpenseUncheckedCreateWithoutStageInput = {
   kmOneWay?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   kmTotal?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   ratePerKm?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  projectId?: string | null
+  delegation?: string | null
+  accountingCode?: string | null
   createdByAdminId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1084,10 +1209,13 @@ export type ExpenseCreateWithoutOfficeExpenseInput = {
   kmOneWay?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   kmTotal?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   ratePerKm?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  delegation?: string | null
+  accountingCode?: string | null
   createdByAdminId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   trip?: Prisma.TripCreateNestedOneWithoutExpensesInput
+  project?: Prisma.ProjectCreateNestedOneWithoutExpensesInput
   stage?: Prisma.TripStageCreateNestedOneWithoutExpensesInput
 }
 
@@ -1109,6 +1237,9 @@ export type ExpenseUncheckedCreateWithoutOfficeExpenseInput = {
   kmOneWay?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   kmTotal?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   ratePerKm?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  projectId?: string | null
+  delegation?: string | null
+  accountingCode?: string | null
   stageId?: string | null
   createdByAdminId?: string | null
   createdAt?: Date | string
@@ -1141,6 +1272,86 @@ export type ExpenseUpdateManyWithWhereWithoutOfficeExpenseInput = {
   data: Prisma.XOR<Prisma.ExpenseUpdateManyMutationInput, Prisma.ExpenseUncheckedUpdateManyWithoutOfficeExpenseInput>
 }
 
+export type ExpenseCreateWithoutProjectInput = {
+  id?: string
+  date: Date | string
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  category?: string | null
+  vendor?: string | null
+  description?: string | null
+  receiptUrl?: string | null
+  invoiceNumber?: string | null
+  paymentMethod?: string | null
+  createdById?: string | null
+  justification?: string | null
+  originOffice?: string | null
+  destinationAddress?: string | null
+  kmOneWay?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  kmTotal?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  ratePerKm?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  delegation?: string | null
+  accountingCode?: string | null
+  createdByAdminId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  trip?: Prisma.TripCreateNestedOneWithoutExpensesInput
+  officeExpense?: Prisma.OfficeExpenseCreateNestedOneWithoutExpensesInput
+  stage?: Prisma.TripStageCreateNestedOneWithoutExpensesInput
+}
+
+export type ExpenseUncheckedCreateWithoutProjectInput = {
+  id?: string
+  tripId?: string | null
+  officeExpenseId?: string | null
+  date: Date | string
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  category?: string | null
+  vendor?: string | null
+  description?: string | null
+  receiptUrl?: string | null
+  invoiceNumber?: string | null
+  paymentMethod?: string | null
+  createdById?: string | null
+  justification?: string | null
+  originOffice?: string | null
+  destinationAddress?: string | null
+  kmOneWay?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  kmTotal?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  ratePerKm?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  delegation?: string | null
+  accountingCode?: string | null
+  stageId?: string | null
+  createdByAdminId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type ExpenseCreateOrConnectWithoutProjectInput = {
+  where: Prisma.ExpenseWhereUniqueInput
+  create: Prisma.XOR<Prisma.ExpenseCreateWithoutProjectInput, Prisma.ExpenseUncheckedCreateWithoutProjectInput>
+}
+
+export type ExpenseCreateManyProjectInputEnvelope = {
+  data: Prisma.ExpenseCreateManyProjectInput | Prisma.ExpenseCreateManyProjectInput[]
+  skipDuplicates?: boolean
+}
+
+export type ExpenseUpsertWithWhereUniqueWithoutProjectInput = {
+  where: Prisma.ExpenseWhereUniqueInput
+  update: Prisma.XOR<Prisma.ExpenseUpdateWithoutProjectInput, Prisma.ExpenseUncheckedUpdateWithoutProjectInput>
+  create: Prisma.XOR<Prisma.ExpenseCreateWithoutProjectInput, Prisma.ExpenseUncheckedCreateWithoutProjectInput>
+}
+
+export type ExpenseUpdateWithWhereUniqueWithoutProjectInput = {
+  where: Prisma.ExpenseWhereUniqueInput
+  data: Prisma.XOR<Prisma.ExpenseUpdateWithoutProjectInput, Prisma.ExpenseUncheckedUpdateWithoutProjectInput>
+}
+
+export type ExpenseUpdateManyWithWhereWithoutProjectInput = {
+  where: Prisma.ExpenseScalarWhereInput
+  data: Prisma.XOR<Prisma.ExpenseUpdateManyMutationInput, Prisma.ExpenseUncheckedUpdateManyWithoutProjectInput>
+}
+
 export type ExpenseCreateManyTripInput = {
   id?: string
   officeExpenseId?: string | null
@@ -1159,6 +1370,9 @@ export type ExpenseCreateManyTripInput = {
   kmOneWay?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   kmTotal?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   ratePerKm?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  projectId?: string | null
+  delegation?: string | null
+  accountingCode?: string | null
   stageId?: string | null
   createdByAdminId?: string | null
   createdAt?: Date | string
@@ -1182,10 +1396,13 @@ export type ExpenseUpdateWithoutTripInput = {
   kmOneWay?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   kmTotal?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   ratePerKm?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  delegation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountingCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdByAdminId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   officeExpense?: Prisma.OfficeExpenseUpdateOneWithoutExpensesNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutExpensesNestedInput
   stage?: Prisma.TripStageUpdateOneWithoutExpensesNestedInput
 }
 
@@ -1207,6 +1424,9 @@ export type ExpenseUncheckedUpdateWithoutTripInput = {
   kmOneWay?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   kmTotal?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   ratePerKm?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delegation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountingCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdByAdminId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1231,6 +1451,9 @@ export type ExpenseUncheckedUpdateManyWithoutTripInput = {
   kmOneWay?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   kmTotal?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   ratePerKm?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delegation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountingCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdByAdminId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1256,6 +1479,9 @@ export type ExpenseCreateManyStageInput = {
   kmOneWay?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   kmTotal?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   ratePerKm?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  projectId?: string | null
+  delegation?: string | null
+  accountingCode?: string | null
   createdByAdminId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1278,11 +1504,14 @@ export type ExpenseUpdateWithoutStageInput = {
   kmOneWay?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   kmTotal?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   ratePerKm?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  delegation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountingCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdByAdminId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   trip?: Prisma.TripUpdateOneWithoutExpensesNestedInput
   officeExpense?: Prisma.OfficeExpenseUpdateOneWithoutExpensesNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutExpensesNestedInput
 }
 
 export type ExpenseUncheckedUpdateWithoutStageInput = {
@@ -1304,6 +1533,9 @@ export type ExpenseUncheckedUpdateWithoutStageInput = {
   kmOneWay?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   kmTotal?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   ratePerKm?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delegation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountingCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdByAdminId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1328,6 +1560,9 @@ export type ExpenseUncheckedUpdateManyWithoutStageInput = {
   kmOneWay?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   kmTotal?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   ratePerKm?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delegation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountingCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdByAdminId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1351,6 +1586,9 @@ export type ExpenseCreateManyOfficeExpenseInput = {
   kmOneWay?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   kmTotal?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   ratePerKm?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  projectId?: string | null
+  delegation?: string | null
+  accountingCode?: string | null
   stageId?: string | null
   createdByAdminId?: string | null
   createdAt?: Date | string
@@ -1374,10 +1612,13 @@ export type ExpenseUpdateWithoutOfficeExpenseInput = {
   kmOneWay?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   kmTotal?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   ratePerKm?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  delegation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountingCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdByAdminId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   trip?: Prisma.TripUpdateOneWithoutExpensesNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutExpensesNestedInput
   stage?: Prisma.TripStageUpdateOneWithoutExpensesNestedInput
 }
 
@@ -1399,6 +1640,9 @@ export type ExpenseUncheckedUpdateWithoutOfficeExpenseInput = {
   kmOneWay?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   kmTotal?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   ratePerKm?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delegation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountingCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdByAdminId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1423,6 +1667,117 @@ export type ExpenseUncheckedUpdateManyWithoutOfficeExpenseInput = {
   kmOneWay?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   kmTotal?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   ratePerKm?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delegation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountingCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdByAdminId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type ExpenseCreateManyProjectInput = {
+  id?: string
+  tripId?: string | null
+  officeExpenseId?: string | null
+  date: Date | string
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  category?: string | null
+  vendor?: string | null
+  description?: string | null
+  receiptUrl?: string | null
+  invoiceNumber?: string | null
+  paymentMethod?: string | null
+  createdById?: string | null
+  justification?: string | null
+  originOffice?: string | null
+  destinationAddress?: string | null
+  kmOneWay?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  kmTotal?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  ratePerKm?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  delegation?: string | null
+  accountingCode?: string | null
+  stageId?: string | null
+  createdByAdminId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type ExpenseUpdateWithoutProjectInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vendor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  justification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  originOffice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  destinationAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kmOneWay?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  kmTotal?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  ratePerKm?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  delegation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountingCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdByAdminId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  trip?: Prisma.TripUpdateOneWithoutExpensesNestedInput
+  officeExpense?: Prisma.OfficeExpenseUpdateOneWithoutExpensesNestedInput
+  stage?: Prisma.TripStageUpdateOneWithoutExpensesNestedInput
+}
+
+export type ExpenseUncheckedUpdateWithoutProjectInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tripId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  officeExpenseId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vendor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  justification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  originOffice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  destinationAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kmOneWay?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  kmTotal?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  ratePerKm?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  delegation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountingCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdByAdminId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type ExpenseUncheckedUpdateManyWithoutProjectInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tripId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  officeExpenseId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vendor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  justification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  originOffice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  destinationAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kmOneWay?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  kmTotal?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  ratePerKm?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  delegation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountingCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdByAdminId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1450,12 +1805,16 @@ export type ExpenseSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   kmOneWay?: boolean
   kmTotal?: boolean
   ratePerKm?: boolean
+  projectId?: boolean
+  delegation?: boolean
+  accountingCode?: boolean
   stageId?: boolean
   createdByAdminId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   trip?: boolean | Prisma.Expense$tripArgs<ExtArgs>
   officeExpense?: boolean | Prisma.Expense$officeExpenseArgs<ExtArgs>
+  project?: boolean | Prisma.Expense$projectArgs<ExtArgs>
   stage?: boolean | Prisma.Expense$stageArgs<ExtArgs>
 }, ExtArgs["result"]["expense"]>
 
@@ -1478,12 +1837,16 @@ export type ExpenseSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   kmOneWay?: boolean
   kmTotal?: boolean
   ratePerKm?: boolean
+  projectId?: boolean
+  delegation?: boolean
+  accountingCode?: boolean
   stageId?: boolean
   createdByAdminId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   trip?: boolean | Prisma.Expense$tripArgs<ExtArgs>
   officeExpense?: boolean | Prisma.Expense$officeExpenseArgs<ExtArgs>
+  project?: boolean | Prisma.Expense$projectArgs<ExtArgs>
   stage?: boolean | Prisma.Expense$stageArgs<ExtArgs>
 }, ExtArgs["result"]["expense"]>
 
@@ -1506,12 +1869,16 @@ export type ExpenseSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   kmOneWay?: boolean
   kmTotal?: boolean
   ratePerKm?: boolean
+  projectId?: boolean
+  delegation?: boolean
+  accountingCode?: boolean
   stageId?: boolean
   createdByAdminId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   trip?: boolean | Prisma.Expense$tripArgs<ExtArgs>
   officeExpense?: boolean | Prisma.Expense$officeExpenseArgs<ExtArgs>
+  project?: boolean | Prisma.Expense$projectArgs<ExtArgs>
   stage?: boolean | Prisma.Expense$stageArgs<ExtArgs>
 }, ExtArgs["result"]["expense"]>
 
@@ -1534,26 +1901,32 @@ export type ExpenseSelectScalar = {
   kmOneWay?: boolean
   kmTotal?: boolean
   ratePerKm?: boolean
+  projectId?: boolean
+  delegation?: boolean
+  accountingCode?: boolean
   stageId?: boolean
   createdByAdminId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ExpenseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tripId" | "officeExpenseId" | "date" | "amount" | "category" | "vendor" | "description" | "receiptUrl" | "invoiceNumber" | "paymentMethod" | "createdById" | "justification" | "originOffice" | "destinationAddress" | "kmOneWay" | "kmTotal" | "ratePerKm" | "stageId" | "createdByAdminId" | "createdAt" | "updatedAt", ExtArgs["result"]["expense"]>
+export type ExpenseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tripId" | "officeExpenseId" | "date" | "amount" | "category" | "vendor" | "description" | "receiptUrl" | "invoiceNumber" | "paymentMethod" | "createdById" | "justification" | "originOffice" | "destinationAddress" | "kmOneWay" | "kmTotal" | "ratePerKm" | "projectId" | "delegation" | "accountingCode" | "stageId" | "createdByAdminId" | "createdAt" | "updatedAt", ExtArgs["result"]["expense"]>
 export type ExpenseInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   trip?: boolean | Prisma.Expense$tripArgs<ExtArgs>
   officeExpense?: boolean | Prisma.Expense$officeExpenseArgs<ExtArgs>
+  project?: boolean | Prisma.Expense$projectArgs<ExtArgs>
   stage?: boolean | Prisma.Expense$stageArgs<ExtArgs>
 }
 export type ExpenseIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   trip?: boolean | Prisma.Expense$tripArgs<ExtArgs>
   officeExpense?: boolean | Prisma.Expense$officeExpenseArgs<ExtArgs>
+  project?: boolean | Prisma.Expense$projectArgs<ExtArgs>
   stage?: boolean | Prisma.Expense$stageArgs<ExtArgs>
 }
 export type ExpenseIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   trip?: boolean | Prisma.Expense$tripArgs<ExtArgs>
   officeExpense?: boolean | Prisma.Expense$officeExpenseArgs<ExtArgs>
+  project?: boolean | Prisma.Expense$projectArgs<ExtArgs>
   stage?: boolean | Prisma.Expense$stageArgs<ExtArgs>
 }
 
@@ -1562,6 +1935,7 @@ export type $ExpensePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   objects: {
     trip: Prisma.$TripPayload<ExtArgs> | null
     officeExpense: Prisma.$OfficeExpensePayload<ExtArgs> | null
+    project: Prisma.$ProjectPayload<ExtArgs> | null
     stage: Prisma.$TripStagePayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1583,6 +1957,9 @@ export type $ExpensePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     kmOneWay: runtime.Decimal | null
     kmTotal: runtime.Decimal | null
     ratePerKm: runtime.Decimal | null
+    projectId: string | null
+    delegation: string | null
+    accountingCode: string | null
     stageId: string | null
     createdByAdminId: string | null
     createdAt: Date
@@ -1983,6 +2360,7 @@ export interface Prisma__ExpenseClient<T, Null = never, ExtArgs extends runtime.
   readonly [Symbol.toStringTag]: "PrismaPromise"
   trip<T extends Prisma.Expense$tripArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Expense$tripArgs<ExtArgs>>): Prisma.Prisma__TripClient<runtime.Types.Result.GetResult<Prisma.$TripPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   officeExpense<T extends Prisma.Expense$officeExpenseArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Expense$officeExpenseArgs<ExtArgs>>): Prisma.Prisma__OfficeExpenseClient<runtime.Types.Result.GetResult<Prisma.$OfficeExpensePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  project<T extends Prisma.Expense$projectArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Expense$projectArgs<ExtArgs>>): Prisma.Prisma__ProjectClient<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   stage<T extends Prisma.Expense$stageArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Expense$stageArgs<ExtArgs>>): Prisma.Prisma__TripStageClient<runtime.Types.Result.GetResult<Prisma.$TripStagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -2031,6 +2409,9 @@ export interface ExpenseFieldRefs {
   readonly kmOneWay: Prisma.FieldRef<"Expense", 'Decimal'>
   readonly kmTotal: Prisma.FieldRef<"Expense", 'Decimal'>
   readonly ratePerKm: Prisma.FieldRef<"Expense", 'Decimal'>
+  readonly projectId: Prisma.FieldRef<"Expense", 'String'>
+  readonly delegation: Prisma.FieldRef<"Expense", 'String'>
+  readonly accountingCode: Prisma.FieldRef<"Expense", 'String'>
   readonly stageId: Prisma.FieldRef<"Expense", 'String'>
   readonly createdByAdminId: Prisma.FieldRef<"Expense", 'String'>
   readonly createdAt: Prisma.FieldRef<"Expense", 'DateTime'>
@@ -2466,6 +2847,25 @@ export type Expense$officeExpenseArgs<ExtArgs extends runtime.Types.Extensions.I
    */
   include?: Prisma.OfficeExpenseInclude<ExtArgs> | null
   where?: Prisma.OfficeExpenseWhereInput
+}
+
+/**
+ * Expense.project
+ */
+export type Expense$projectArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Project
+   */
+  select?: Prisma.ProjectSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Project
+   */
+  omit?: Prisma.ProjectOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProjectInclude<ExtArgs> | null
+  where?: Prisma.ProjectWhereInput
 }
 
 /**

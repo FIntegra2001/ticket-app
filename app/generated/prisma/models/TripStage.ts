@@ -40,6 +40,7 @@ export type TripStageMinAggregateOutputType = {
   position: number | null
   cityId: string | null
   cityOther: string | null
+  delegation: string | null
   arrivalDate: Date | null
   departureDate: Date | null
   createdAt: Date | null
@@ -52,6 +53,7 @@ export type TripStageMaxAggregateOutputType = {
   position: number | null
   cityId: string | null
   cityOther: string | null
+  delegation: string | null
   arrivalDate: Date | null
   departureDate: Date | null
   createdAt: Date | null
@@ -64,6 +66,7 @@ export type TripStageCountAggregateOutputType = {
   position: number
   cityId: number
   cityOther: number
+  delegation: number
   arrivalDate: number
   departureDate: number
   createdAt: number
@@ -86,6 +89,7 @@ export type TripStageMinAggregateInputType = {
   position?: true
   cityId?: true
   cityOther?: true
+  delegation?: true
   arrivalDate?: true
   departureDate?: true
   createdAt?: true
@@ -98,6 +102,7 @@ export type TripStageMaxAggregateInputType = {
   position?: true
   cityId?: true
   cityOther?: true
+  delegation?: true
   arrivalDate?: true
   departureDate?: true
   createdAt?: true
@@ -110,6 +115,7 @@ export type TripStageCountAggregateInputType = {
   position?: true
   cityId?: true
   cityOther?: true
+  delegation?: true
   arrivalDate?: true
   departureDate?: true
   createdAt?: true
@@ -209,6 +215,7 @@ export type TripStageGroupByOutputType = {
   position: number
   cityId: string
   cityOther: string | null
+  delegation: string | null
   arrivalDate: Date
   departureDate: Date
   createdAt: Date
@@ -244,6 +251,7 @@ export type TripStageWhereInput = {
   position?: Prisma.IntFilter<"TripStage"> | number
   cityId?: Prisma.StringFilter<"TripStage"> | string
   cityOther?: Prisma.StringNullableFilter<"TripStage"> | string | null
+  delegation?: Prisma.StringNullableFilter<"TripStage"> | string | null
   arrivalDate?: Prisma.DateTimeFilter<"TripStage"> | Date | string
   departureDate?: Prisma.DateTimeFilter<"TripStage"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"TripStage"> | Date | string
@@ -259,6 +267,7 @@ export type TripStageOrderByWithRelationInput = {
   position?: Prisma.SortOrder
   cityId?: Prisma.SortOrder
   cityOther?: Prisma.SortOrderInput | Prisma.SortOrder
+  delegation?: Prisma.SortOrderInput | Prisma.SortOrder
   arrivalDate?: Prisma.SortOrder
   departureDate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -277,6 +286,7 @@ export type TripStageWhereUniqueInput = Prisma.AtLeast<{
   position?: Prisma.IntFilter<"TripStage"> | number
   cityId?: Prisma.StringFilter<"TripStage"> | string
   cityOther?: Prisma.StringNullableFilter<"TripStage"> | string | null
+  delegation?: Prisma.StringNullableFilter<"TripStage"> | string | null
   arrivalDate?: Prisma.DateTimeFilter<"TripStage"> | Date | string
   departureDate?: Prisma.DateTimeFilter<"TripStage"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"TripStage"> | Date | string
@@ -292,6 +302,7 @@ export type TripStageOrderByWithAggregationInput = {
   position?: Prisma.SortOrder
   cityId?: Prisma.SortOrder
   cityOther?: Prisma.SortOrderInput | Prisma.SortOrder
+  delegation?: Prisma.SortOrderInput | Prisma.SortOrder
   arrivalDate?: Prisma.SortOrder
   departureDate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -312,6 +323,7 @@ export type TripStageScalarWhereWithAggregatesInput = {
   position?: Prisma.IntWithAggregatesFilter<"TripStage"> | number
   cityId?: Prisma.StringWithAggregatesFilter<"TripStage"> | string
   cityOther?: Prisma.StringNullableWithAggregatesFilter<"TripStage"> | string | null
+  delegation?: Prisma.StringNullableWithAggregatesFilter<"TripStage"> | string | null
   arrivalDate?: Prisma.DateTimeWithAggregatesFilter<"TripStage"> | Date | string
   departureDate?: Prisma.DateTimeWithAggregatesFilter<"TripStage"> | Date | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"TripStage"> | Date | string
@@ -322,6 +334,7 @@ export type TripStageCreateInput = {
   id?: string
   position: number
   cityOther?: string | null
+  delegation?: string | null
   arrivalDate: Date | string
   departureDate: Date | string
   createdAt?: Date | string
@@ -337,6 +350,7 @@ export type TripStageUncheckedCreateInput = {
   position: number
   cityId: string
   cityOther?: string | null
+  delegation?: string | null
   arrivalDate: Date | string
   departureDate: Date | string
   createdAt?: Date | string
@@ -348,6 +362,7 @@ export type TripStageUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   position?: Prisma.IntFieldUpdateOperationsInput | number
   cityOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delegation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   arrivalDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   departureDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -363,6 +378,7 @@ export type TripStageUncheckedUpdateInput = {
   position?: Prisma.IntFieldUpdateOperationsInput | number
   cityId?: Prisma.StringFieldUpdateOperationsInput | string
   cityOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delegation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   arrivalDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   departureDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -376,6 +392,7 @@ export type TripStageCreateManyInput = {
   position: number
   cityId: string
   cityOther?: string | null
+  delegation?: string | null
   arrivalDate: Date | string
   departureDate: Date | string
   createdAt?: Date | string
@@ -386,6 +403,7 @@ export type TripStageUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   position?: Prisma.IntFieldUpdateOperationsInput | number
   cityOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delegation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   arrivalDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   departureDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -398,6 +416,7 @@ export type TripStageUncheckedUpdateManyInput = {
   position?: Prisma.IntFieldUpdateOperationsInput | number
   cityId?: Prisma.StringFieldUpdateOperationsInput | string
   cityOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delegation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   arrivalDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   departureDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -420,6 +439,7 @@ export type TripStageCountOrderByAggregateInput = {
   position?: Prisma.SortOrder
   cityId?: Prisma.SortOrder
   cityOther?: Prisma.SortOrder
+  delegation?: Prisma.SortOrder
   arrivalDate?: Prisma.SortOrder
   departureDate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -436,6 +456,7 @@ export type TripStageMaxOrderByAggregateInput = {
   position?: Prisma.SortOrder
   cityId?: Prisma.SortOrder
   cityOther?: Prisma.SortOrder
+  delegation?: Prisma.SortOrder
   arrivalDate?: Prisma.SortOrder
   departureDate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -448,6 +469,7 @@ export type TripStageMinOrderByAggregateInput = {
   position?: Prisma.SortOrder
   cityId?: Prisma.SortOrder
   cityOther?: Prisma.SortOrder
+  delegation?: Prisma.SortOrder
   arrivalDate?: Prisma.SortOrder
   departureDate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -567,6 +589,7 @@ export type TripStageCreateWithoutTripInput = {
   id?: string
   position: number
   cityOther?: string | null
+  delegation?: string | null
   arrivalDate: Date | string
   departureDate: Date | string
   createdAt?: Date | string
@@ -580,6 +603,7 @@ export type TripStageUncheckedCreateWithoutTripInput = {
   position: number
   cityId: string
   cityOther?: string | null
+  delegation?: string | null
   arrivalDate: Date | string
   departureDate: Date | string
   createdAt?: Date | string
@@ -622,6 +646,7 @@ export type TripStageScalarWhereInput = {
   position?: Prisma.IntFilter<"TripStage"> | number
   cityId?: Prisma.StringFilter<"TripStage"> | string
   cityOther?: Prisma.StringNullableFilter<"TripStage"> | string | null
+  delegation?: Prisma.StringNullableFilter<"TripStage"> | string | null
   arrivalDate?: Prisma.DateTimeFilter<"TripStage"> | Date | string
   departureDate?: Prisma.DateTimeFilter<"TripStage"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"TripStage"> | Date | string
@@ -632,6 +657,7 @@ export type TripStageCreateWithoutCityInput = {
   id?: string
   position: number
   cityOther?: string | null
+  delegation?: string | null
   arrivalDate: Date | string
   departureDate: Date | string
   createdAt?: Date | string
@@ -645,6 +671,7 @@ export type TripStageUncheckedCreateWithoutCityInput = {
   tripId: string
   position: number
   cityOther?: string | null
+  delegation?: string | null
   arrivalDate: Date | string
   departureDate: Date | string
   createdAt?: Date | string
@@ -682,6 +709,7 @@ export type TripStageCreateWithoutExpensesInput = {
   id?: string
   position: number
   cityOther?: string | null
+  delegation?: string | null
   arrivalDate: Date | string
   departureDate: Date | string
   createdAt?: Date | string
@@ -696,6 +724,7 @@ export type TripStageUncheckedCreateWithoutExpensesInput = {
   position: number
   cityId: string
   cityOther?: string | null
+  delegation?: string | null
   arrivalDate: Date | string
   departureDate: Date | string
   createdAt?: Date | string
@@ -722,6 +751,7 @@ export type TripStageUpdateWithoutExpensesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   position?: Prisma.IntFieldUpdateOperationsInput | number
   cityOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delegation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   arrivalDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   departureDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -736,6 +766,7 @@ export type TripStageUncheckedUpdateWithoutExpensesInput = {
   position?: Prisma.IntFieldUpdateOperationsInput | number
   cityId?: Prisma.StringFieldUpdateOperationsInput | string
   cityOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delegation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   arrivalDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   departureDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -747,6 +778,7 @@ export type TripStageCreateManyTripInput = {
   position: number
   cityId: string
   cityOther?: string | null
+  delegation?: string | null
   arrivalDate: Date | string
   departureDate: Date | string
   createdAt?: Date | string
@@ -757,6 +789,7 @@ export type TripStageUpdateWithoutTripInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   position?: Prisma.IntFieldUpdateOperationsInput | number
   cityOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delegation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   arrivalDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   departureDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -770,6 +803,7 @@ export type TripStageUncheckedUpdateWithoutTripInput = {
   position?: Prisma.IntFieldUpdateOperationsInput | number
   cityId?: Prisma.StringFieldUpdateOperationsInput | string
   cityOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delegation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   arrivalDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   departureDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -782,6 +816,7 @@ export type TripStageUncheckedUpdateManyWithoutTripInput = {
   position?: Prisma.IntFieldUpdateOperationsInput | number
   cityId?: Prisma.StringFieldUpdateOperationsInput | string
   cityOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delegation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   arrivalDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   departureDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -793,6 +828,7 @@ export type TripStageCreateManyCityInput = {
   tripId: string
   position: number
   cityOther?: string | null
+  delegation?: string | null
   arrivalDate: Date | string
   departureDate: Date | string
   createdAt?: Date | string
@@ -803,6 +839,7 @@ export type TripStageUpdateWithoutCityInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   position?: Prisma.IntFieldUpdateOperationsInput | number
   cityOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delegation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   arrivalDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   departureDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -816,6 +853,7 @@ export type TripStageUncheckedUpdateWithoutCityInput = {
   tripId?: Prisma.StringFieldUpdateOperationsInput | string
   position?: Prisma.IntFieldUpdateOperationsInput | number
   cityOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delegation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   arrivalDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   departureDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -828,6 +866,7 @@ export type TripStageUncheckedUpdateManyWithoutCityInput = {
   tripId?: Prisma.StringFieldUpdateOperationsInput | string
   position?: Prisma.IntFieldUpdateOperationsInput | number
   cityOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delegation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   arrivalDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   departureDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -871,6 +910,7 @@ export type TripStageSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   position?: boolean
   cityId?: boolean
   cityOther?: boolean
+  delegation?: boolean
   arrivalDate?: boolean
   departureDate?: boolean
   createdAt?: boolean
@@ -887,6 +927,7 @@ export type TripStageSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   position?: boolean
   cityId?: boolean
   cityOther?: boolean
+  delegation?: boolean
   arrivalDate?: boolean
   departureDate?: boolean
   createdAt?: boolean
@@ -901,6 +942,7 @@ export type TripStageSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
   position?: boolean
   cityId?: boolean
   cityOther?: boolean
+  delegation?: boolean
   arrivalDate?: boolean
   departureDate?: boolean
   createdAt?: boolean
@@ -915,13 +957,14 @@ export type TripStageSelectScalar = {
   position?: boolean
   cityId?: boolean
   cityOther?: boolean
+  delegation?: boolean
   arrivalDate?: boolean
   departureDate?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type TripStageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tripId" | "position" | "cityId" | "cityOther" | "arrivalDate" | "departureDate" | "createdAt" | "updatedAt", ExtArgs["result"]["tripStage"]>
+export type TripStageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tripId" | "position" | "cityId" | "cityOther" | "delegation" | "arrivalDate" | "departureDate" | "createdAt" | "updatedAt", ExtArgs["result"]["tripStage"]>
 export type TripStageInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   trip?: boolean | Prisma.TripDefaultArgs<ExtArgs>
   city?: boolean | Prisma.CityDefaultArgs<ExtArgs>
@@ -950,6 +993,7 @@ export type $TripStagePayload<ExtArgs extends runtime.Types.Extensions.InternalA
     position: number
     cityId: string
     cityOther: string | null
+    delegation: string | null
     arrivalDate: Date
     departureDate: Date
     createdAt: Date
@@ -1385,6 +1429,7 @@ export interface TripStageFieldRefs {
   readonly position: Prisma.FieldRef<"TripStage", 'Int'>
   readonly cityId: Prisma.FieldRef<"TripStage", 'String'>
   readonly cityOther: Prisma.FieldRef<"TripStage", 'String'>
+  readonly delegation: Prisma.FieldRef<"TripStage", 'String'>
   readonly arrivalDate: Prisma.FieldRef<"TripStage", 'DateTime'>
   readonly departureDate: Prisma.FieldRef<"TripStage", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"TripStage", 'DateTime'>

@@ -6,6 +6,7 @@ import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { ZodError } from "zod";
 import { buildMileageData, MileageError } from "@/lib/mileage.server";
+import { ProjectError, resolveOfficeExpenseProject, resolveTripExpenseProject } from "@/lib/projects.server";
 import { resolveExpenseStage, StageError } from "@/lib/trip-stages.server";
 
 type Params = {
@@ -137,6 +138,17 @@ export async function PUT(request: Request, { params }: Params) {
       });
       validatedData.amount = km.amountNumber;
     }
+    // Fase 3: si cambia el proyecto o el tramo, se recalcula el código contable
+    if (validatedData.projectId !== undefined || validatedData.stageId !== undefined) {
+      const proj = await resolveTripExpenseProject(
+        tripId,
+        validatedData.stageId ?? existingExpense.stageId,
+        validatedData.projectId ?? existingExpense.projectId,
+      );
+      updateData.project = proj.projectId ? { connect: { id: proj.projectId } } : { disconnect: true };
+      updateData.delegation = proj.delegation;
+      updateData.accountingCode = proj.accountingCode;
+    }
     // Fase 1: cambio de tramo (debe ser de este viaje)
     if (validatedData.stageId !== undefined) {
       const stageId = await resolveExpenseStage(
@@ -177,6 +189,9 @@ export async function PUT(request: Request, { params }: Params) {
 
     return NextResponse.json(expense);
   } catch (error) {
+    if (error instanceof ProjectError) {
+      return NextResponse.json({ error: error.message }, { status: error.status });
+    }
     if (error instanceof MileageError) {
       return NextResponse.json({ error: error.message }, { status: 400 });
     }

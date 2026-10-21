@@ -4,7 +4,9 @@ import * as React from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import type { Expense, TripStage } from "@/types";
+import type { Expense, Project, TripStage } from "@/types";
+import { useProjects } from "@/hooks/useProjects";
+import { DELEGATIONS, projectLabel, projectsForKeys } from "@/lib/projects";
 import {
   Select,
   SelectContent,
@@ -47,6 +49,8 @@ type ExpenseFormValues = {
   kmOneWay?: number;
   originOffice?: string;
   destinationAddress?: string;
+  projectId?: string;
+  delegation?: string;
 };
 
 interface ExpenseFormProps {
@@ -63,6 +67,8 @@ interface ExpenseFormProps {
   initialData?: Expense | null;
   /** Fase 1: tramos del viaje. Con 2 o más, se pide el destino del gasto. */
   stages?: TripStage[];
+  /** Fase 3: proyectos del viaje. Con 2 o más, el gasto elige uno. */
+  tripProjects?: Project[];
   onSubmit: (values: ExpenseFormValues) => void;
   onCancel: () => void;
 }
@@ -75,7 +81,24 @@ export default function ExpenseForm({
   officeExpenseId,
   scope = "trip",
   stages = [],
+  tripProjects = [],
 }: ExpenseFormProps) {
+  // Fase 3: proyecto del gasto. En oficina, también la delegación (se propone
+  // la última usada en este dispositivo).
+  const { data: allProjects = [] } = useProjects();
+  const [projectId, setProjectId] = React.useState<string>(
+    initialData?.projectId ?? (tripProjects.length === 1 ? tripProjects[0].id : ""),
+  );
+  const [delegation, setDelegation] = React.useState<string>(() => {
+    if (initialData?.delegation) return initialData.delegation;
+    try {
+      return localStorage.getItem("officeDelegation") || "MAD";
+    } catch {
+      return "MAD";
+    }
+  });
+  const officeProjects =
+    scope === "office" ? projectsForKeys(allProjects, [[delegation]]) : [];
   // Categorías del contexto: en un viaje solo salen las de viaje, en un parte de
   // oficina solo las de oficina.
   const categories = getCategoriesByScope(scope);
@@ -242,6 +265,14 @@ export default function ExpenseForm({
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (scope === "office" && !projectId) {
+      toast.error("Elige el proyecto del gasto");
+      return;
+    }
+    if (scope !== "office" && tripProjects.length > 1 && !projectId) {
+      toast.error("Elige a qué proyecto va este gasto");
+      return;
+    }
     if (needsJustification && !values.justification?.trim()) {
       toast.error("Indica la justificación (proyecto o empresa)");
       return;
@@ -271,6 +302,8 @@ export default function ExpenseForm({
         amount: parsedAmount,
         receiptUrl: kmMode ? undefined : receiptUrl,
         stageId: effectiveStageId,
+        projectId: projectId || undefined,
+        delegation: scope === "office" ? delegation : undefined,
         ...(kmMode
           ? { kmOneWay, paymentMethod: PERSONAL_ADVANCE }
           : { kmOneWay: undefined, originOffice: undefined, destinationAddress: undefined }),
@@ -322,6 +355,69 @@ export default function ExpenseForm({
           onFileSelected={handleFileSelected}
           onRemove={handleRemoveImage}
         />
+      )}
+
+      {/* Fase 3: proyecto (y delegación en oficina) */}
+      {scope === "office" ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div>
+            <Label>Delegación *</Label>
+            <Select
+              value={delegation}
+              onValueChange={(v) => {
+                setDelegation(v);
+                try {
+                  localStorage.setItem("officeDelegation", v);
+                } catch {}
+                if (!projectsForKeys(allProjects, [[v]]).some((p) => p.id === projectId)) setProjectId("");
+              }}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {DELEGATIONS.map((d) => (
+                  <SelectItem key={d.code} value={d.code}>
+                    {d.name} ({d.code})
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <Label>Proyecto *</Label>
+            <Select value={projectId} onValueChange={setProjectId}>
+              <SelectTrigger>
+                <SelectValue placeholder="Elige proyecto..." />
+              </SelectTrigger>
+              <SelectContent>
+                {officeProjects.map((p) => (
+                  <SelectItem key={p.id} value={p.id}>
+                    {projectLabel(p)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+      ) : (
+        tripProjects.length > 1 && (
+          <div>
+            <Label>Proyecto del gasto *</Label>
+            <Select value={projectId} onValueChange={setProjectId}>
+              <SelectTrigger>
+                <SelectValue placeholder="¿A qué proyecto va?" />
+              </SelectTrigger>
+              <SelectContent>
+                {tripProjects.map((p) => (
+                  <SelectItem key={p.id} value={p.id}>
+                    {projectLabel(p)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        )
       )}
 
       {needsJustification && (

@@ -52,6 +52,7 @@ export async function GET(request: NextRequest) {
           requestedBy: { select: { id: true, name: true, email: true } },
           documents: { select: { id: true, type: true, createdAt: true } },
           stages: stagesInclude,
+        projects: { include: { project: { include: { allocations: { select: { delegation: true, accountingCode: true } } } } } },
         },
         orderBy: tab ? tripTabOrder(tab) : { createdAt: "desc" },
         skip,

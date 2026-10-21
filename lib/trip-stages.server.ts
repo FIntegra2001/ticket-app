@@ -25,6 +25,7 @@ function stageData(s: StageInput, position: number) {
     position,
     cityId: s.cityId,
     cityOther: s.cityOther?.trim() || null,
+    delegation: s.delegation || null,
     arrivalDate: toDay(s.arrivalDate),
     departureDate: toDay(s.departureDate),
   };

@@ -38,6 +38,8 @@ export type CityMinAggregateOutputType = {
   id: string | null
   name: string | null
   region: string | null
+  code: string | null
+  delegation: string | null
   isOther: boolean | null
   active: boolean | null
   sortOrder: number | null
@@ -49,6 +51,8 @@ export type CityMaxAggregateOutputType = {
   id: string | null
   name: string | null
   region: string | null
+  code: string | null
+  delegation: string | null
   isOther: boolean | null
   active: boolean | null
   sortOrder: number | null
@@ -60,6 +64,8 @@ export type CityCountAggregateOutputType = {
   id: number
   name: number
   region: number
+  code: number
+  delegation: number
   isOther: number
   active: number
   sortOrder: number
@@ -81,6 +87,8 @@ export type CityMinAggregateInputType = {
   id?: true
   name?: true
   region?: true
+  code?: true
+  delegation?: true
   isOther?: true
   active?: true
   sortOrder?: true
@@ -92,6 +100,8 @@ export type CityMaxAggregateInputType = {
   id?: true
   name?: true
   region?: true
+  code?: true
+  delegation?: true
   isOther?: true
   active?: true
   sortOrder?: true
@@ -103,6 +113,8 @@ export type CityCountAggregateInputType = {
   id?: true
   name?: true
   region?: true
+  code?: true
+  delegation?: true
   isOther?: true
   active?: true
   sortOrder?: true
@@ -201,6 +213,8 @@ export type CityGroupByOutputType = {
   id: string
   name: string
   region: string | null
+  code: string | null
+  delegation: string | null
   isOther: boolean
   active: boolean
   sortOrder: number
@@ -235,6 +249,8 @@ export type CityWhereInput = {
   id?: Prisma.StringFilter<"City"> | string
   name?: Prisma.StringFilter<"City"> | string
   region?: Prisma.StringNullableFilter<"City"> | string | null
+  code?: Prisma.StringNullableFilter<"City"> | string | null
+  delegation?: Prisma.StringNullableFilter<"City"> | string | null
   isOther?: Prisma.BoolFilter<"City"> | boolean
   active?: Prisma.BoolFilter<"City"> | boolean
   sortOrder?: Prisma.IntFilter<"City"> | number
@@ -247,6 +263,8 @@ export type CityOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   region?: Prisma.SortOrderInput | Prisma.SortOrder
+  code?: Prisma.SortOrderInput | Prisma.SortOrder
+  delegation?: Prisma.SortOrderInput | Prisma.SortOrder
   isOther?: Prisma.SortOrder
   active?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
@@ -262,6 +280,8 @@ export type CityWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.CityWhereInput[]
   NOT?: Prisma.CityWhereInput | Prisma.CityWhereInput[]
   region?: Prisma.StringNullableFilter<"City"> | string | null
+  code?: Prisma.StringNullableFilter<"City"> | string | null
+  delegation?: Prisma.StringNullableFilter<"City"> | string | null
   isOther?: Prisma.BoolFilter<"City"> | boolean
   active?: Prisma.BoolFilter<"City"> | boolean
   sortOrder?: Prisma.IntFilter<"City"> | number
@@ -274,6 +294,8 @@ export type CityOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   region?: Prisma.SortOrderInput | Prisma.SortOrder
+  code?: Prisma.SortOrderInput | Prisma.SortOrder
+  delegation?: Prisma.SortOrderInput | Prisma.SortOrder
   isOther?: Prisma.SortOrder
   active?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
@@ -293,6 +315,8 @@ export type CityScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"City"> | string
   name?: Prisma.StringWithAggregatesFilter<"City"> | string
   region?: Prisma.StringNullableWithAggregatesFilter<"City"> | string | null
+  code?: Prisma.StringNullableWithAggregatesFilter<"City"> | string | null
+  delegation?: Prisma.StringNullableWithAggregatesFilter<"City"> | string | null
   isOther?: Prisma.BoolWithAggregatesFilter<"City"> | boolean
   active?: Prisma.BoolWithAggregatesFilter<"City"> | boolean
   sortOrder?: Prisma.IntWithAggregatesFilter<"City"> | number
@@ -304,6 +328,8 @@ export type CityCreateInput = {
   id?: string
   name: string
   region?: string | null
+  code?: string | null
+  delegation?: string | null
   isOther?: boolean
   active?: boolean
   sortOrder?: number
@@ -316,6 +342,8 @@ export type CityUncheckedCreateInput = {
   id?: string
   name: string
   region?: string | null
+  code?: string | null
+  delegation?: string | null
   isOther?: boolean
   active?: boolean
   sortOrder?: number
@@ -328,6 +356,8 @@ export type CityUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delegation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isOther?: Prisma.BoolFieldUpdateOperationsInput | boolean
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
@@ -340,6 +370,8 @@ export type CityUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delegation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isOther?: Prisma.BoolFieldUpdateOperationsInput | boolean
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
@@ -352,6 +384,8 @@ export type CityCreateManyInput = {
   id?: string
   name: string
   region?: string | null
+  code?: string | null
+  delegation?: string | null
   isOther?: boolean
   active?: boolean
   sortOrder?: number
@@ -363,6 +397,8 @@ export type CityUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delegation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isOther?: Prisma.BoolFieldUpdateOperationsInput | boolean
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
@@ -374,6 +410,8 @@ export type CityUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delegation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isOther?: Prisma.BoolFieldUpdateOperationsInput | boolean
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
@@ -385,6 +423,8 @@ export type CityCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   region?: Prisma.SortOrder
+  code?: Prisma.SortOrder
+  delegation?: Prisma.SortOrder
   isOther?: Prisma.SortOrder
   active?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
@@ -400,6 +440,8 @@ export type CityMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   region?: Prisma.SortOrder
+  code?: Prisma.SortOrder
+  delegation?: Prisma.SortOrder
   isOther?: Prisma.SortOrder
   active?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
@@ -411,6 +453,8 @@ export type CityMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   region?: Prisma.SortOrder
+  code?: Prisma.SortOrder
+  delegation?: Prisma.SortOrder
   isOther?: Prisma.SortOrder
   active?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
@@ -445,6 +489,8 @@ export type CityCreateWithoutStagesInput = {
   id?: string
   name: string
   region?: string | null
+  code?: string | null
+  delegation?: string | null
   isOther?: boolean
   active?: boolean
   sortOrder?: number
@@ -456,6 +502,8 @@ export type CityUncheckedCreateWithoutStagesInput = {
   id?: string
   name: string
   region?: string | null
+  code?: string | null
+  delegation?: string | null
   isOther?: boolean
   active?: boolean
   sortOrder?: number
@@ -483,6 +531,8 @@ export type CityUpdateWithoutStagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delegation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isOther?: Prisma.BoolFieldUpdateOperationsInput | boolean
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
@@ -494,6 +544,8 @@ export type CityUncheckedUpdateWithoutStagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  delegation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isOther?: Prisma.BoolFieldUpdateOperationsInput | boolean
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
@@ -536,6 +588,8 @@ export type CitySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   id?: boolean
   name?: boolean
   region?: boolean
+  code?: boolean
+  delegation?: boolean
   isOther?: boolean
   active?: boolean
   sortOrder?: boolean
@@ -549,6 +603,8 @@ export type CitySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   id?: boolean
   name?: boolean
   region?: boolean
+  code?: boolean
+  delegation?: boolean
   isOther?: boolean
   active?: boolean
   sortOrder?: boolean
@@ -560,6 +616,8 @@ export type CitySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   id?: boolean
   name?: boolean
   region?: boolean
+  code?: boolean
+  delegation?: boolean
   isOther?: boolean
   active?: boolean
   sortOrder?: boolean
@@ -571,6 +629,8 @@ export type CitySelectScalar = {
   id?: boolean
   name?: boolean
   region?: boolean
+  code?: boolean
+  delegation?: boolean
   isOther?: boolean
   active?: boolean
   sortOrder?: boolean
@@ -578,7 +638,7 @@ export type CitySelectScalar = {
   updatedAt?: boolean
 }
 
-export type CityOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "region" | "isOther" | "active" | "sortOrder" | "createdAt" | "updatedAt", ExtArgs["result"]["city"]>
+export type CityOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "region" | "code" | "delegation" | "isOther" | "active" | "sortOrder" | "createdAt" | "updatedAt", ExtArgs["result"]["city"]>
 export type CityInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   stages?: boolean | Prisma.City$stagesArgs<ExtArgs>
   _count?: boolean | Prisma.CityCountOutputTypeDefaultArgs<ExtArgs>
@@ -595,6 +655,8 @@ export type $CityPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     id: string
     name: string
     region: string | null
+    code: string | null
+    delegation: string | null
     isOther: boolean
     active: boolean
     sortOrder: number
@@ -1027,6 +1089,8 @@ export interface CityFieldRefs {
   readonly id: Prisma.FieldRef<"City", 'String'>
   readonly name: Prisma.FieldRef<"City", 'String'>
   readonly region: Prisma.FieldRef<"City", 'String'>
+  readonly code: Prisma.FieldRef<"City", 'String'>
+  readonly delegation: Prisma.FieldRef<"City", 'String'>
   readonly isOther: Prisma.FieldRef<"City", 'Boolean'>
   readonly active: Prisma.FieldRef<"City", 'Boolean'>
   readonly sortOrder: Prisma.FieldRef<"City", 'Int'>

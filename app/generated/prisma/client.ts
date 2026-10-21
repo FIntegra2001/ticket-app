@@ -104,3 +104,18 @@ export type MileageRate = Prisma.MileageRateModel
  * 
  */
 export type Reimbursement = Prisma.ReimbursementModel
+/**
+ * Model Project
+ * 
+ */
+export type Project = Prisma.ProjectModel
+/**
+ * Model ProjectAllocation
+ * 
+ */
+export type ProjectAllocation = Prisma.ProjectAllocationModel
+/**
+ * Model TripProject
+ * 
+ */
+export type TripProject = Prisma.TripProjectModel

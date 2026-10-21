@@ -16,6 +16,8 @@ export default function AdminCitiesPage() {
   const { data: cities = [], isLoading } = useCities(true);
   const [name, setName] = React.useState("");
   const [region, setRegion] = React.useState("");
+  const [code, setCode] = React.useState("");
+  const [delegation, setDelegation] = React.useState("");
 
   const regions = [...new Set(cities.map((c) => c.region).filter(Boolean))] as string[];
 
@@ -26,7 +28,7 @@ export default function AdminCitiesPage() {
       const res = await fetch("/api/admin/cities", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, region }),
+        body: JSON.stringify({ name, region, code, delegation: delegation || code }),
       });
       if (!res.ok) throw new Error((await res.json()).error ?? "Error");
     },
@@ -34,6 +36,8 @@ export default function AdminCitiesPage() {
       toast.success("Ciudad añadida");
       setName("");
       setRegion("");
+      setCode("");
+      setDelegation("");
       refresh();
     },
     onError: (e: Error) => toast.error(e.message),
@@ -84,7 +88,22 @@ export default function AdminCitiesPage() {
             </datalist>
           </div>
         </div>
-        <Button type="submit" disabled={!name.trim() || !region.trim() || create.isPending}>
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <Label htmlFor="code">Código (3-4 letras)</Label>
+            <Input id="code" value={code} onChange={(e) => setCode(e.target.value.toUpperCase())} placeholder="MAD" />
+          </div>
+          <div>
+            <Label htmlFor="delegation">Delegación</Label>
+            <Input
+              id="delegation"
+              value={delegation}
+              onChange={(e) => setDelegation(e.target.value.toUpperCase())}
+              placeholder="igual que el código"
+            />
+          </div>
+        </div>
+        <Button type="submit" disabled={!name.trim() || !region.trim() || !code.trim() || create.isPending}>
           Añadir
         </Button>
       </form>
@@ -101,6 +120,12 @@ export default function AdminCitiesPage() {
               <div>
                 <span className="font-medium">{c.name}</span>{" "}
                 <span className="text-sm text-muted-foreground">{c.region ?? ""}</span>
+                {c.code && (
+                  <code className="ml-2 text-xs bg-muted rounded px-1.5 py-0.5">
+                    {c.code}
+                    {c.delegation && c.delegation !== c.code ? ` → ${c.delegation}` : ""}
+                  </code>
+                )}
                 {!c.active && (
                   <Badge variant="outline" className="ml-2">
                     Desactivada

@@ -45,6 +45,7 @@ export default function TripsPage() {
   const handleSubmit = (formData: CreateTripDto) => {
     const payload = {
       stages: formData.stages,
+      projectIds: formData.projectIds,
       project: formData.project,
       notes: formData.notes,
     };

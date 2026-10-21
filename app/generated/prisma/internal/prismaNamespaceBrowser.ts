@@ -63,7 +63,10 @@ export const ModelName = {
   Account: 'Account',
   Verification: 'Verification',
   MileageRate: 'MileageRate',
-  Reimbursement: 'Reimbursement'
+  Reimbursement: 'Reimbursement',
+  Project: 'Project',
+  ProjectAllocation: 'ProjectAllocation',
+  TripProject: 'TripProject'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -141,6 +144,8 @@ export const CityScalarFieldEnum = {
   id: 'id',
   name: 'name',
   region: 'region',
+  code: 'code',
+  delegation: 'delegation',
   isOther: 'isOther',
   active: 'active',
   sortOrder: 'sortOrder',
@@ -157,6 +162,7 @@ export const TripStageScalarFieldEnum = {
   position: 'position',
   cityId: 'cityId',
   cityOther: 'cityOther',
+  delegation: 'delegation',
   arrivalDate: 'arrivalDate',
   departureDate: 'departureDate',
   createdAt: 'createdAt',
@@ -211,6 +217,9 @@ export const ExpenseScalarFieldEnum = {
   kmOneWay: 'kmOneWay',
   kmTotal: 'kmTotal',
   ratePerKm: 'ratePerKm',
+  projectId: 'projectId',
+  delegation: 'delegation',
+  accountingCode: 'accountingCode',
   stageId: 'stageId',
   createdByAdminId: 'createdByAdminId',
   createdAt: 'createdAt',
@@ -288,6 +297,41 @@ export const ReimbursementScalarFieldEnum = {
 } as const
 
 export type ReimbursementScalarFieldEnum = (typeof ReimbursementScalarFieldEnum)[keyof typeof ReimbursementScalarFieldEnum]
+
+
+export const ProjectScalarFieldEnum = {
+  id: 'id',
+  code: 'code',
+  year: 'year',
+  shortName: 'shortName',
+  funder: 'funder',
+  fullName: 'fullName',
+  type: 'type',
+  status: 'status',
+  active: 'active',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ProjectScalarFieldEnum = (typeof ProjectScalarFieldEnum)[keyof typeof ProjectScalarFieldEnum]
+
+
+export const ProjectAllocationScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  delegation: 'delegation',
+  accountingCode: 'accountingCode'
+} as const
+
+export type ProjectAllocationScalarFieldEnum = (typeof ProjectAllocationScalarFieldEnum)[keyof typeof ProjectAllocationScalarFieldEnum]
+
+
+export const TripProjectScalarFieldEnum = {
+  tripId: 'tripId',
+  projectId: 'projectId'
+} as const
+
+export type TripProjectScalarFieldEnum = (typeof TripProjectScalarFieldEnum)[keyof typeof TripProjectScalarFieldEnum]
 
 
 export const SortOrder = {

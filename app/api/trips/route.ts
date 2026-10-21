@@ -2,6 +2,7 @@ import { Prisma } from "@/app/generated/prisma/client";
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/db";
 import { createTripSchema, requestTripSchema } from "@/lib/validations";
+import { prepareTripProjects, ProjectError } from "@/lib/projects.server";
 import {
   createStagesInput,
   prepareStages,
@@ -47,6 +48,7 @@ export async function GET(request: NextRequest) {
           },
           expenses: true,
           stages: stagesInclude,
+        projects: { include: { project: { include: { allocations: { select: { delegation: true, accountingCode: true } } } } } },
         },
         orderBy: { createdAt: "desc" },
         skip,
@@ -96,7 +98,9 @@ export async function POST(request: Request) {
             createdByAdmin: { connect: { id: session.user.id } },
             ...(await prepareStages(v.stages)),
             stages: createStagesInput(v.stages),
-            project: v.project,
+            // Fase 3: proyectos del catálogo (Trip.project queda como resumen)
+            project: await prepareTripProjects(v.projectIds, v.stages),
+            projects: { create: v.projectIds.map((projectId) => ({ projectId })) },
             notes: v.notes,
             numberInvoice: v.numberInvoice,
             status: "APROBADO",
@@ -113,7 +117,9 @@ export async function POST(request: Request) {
             requestedBy: { connect: { id: session.user.id } },
             ...(await prepareStages(v.stages)),
             stages: createStagesInput(v.stages),
-            project: v.project,
+            // Fase 3: proyectos del catálogo (Trip.project queda como resumen)
+            project: await prepareTripProjects(v.projectIds, v.stages),
+            projects: { create: v.projectIds.map((projectId) => ({ projectId })) },
             notes: v.notes,
             status: "PENDIENTE",
             assignedUsers: { create: [{ userId: session.user.id }] },
@@ -132,11 +138,15 @@ export async function POST(request: Request) {
         },
         expenses: true,
         stages: stagesInclude,
+        projects: { include: { project: { include: { allocations: { select: { delegation: true, accountingCode: true } } } } } },
       },
     });
 
     return NextResponse.json(trip, { status: 201 });
   } catch (error) {
+    if (error instanceof ProjectError) {
+      return NextResponse.json({ error: error.message }, { status: error.status });
+    }
     if (error instanceof StageError) {
       return NextResponse.json({ error: error.message }, { status: error.status });
     }

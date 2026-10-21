@@ -7,6 +7,7 @@ import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { ZodError } from "zod";
 import { buildMileageData, MileageError } from "@/lib/mileage.server";
+import { ProjectError, resolveOfficeExpenseProject, resolveTripExpenseProject } from "@/lib/projects.server";
 
 type Params = {
   params: Promise<{ officeExpenseId: string; expenseId: string }>;
@@ -90,6 +91,16 @@ export async function PUT(request: Request, { params }: Params) {
     if (validatedData.paymentMethod !== undefined)
       updateData.paymentMethod = validatedData.paymentMethod;
 
+    // Fase 3: proyecto / delegación → recalcular código contable
+    if (validatedData.projectId !== undefined || validatedData.delegation !== undefined) {
+      const proj = await resolveOfficeExpenseProject(
+        validatedData.projectId ?? existing.projectId,
+        validatedData.delegation ?? existing.delegation,
+      );
+      updateData.project = { connect: { id: proj.projectId! } };
+      updateData.delegation = proj.delegation;
+      updateData.accountingCode = proj.accountingCode;
+    }
     if (validatedData.justification !== undefined)
       updateData.justification = validatedData.justification;
     // Fase 2: kilometraje recalculado en el servidor (importe, tarifa, pago)
@@ -133,6 +144,9 @@ export async function PUT(request: Request, { params }: Params) {
 
     return NextResponse.json(expense);
   } catch (error) {
+    if (error instanceof ProjectError) {
+      return NextResponse.json({ error: error.message }, { status: error.status });
+    }
     if (error instanceof MileageError) {
       return NextResponse.json({ error: error.message }, { status: 400 });
     }

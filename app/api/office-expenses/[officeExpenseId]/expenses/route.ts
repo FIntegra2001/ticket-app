@@ -7,6 +7,7 @@ import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { ZodError } from "zod";
 import { buildMileageData, MileageError } from "@/lib/mileage.server";
+import { ProjectError, resolveOfficeExpenseProject, resolveTripExpenseProject } from "@/lib/projects.server";
 
 type Params = {
   params: Promise<{ officeExpenseId: string }>;
@@ -116,6 +117,8 @@ export async function POST(request: Request, { params }: Params) {
         { status: 400 },
       );
     }
+    // Fase 3: proyecto + delegación elegida → código contable
+    const proj = await resolveOfficeExpenseProject(validatedData.projectId, validatedData.delegation);
     const km = await buildMileageData(validatedData);
     if (!km && !validatedData.receiptUrl) {
       return NextResponse.json(
@@ -129,6 +132,7 @@ export async function POST(request: Request, { params }: Params) {
       prisma.expense.create({
         data: {
           officeExpenseId,
+          ...proj,
           amount: new Prisma.Decimal(amount),
           justification: validatedData.justification,
           createdById: session.user.id,
@@ -157,6 +161,9 @@ export async function POST(request: Request, { params }: Params) {
 
     return NextResponse.json(expense, { status: 201 });
   } catch (error) {
+    if (error instanceof ProjectError) {
+      return NextResponse.json({ error: error.message }, { status: error.status });
+    }
     if (error instanceof MileageError) {
       return NextResponse.json({ error: error.message }, { status: 400 });
     }

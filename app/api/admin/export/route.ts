@@ -134,7 +134,8 @@ export async function GET(request: Request) {
       cobro:                 añoGasto,
       mesImputacion:         mesNum,
       imputacion:            añoGasto,
-      proyecto:              trip.project ?? "",
+      // Fase 3: código contable del gasto (CÓD-DELEG-AÑO); gastos sin él, el texto antiguo
+      proyecto:              expense.accountingCode ?? trip.project ?? "",
       pagado:                "Sí",
       fechaPago:             "",
       personal:              userNames,

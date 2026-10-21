@@ -8,6 +8,7 @@ import {
   StageError,
   stagesInclude,
 } from "@/lib/trip-stages.server";
+import { prepareTripProjects, ProjectError, stagesOf, tripProjectsInput } from "@/lib/projects.server";
 import { destroyTripDocument } from "@/lib/trip-documents.server";
 import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
@@ -40,6 +41,7 @@ export async function GET(_: Request, { params }: Params) {
           },
         },
         stages: stagesInclude,
+        projects: { include: { project: { include: { allocations: { select: { delegation: true, accountingCode: true } } } } } },
       },
     });
 
@@ -108,6 +110,14 @@ export async function PUT(request: NextRequest, { params }: Params) {
     if (validatedData.stages !== undefined) {
       Object.assign(updateData, await prepareStages(validatedData.stages));
     }
+    // Fase 3: proyectos del viaje (validados contra sus destinos)
+    if (validatedData.projectIds !== undefined) {
+      updateData.project = await prepareTripProjects(
+        validatedData.projectIds,
+        await stagesOf(tripId, validatedData.stages),
+      );
+      updateData.projects = tripProjectsInput(validatedData.projectIds);
+    }
 
     const trip = await prisma.$transaction(async (tx) => {
       if (validatedData.stages !== undefined) {
@@ -123,12 +133,16 @@ export async function PUT(request: NextRequest, { params }: Params) {
           },
         },
         stages: stagesInclude,
+        projects: { include: { project: { include: { allocations: { select: { delegation: true, accountingCode: true } } } } } },
       },
       });
     });
 
     return NextResponse.json(trip);
   } catch (error) {
+    if (error instanceof ProjectError) {
+      return NextResponse.json({ error: error.message }, { status: error.status });
+    }
     if (error instanceof StageError) {
       return NextResponse.json({ error: error.message }, { status: error.status });
     }

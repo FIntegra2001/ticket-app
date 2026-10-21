@@ -129,7 +129,7 @@ export async function GET() {
       cobro: añoGasto,
       mesImputacion: mesNum,
       imputacion: añoGasto,
-      proyecto: trip.project ?? "",
+      proyecto: expense.accountingCode ?? trip.project ?? "",
       pagado: "Sí",
       fechaPago: "",
       personal: userName,

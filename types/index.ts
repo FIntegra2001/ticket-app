@@ -1,5 +1,7 @@
 import type { StageInput, TripStage } from "@/lib/trip-stages";
 export type { City, StageInput, TripStage } from "@/lib/trip-stages";
+import type { Project } from "@/lib/projects";
+export type { Project } from "@/lib/projects";
 
 export type UserRole = "USER" | "ADMIN";
 
@@ -71,11 +73,14 @@ export interface Trip {
   /** Fase 3: seguimiento del hotel */
   hotelRequestedAt?: Date | string | null
   hotelConfirmedAt?: Date | string | null
+  /** Fase 3: proyectos del viaje */
+  projects?: { projectId: string; project: Project }[]
 }
 
 // ✅ NUEVO: DTO para crear viaje (solo admin)
 export interface CreateTripDto {
   stages: StageInput[];
+  projectIds: string[];
   project?: string;
   notes?: string;
   numberInvoice?: string;
@@ -85,12 +90,14 @@ export interface CreateTripDto {
 // 🆕 DTO para que un USER solicite un viaje: no elige nº de factura ni asignados
 export interface RequestTripDto {
   stages: StageInput[];
+  projectIds: string[];
   project?: string;
   notes?: string;
 }
 
 export interface UpdateTripDto {
   stages?: StageInput[];
+  projectIds?: string[];
   project?: string;
   notes?: string;
   status?: TripStatus;
@@ -152,6 +159,9 @@ export interface Expense {
   invoiceNumber?: string | null;
   paymentMethod?: string | null;
   stageId?: string | null;          // Fase 1: tramo del viaje
+  projectId?: string | null;        // Fase 3
+  delegation?: string | null;
+  accountingCode?: string | null;
   createdByAdminId?: string | null // ✅ NUEVO
   createdAt: Date;
   updatedAt: Date;
@@ -171,6 +181,8 @@ export interface CreateExpenseDto {
   invoiceNumber?: string;
   paymentMethod?: string;
   stageId?: string;
+  projectId?: string;
+  delegation?: string;
   justification?: string;
   kmOneWay?: number;
   originOffice?: string;
@@ -187,6 +199,8 @@ export interface UpdateExpenseDto {
   invoiceNumber?: string;
   paymentMethod?: string;
   stageId?: string;
+  projectId?: string;
+  delegation?: string;
   justification?: string;
   kmOneWay?: number;
   originOffice?: string;

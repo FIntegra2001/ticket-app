@@ -6,6 +6,7 @@ import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { ZodError } from "zod";
 import { buildMileageData, MileageError } from "@/lib/mileage.server";
+import { ProjectError, resolveOfficeExpenseProject, resolveTripExpenseProject } from "@/lib/projects.server";
 import { resolveExpenseStage, StageError } from "@/lib/trip-stages.server";
 
 type Params = {
@@ -108,6 +109,9 @@ export async function POST(request: Request, { params }: Params) {
       validatedData.stageId,
     );
 
+    // Fase 3: proyecto del gasto y código contable según la ciudad del tramo
+    const proj = await resolveTripExpenseProject(tripId, stageId, validatedData.projectId);
+
     // Fase 2: kilometraje calculado en el servidor
     const km = await buildMileageData(validatedData);
     const amount = km?.amountNumber ?? validatedData.amount;
@@ -118,6 +122,7 @@ export async function POST(request: Request, { params }: Params) {
         data: {
           tripId,
           stageId,
+          ...proj,
           amount: new Prisma.Decimal(amount),
           justification: validatedData.justification,
           createdById: session.user.id,
@@ -151,6 +156,9 @@ export async function POST(request: Request, { params }: Params) {
 
     return NextResponse.json(expense, { status: 201 });
   } catch (error) {
+    if (error instanceof ProjectError) {
+      return NextResponse.json({ error: error.message }, { status: error.status });
+    }
     if (error instanceof MileageError) {
       return NextResponse.json({ error: error.message }, { status: 400 });
     }

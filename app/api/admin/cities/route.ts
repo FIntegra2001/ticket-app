@@ -7,6 +7,9 @@ import { z, ZodError } from "zod";
 const createCitySchema = z.object({
   name: z.string().trim().min(1, "Falta el nombre"),
   region: z.string().trim().min(1, "Falta la comunidad autónoma"),
+  // Fase 3: código propio (3-4 letras) y delegación de imputación
+  code: z.string().trim().toUpperCase().regex(/^[A-Z]{2,4}$/, "Código de 2 a 4 letras"),
+  delegation: z.string().trim().toUpperCase().regex(/^[A-Z]{2,4}$/, "Delegación de 2 a 4 letras"),
 });
 
 // Alta de ciudad en el catálogo. Solo ADMIN.

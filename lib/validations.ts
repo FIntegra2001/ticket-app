@@ -2,12 +2,16 @@ import { z } from "zod";
 import { stagesSchema } from "@/lib/trip-stages";
 
 // ============= TRIP SCHEMAS =============
+// Fase 3: proyectos del viaje (catálogo). Uno o varios.
+const projectIdsSchema = z.array(z.string()).min(1, "Elige al menos un proyecto");
+
 // Fase 1: el destino y las fechas se envían como itinerario (`stages`). La
 // ciudad y las fechas del viaje se calculan en el servidor a partir de él.
 
 // Creación por ADMIN: exige asignados y admite el nº de factura interno.
 export const createTripSchema = z.object({
   stages: stagesSchema,
+  projectIds: projectIdsSchema,
   project: z.string().optional(),
   notes: z.string().optional(),
   assignedUserIds: z
@@ -21,6 +25,7 @@ export const createTripSchema = z.object({
 // descarta lo que no está declarado.
 export const requestTripSchema = z.object({
   stages: stagesSchema,
+  projectIds: projectIdsSchema,
   project: z.string().optional(),
   notes: z.string().optional(),
 });
@@ -29,6 +34,7 @@ export const requestTripSchema = z.object({
 // incluye `status`, `totalAmount`, `assignedUserIds` ni `numberInvoice`.
 export const updateTripRequestSchema = z.object({
   stages: stagesSchema.optional(),
+  projectIds: projectIdsSchema.optional(),
   project: z.string().optional(),
   notes: z.string().optional(),
 });
@@ -36,6 +42,7 @@ export const updateTripRequestSchema = z.object({
 // Edición completa: SOLO para las rutas de admin.
 export const updateTripSchema = z.object({
   stages: stagesSchema.optional(),
+  projectIds: projectIdsSchema.optional(),
   project: z.string().optional(),
   notes: z.string().optional(),
   status: z.enum(["PENDIENTE", "APROBADO", "RECHAZADO"]).optional(),
@@ -71,6 +78,9 @@ const phase2ExpenseFields = {
   kmOneWay: z.number().positive().optional(),
   originOffice: z.string().optional(),
   destinationAddress: z.string().optional(),
+  // Fase 3: proyecto del gasto y, en oficina, delegación elegida
+  projectId: z.string().optional(),
+  delegation: z.string().optional(),
 };
 
 export const createExpenseSchema = z.object({

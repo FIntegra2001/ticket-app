@@ -45,6 +45,7 @@ export type OfficeExpenseForExport = {
     description: string | null;
     invoiceNumber: string | null;
     paymentMethod: string | null;
+    accountingCode?: string | null;
   }[];
 };
 
@@ -141,7 +142,7 @@ export async function buildOfficeExpensesWorkbook(
         cobro: añoGasto,
         mesImputacion: mesNum,
         imputacion: añoGasto,
-        proyecto: "",
+        proyecto: expense.accountingCode ?? "", // Fase 3: código contable
         pagado: "Sí",
         fechaPago: "",
         personal,

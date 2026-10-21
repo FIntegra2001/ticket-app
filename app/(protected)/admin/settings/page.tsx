@@ -52,12 +52,15 @@ export default function AdminSettingsPage() {
     <div className="max-w-3xl mx-auto px-4 py-6 space-y-6">
       <h1 className="text-2xl font-bold text-gray-900">Configuración</h1>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
         <Link href="/admin/users" className="bg-white border rounded-lg p-3 hover:bg-gray-50">
           Usuarios
         </Link>
         <Link href="/admin/cities" className="bg-white border rounded-lg p-3 hover:bg-gray-50">
           Catálogo de ciudades
+        </Link>
+        <Link href="/admin/projects" className="bg-white border rounded-lg p-3 hover:bg-gray-50">
+          Proyectos
         </Link>
         <Link href="/admin/reimbursements" className="bg-white border rounded-lg p-3 hover:bg-gray-50">
           Reembolsos

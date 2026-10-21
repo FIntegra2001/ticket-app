@@ -25,6 +25,8 @@ export type City = {
   isOther: boolean;
   active: boolean;
   sortOrder: number;
+  code?: string | null;
+  delegation?: string | null;
 };
 
 export type TripStage = {
@@ -34,6 +36,7 @@ export type TripStage = {
   cityId: string;
   city?: City;
   cityOther?: string | null;
+  delegation?: string | null;
   arrivalDate: Date | string;
   departureDate: Date | string;
 };
@@ -42,6 +45,8 @@ export type TripStage = {
 export const stageInputSchema = z.object({
   cityId: z.string().min(1, "Elige una ciudad"),
   cityOther: z.string().trim().optional(),
+  // Fase 3: delegación a la que se imputa una ciudad "Otro (especificar)"
+  delegation: z.string().optional(),
   arrivalDate: z.string().min(1, "Falta la fecha de llegada"),
   departureDate: z.string().min(1, "Falta la fecha de salida"),
 });
@@ -92,6 +97,8 @@ export function checkStages(
       errors.push({ index: i, message: `Destino ${i + 1}: elige una ciudad` });
     } else if (city.isOther && !s.cityOther?.trim()) {
       errors.push({ index: i, message: `Destino ${i + 1}: escribe el nombre de la ciudad` });
+    } else if (city.isOther && !s.delegation) {
+      errors.push({ index: i, message: `Destino ${i + 1}: elige la delegación a la que se imputa` });
     }
     if (s.arrivalDate && s.departureDate && toDay(s.departureDate) < toDay(s.arrivalDate)) {
       errors.push({ index: i, message: `Destino ${i + 1}: la salida no puede ser anterior a la llegada` });

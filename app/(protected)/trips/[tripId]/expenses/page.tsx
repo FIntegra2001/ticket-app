@@ -124,6 +124,7 @@ export default function TripExpensesPage() {
             <ExpenseForm
               tripId={tripId}
               stages={trip?.stages}
+            tripProjects={trip?.projects?.map((p) => p.project)}
               initialData={editing || undefined}
               onSubmit={(values) => {
                 if (editing) {

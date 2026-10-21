@@ -324,6 +324,7 @@ export type TripWhereInput = {
   requestedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   approvedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   stages?: Prisma.TripStageListRelationFilter
+  projects?: Prisma.TripProjectListRelationFilter
   assignedUsers?: Prisma.TripAssignmentListRelationFilter
   expenses?: Prisma.ExpenseListRelationFilter
   documents?: Prisma.TripDocumentListRelationFilter
@@ -352,6 +353,7 @@ export type TripOrderByWithRelationInput = {
   requestedBy?: Prisma.UserOrderByWithRelationInput
   approvedBy?: Prisma.UserOrderByWithRelationInput
   stages?: Prisma.TripStageOrderByRelationAggregateInput
+  projects?: Prisma.TripProjectOrderByRelationAggregateInput
   assignedUsers?: Prisma.TripAssignmentOrderByRelationAggregateInput
   expenses?: Prisma.ExpenseOrderByRelationAggregateInput
   documents?: Prisma.TripDocumentOrderByRelationAggregateInput
@@ -383,6 +385,7 @@ export type TripWhereUniqueInput = Prisma.AtLeast<{
   requestedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   approvedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   stages?: Prisma.TripStageListRelationFilter
+  projects?: Prisma.TripProjectListRelationFilter
   assignedUsers?: Prisma.TripAssignmentListRelationFilter
   expenses?: Prisma.ExpenseListRelationFilter
   documents?: Prisma.TripDocumentListRelationFilter
@@ -458,6 +461,7 @@ export type TripCreateInput = {
   requestedBy?: Prisma.UserCreateNestedOneWithoutRequestedTripsInput
   approvedBy?: Prisma.UserCreateNestedOneWithoutApprovedTripsInput
   stages?: Prisma.TripStageCreateNestedManyWithoutTripInput
+  projects?: Prisma.TripProjectCreateNestedManyWithoutTripInput
   assignedUsers?: Prisma.TripAssignmentCreateNestedManyWithoutTripInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutTripInput
   documents?: Prisma.TripDocumentCreateNestedManyWithoutTripInput
@@ -483,6 +487,7 @@ export type TripUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   stages?: Prisma.TripStageUncheckedCreateNestedManyWithoutTripInput
+  projects?: Prisma.TripProjectUncheckedCreateNestedManyWithoutTripInput
   assignedUsers?: Prisma.TripAssignmentUncheckedCreateNestedManyWithoutTripInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTripInput
   documents?: Prisma.TripDocumentUncheckedCreateNestedManyWithoutTripInput
@@ -508,6 +513,7 @@ export type TripUpdateInput = {
   requestedBy?: Prisma.UserUpdateOneWithoutRequestedTripsNestedInput
   approvedBy?: Prisma.UserUpdateOneWithoutApprovedTripsNestedInput
   stages?: Prisma.TripStageUpdateManyWithoutTripNestedInput
+  projects?: Prisma.TripProjectUpdateManyWithoutTripNestedInput
   assignedUsers?: Prisma.TripAssignmentUpdateManyWithoutTripNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutTripNestedInput
   documents?: Prisma.TripDocumentUpdateManyWithoutTripNestedInput
@@ -533,6 +539,7 @@ export type TripUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   stages?: Prisma.TripStageUncheckedUpdateManyWithoutTripNestedInput
+  projects?: Prisma.TripProjectUncheckedUpdateManyWithoutTripNestedInput
   assignedUsers?: Prisma.TripAssignmentUncheckedUpdateManyWithoutTripNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTripNestedInput
   documents?: Prisma.TripDocumentUncheckedUpdateManyWithoutTripNestedInput
@@ -889,6 +896,20 @@ export type TripUpdateOneWithoutExpensesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.TripUpdateToOneWithWhereWithoutExpensesInput, Prisma.TripUpdateWithoutExpensesInput>, Prisma.TripUncheckedUpdateWithoutExpensesInput>
 }
 
+export type TripCreateNestedOneWithoutProjectsInput = {
+  create?: Prisma.XOR<Prisma.TripCreateWithoutProjectsInput, Prisma.TripUncheckedCreateWithoutProjectsInput>
+  connectOrCreate?: Prisma.TripCreateOrConnectWithoutProjectsInput
+  connect?: Prisma.TripWhereUniqueInput
+}
+
+export type TripUpdateOneRequiredWithoutProjectsNestedInput = {
+  create?: Prisma.XOR<Prisma.TripCreateWithoutProjectsInput, Prisma.TripUncheckedCreateWithoutProjectsInput>
+  connectOrCreate?: Prisma.TripCreateOrConnectWithoutProjectsInput
+  upsert?: Prisma.TripUpsertWithoutProjectsInput
+  connect?: Prisma.TripWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TripUpdateToOneWithWhereWithoutProjectsInput, Prisma.TripUpdateWithoutProjectsInput>, Prisma.TripUncheckedUpdateWithoutProjectsInput>
+}
+
 export type TripCreateWithoutCreatedByAdminInput = {
   id?: string
   approvedAt?: Date | string | null
@@ -908,6 +929,7 @@ export type TripCreateWithoutCreatedByAdminInput = {
   requestedBy?: Prisma.UserCreateNestedOneWithoutRequestedTripsInput
   approvedBy?: Prisma.UserCreateNestedOneWithoutApprovedTripsInput
   stages?: Prisma.TripStageCreateNestedManyWithoutTripInput
+  projects?: Prisma.TripProjectCreateNestedManyWithoutTripInput
   assignedUsers?: Prisma.TripAssignmentCreateNestedManyWithoutTripInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutTripInput
   documents?: Prisma.TripDocumentCreateNestedManyWithoutTripInput
@@ -932,6 +954,7 @@ export type TripUncheckedCreateWithoutCreatedByAdminInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   stages?: Prisma.TripStageUncheckedCreateNestedManyWithoutTripInput
+  projects?: Prisma.TripProjectUncheckedCreateNestedManyWithoutTripInput
   assignedUsers?: Prisma.TripAssignmentUncheckedCreateNestedManyWithoutTripInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTripInput
   documents?: Prisma.TripDocumentUncheckedCreateNestedManyWithoutTripInput
@@ -966,6 +989,7 @@ export type TripCreateWithoutRequestedByInput = {
   createdByAdmin?: Prisma.UserCreateNestedOneWithoutCreatedTripsInput
   approvedBy?: Prisma.UserCreateNestedOneWithoutApprovedTripsInput
   stages?: Prisma.TripStageCreateNestedManyWithoutTripInput
+  projects?: Prisma.TripProjectCreateNestedManyWithoutTripInput
   assignedUsers?: Prisma.TripAssignmentCreateNestedManyWithoutTripInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutTripInput
   documents?: Prisma.TripDocumentCreateNestedManyWithoutTripInput
@@ -990,6 +1014,7 @@ export type TripUncheckedCreateWithoutRequestedByInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   stages?: Prisma.TripStageUncheckedCreateNestedManyWithoutTripInput
+  projects?: Prisma.TripProjectUncheckedCreateNestedManyWithoutTripInput
   assignedUsers?: Prisma.TripAssignmentUncheckedCreateNestedManyWithoutTripInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTripInput
   documents?: Prisma.TripDocumentUncheckedCreateNestedManyWithoutTripInput
@@ -1024,6 +1049,7 @@ export type TripCreateWithoutApprovedByInput = {
   createdByAdmin?: Prisma.UserCreateNestedOneWithoutCreatedTripsInput
   requestedBy?: Prisma.UserCreateNestedOneWithoutRequestedTripsInput
   stages?: Prisma.TripStageCreateNestedManyWithoutTripInput
+  projects?: Prisma.TripProjectCreateNestedManyWithoutTripInput
   assignedUsers?: Prisma.TripAssignmentCreateNestedManyWithoutTripInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutTripInput
   documents?: Prisma.TripDocumentCreateNestedManyWithoutTripInput
@@ -1048,6 +1074,7 @@ export type TripUncheckedCreateWithoutApprovedByInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   stages?: Prisma.TripStageUncheckedCreateNestedManyWithoutTripInput
+  projects?: Prisma.TripProjectUncheckedCreateNestedManyWithoutTripInput
   assignedUsers?: Prisma.TripAssignmentUncheckedCreateNestedManyWithoutTripInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTripInput
   documents?: Prisma.TripDocumentUncheckedCreateNestedManyWithoutTripInput
@@ -1155,6 +1182,7 @@ export type TripCreateWithoutDocumentsInput = {
   requestedBy?: Prisma.UserCreateNestedOneWithoutRequestedTripsInput
   approvedBy?: Prisma.UserCreateNestedOneWithoutApprovedTripsInput
   stages?: Prisma.TripStageCreateNestedManyWithoutTripInput
+  projects?: Prisma.TripProjectCreateNestedManyWithoutTripInput
   assignedUsers?: Prisma.TripAssignmentCreateNestedManyWithoutTripInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutTripInput
 }
@@ -1179,6 +1207,7 @@ export type TripUncheckedCreateWithoutDocumentsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   stages?: Prisma.TripStageUncheckedCreateNestedManyWithoutTripInput
+  projects?: Prisma.TripProjectUncheckedCreateNestedManyWithoutTripInput
   assignedUsers?: Prisma.TripAssignmentUncheckedCreateNestedManyWithoutTripInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTripInput
 }
@@ -1219,6 +1248,7 @@ export type TripUpdateWithoutDocumentsInput = {
   requestedBy?: Prisma.UserUpdateOneWithoutRequestedTripsNestedInput
   approvedBy?: Prisma.UserUpdateOneWithoutApprovedTripsNestedInput
   stages?: Prisma.TripStageUpdateManyWithoutTripNestedInput
+  projects?: Prisma.TripProjectUpdateManyWithoutTripNestedInput
   assignedUsers?: Prisma.TripAssignmentUpdateManyWithoutTripNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutTripNestedInput
 }
@@ -1243,6 +1273,7 @@ export type TripUncheckedUpdateWithoutDocumentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   stages?: Prisma.TripStageUncheckedUpdateManyWithoutTripNestedInput
+  projects?: Prisma.TripProjectUncheckedUpdateManyWithoutTripNestedInput
   assignedUsers?: Prisma.TripAssignmentUncheckedUpdateManyWithoutTripNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTripNestedInput
 }
@@ -1266,6 +1297,7 @@ export type TripCreateWithoutStagesInput = {
   createdByAdmin?: Prisma.UserCreateNestedOneWithoutCreatedTripsInput
   requestedBy?: Prisma.UserCreateNestedOneWithoutRequestedTripsInput
   approvedBy?: Prisma.UserCreateNestedOneWithoutApprovedTripsInput
+  projects?: Prisma.TripProjectCreateNestedManyWithoutTripInput
   assignedUsers?: Prisma.TripAssignmentCreateNestedManyWithoutTripInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutTripInput
   documents?: Prisma.TripDocumentCreateNestedManyWithoutTripInput
@@ -1290,6 +1322,7 @@ export type TripUncheckedCreateWithoutStagesInput = {
   hotelConfirmedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  projects?: Prisma.TripProjectUncheckedCreateNestedManyWithoutTripInput
   assignedUsers?: Prisma.TripAssignmentUncheckedCreateNestedManyWithoutTripInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTripInput
   documents?: Prisma.TripDocumentUncheckedCreateNestedManyWithoutTripInput
@@ -1330,6 +1363,7 @@ export type TripUpdateWithoutStagesInput = {
   createdByAdmin?: Prisma.UserUpdateOneWithoutCreatedTripsNestedInput
   requestedBy?: Prisma.UserUpdateOneWithoutRequestedTripsNestedInput
   approvedBy?: Prisma.UserUpdateOneWithoutApprovedTripsNestedInput
+  projects?: Prisma.TripProjectUpdateManyWithoutTripNestedInput
   assignedUsers?: Prisma.TripAssignmentUpdateManyWithoutTripNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutTripNestedInput
   documents?: Prisma.TripDocumentUpdateManyWithoutTripNestedInput
@@ -1354,6 +1388,7 @@ export type TripUncheckedUpdateWithoutStagesInput = {
   hotelConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  projects?: Prisma.TripProjectUncheckedUpdateManyWithoutTripNestedInput
   assignedUsers?: Prisma.TripAssignmentUncheckedUpdateManyWithoutTripNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTripNestedInput
   documents?: Prisma.TripDocumentUncheckedUpdateManyWithoutTripNestedInput
@@ -1379,6 +1414,7 @@ export type TripCreateWithoutAssignedUsersInput = {
   requestedBy?: Prisma.UserCreateNestedOneWithoutRequestedTripsInput
   approvedBy?: Prisma.UserCreateNestedOneWithoutApprovedTripsInput
   stages?: Prisma.TripStageCreateNestedManyWithoutTripInput
+  projects?: Prisma.TripProjectCreateNestedManyWithoutTripInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutTripInput
   documents?: Prisma.TripDocumentCreateNestedManyWithoutTripInput
 }
@@ -1403,6 +1439,7 @@ export type TripUncheckedCreateWithoutAssignedUsersInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   stages?: Prisma.TripStageUncheckedCreateNestedManyWithoutTripInput
+  projects?: Prisma.TripProjectUncheckedCreateNestedManyWithoutTripInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTripInput
   documents?: Prisma.TripDocumentUncheckedCreateNestedManyWithoutTripInput
 }
@@ -1443,6 +1480,7 @@ export type TripUpdateWithoutAssignedUsersInput = {
   requestedBy?: Prisma.UserUpdateOneWithoutRequestedTripsNestedInput
   approvedBy?: Prisma.UserUpdateOneWithoutApprovedTripsNestedInput
   stages?: Prisma.TripStageUpdateManyWithoutTripNestedInput
+  projects?: Prisma.TripProjectUpdateManyWithoutTripNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutTripNestedInput
   documents?: Prisma.TripDocumentUpdateManyWithoutTripNestedInput
 }
@@ -1467,6 +1505,7 @@ export type TripUncheckedUpdateWithoutAssignedUsersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   stages?: Prisma.TripStageUncheckedUpdateManyWithoutTripNestedInput
+  projects?: Prisma.TripProjectUncheckedUpdateManyWithoutTripNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTripNestedInput
   documents?: Prisma.TripDocumentUncheckedUpdateManyWithoutTripNestedInput
 }
@@ -1491,6 +1530,7 @@ export type TripCreateWithoutExpensesInput = {
   requestedBy?: Prisma.UserCreateNestedOneWithoutRequestedTripsInput
   approvedBy?: Prisma.UserCreateNestedOneWithoutApprovedTripsInput
   stages?: Prisma.TripStageCreateNestedManyWithoutTripInput
+  projects?: Prisma.TripProjectCreateNestedManyWithoutTripInput
   assignedUsers?: Prisma.TripAssignmentCreateNestedManyWithoutTripInput
   documents?: Prisma.TripDocumentCreateNestedManyWithoutTripInput
 }
@@ -1515,6 +1555,7 @@ export type TripUncheckedCreateWithoutExpensesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   stages?: Prisma.TripStageUncheckedCreateNestedManyWithoutTripInput
+  projects?: Prisma.TripProjectUncheckedCreateNestedManyWithoutTripInput
   assignedUsers?: Prisma.TripAssignmentUncheckedCreateNestedManyWithoutTripInput
   documents?: Prisma.TripDocumentUncheckedCreateNestedManyWithoutTripInput
 }
@@ -1555,6 +1596,7 @@ export type TripUpdateWithoutExpensesInput = {
   requestedBy?: Prisma.UserUpdateOneWithoutRequestedTripsNestedInput
   approvedBy?: Prisma.UserUpdateOneWithoutApprovedTripsNestedInput
   stages?: Prisma.TripStageUpdateManyWithoutTripNestedInput
+  projects?: Prisma.TripProjectUpdateManyWithoutTripNestedInput
   assignedUsers?: Prisma.TripAssignmentUpdateManyWithoutTripNestedInput
   documents?: Prisma.TripDocumentUpdateManyWithoutTripNestedInput
 }
@@ -1579,7 +1621,124 @@ export type TripUncheckedUpdateWithoutExpensesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   stages?: Prisma.TripStageUncheckedUpdateManyWithoutTripNestedInput
+  projects?: Prisma.TripProjectUncheckedUpdateManyWithoutTripNestedInput
   assignedUsers?: Prisma.TripAssignmentUncheckedUpdateManyWithoutTripNestedInput
+  documents?: Prisma.TripDocumentUncheckedUpdateManyWithoutTripNestedInput
+}
+
+export type TripCreateWithoutProjectsInput = {
+  id?: string
+  approvedAt?: Date | string | null
+  city: string
+  startDate: Date | string
+  endDate: Date | string
+  project?: string | null
+  notes?: string | null
+  status?: $Enums.TripStatus
+  totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  numberInvoice?: string | null
+  region?: string | null
+  hotelRequestedAt?: Date | string | null
+  hotelConfirmedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  createdByAdmin?: Prisma.UserCreateNestedOneWithoutCreatedTripsInput
+  requestedBy?: Prisma.UserCreateNestedOneWithoutRequestedTripsInput
+  approvedBy?: Prisma.UserCreateNestedOneWithoutApprovedTripsInput
+  stages?: Prisma.TripStageCreateNestedManyWithoutTripInput
+  assignedUsers?: Prisma.TripAssignmentCreateNestedManyWithoutTripInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutTripInput
+  documents?: Prisma.TripDocumentCreateNestedManyWithoutTripInput
+}
+
+export type TripUncheckedCreateWithoutProjectsInput = {
+  id?: string
+  createdByAdminId?: string | null
+  requestedById?: string | null
+  approvedAt?: Date | string | null
+  approvedById?: string | null
+  city: string
+  startDate: Date | string
+  endDate: Date | string
+  project?: string | null
+  notes?: string | null
+  status?: $Enums.TripStatus
+  totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  numberInvoice?: string | null
+  region?: string | null
+  hotelRequestedAt?: Date | string | null
+  hotelConfirmedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  stages?: Prisma.TripStageUncheckedCreateNestedManyWithoutTripInput
+  assignedUsers?: Prisma.TripAssignmentUncheckedCreateNestedManyWithoutTripInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTripInput
+  documents?: Prisma.TripDocumentUncheckedCreateNestedManyWithoutTripInput
+}
+
+export type TripCreateOrConnectWithoutProjectsInput = {
+  where: Prisma.TripWhereUniqueInput
+  create: Prisma.XOR<Prisma.TripCreateWithoutProjectsInput, Prisma.TripUncheckedCreateWithoutProjectsInput>
+}
+
+export type TripUpsertWithoutProjectsInput = {
+  update: Prisma.XOR<Prisma.TripUpdateWithoutProjectsInput, Prisma.TripUncheckedUpdateWithoutProjectsInput>
+  create: Prisma.XOR<Prisma.TripCreateWithoutProjectsInput, Prisma.TripUncheckedCreateWithoutProjectsInput>
+  where?: Prisma.TripWhereInput
+}
+
+export type TripUpdateToOneWithWhereWithoutProjectsInput = {
+  where?: Prisma.TripWhereInput
+  data: Prisma.XOR<Prisma.TripUpdateWithoutProjectsInput, Prisma.TripUncheckedUpdateWithoutProjectsInput>
+}
+
+export type TripUpdateWithoutProjectsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  project?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
+  totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  numberInvoice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hotelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hotelConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdByAdmin?: Prisma.UserUpdateOneWithoutCreatedTripsNestedInput
+  requestedBy?: Prisma.UserUpdateOneWithoutRequestedTripsNestedInput
+  approvedBy?: Prisma.UserUpdateOneWithoutApprovedTripsNestedInput
+  stages?: Prisma.TripStageUpdateManyWithoutTripNestedInput
+  assignedUsers?: Prisma.TripAssignmentUpdateManyWithoutTripNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutTripNestedInput
+  documents?: Prisma.TripDocumentUpdateManyWithoutTripNestedInput
+}
+
+export type TripUncheckedUpdateWithoutProjectsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdByAdminId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requestedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  project?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
+  totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  numberInvoice?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hotelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hotelConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  stages?: Prisma.TripStageUncheckedUpdateManyWithoutTripNestedInput
+  assignedUsers?: Prisma.TripAssignmentUncheckedUpdateManyWithoutTripNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTripNestedInput
   documents?: Prisma.TripDocumentUncheckedUpdateManyWithoutTripNestedInput
 }
 
@@ -1662,6 +1821,7 @@ export type TripUpdateWithoutCreatedByAdminInput = {
   requestedBy?: Prisma.UserUpdateOneWithoutRequestedTripsNestedInput
   approvedBy?: Prisma.UserUpdateOneWithoutApprovedTripsNestedInput
   stages?: Prisma.TripStageUpdateManyWithoutTripNestedInput
+  projects?: Prisma.TripProjectUpdateManyWithoutTripNestedInput
   assignedUsers?: Prisma.TripAssignmentUpdateManyWithoutTripNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutTripNestedInput
   documents?: Prisma.TripDocumentUpdateManyWithoutTripNestedInput
@@ -1686,6 +1846,7 @@ export type TripUncheckedUpdateWithoutCreatedByAdminInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   stages?: Prisma.TripStageUncheckedUpdateManyWithoutTripNestedInput
+  projects?: Prisma.TripProjectUncheckedUpdateManyWithoutTripNestedInput
   assignedUsers?: Prisma.TripAssignmentUncheckedUpdateManyWithoutTripNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTripNestedInput
   documents?: Prisma.TripDocumentUncheckedUpdateManyWithoutTripNestedInput
@@ -1730,6 +1891,7 @@ export type TripUpdateWithoutRequestedByInput = {
   createdByAdmin?: Prisma.UserUpdateOneWithoutCreatedTripsNestedInput
   approvedBy?: Prisma.UserUpdateOneWithoutApprovedTripsNestedInput
   stages?: Prisma.TripStageUpdateManyWithoutTripNestedInput
+  projects?: Prisma.TripProjectUpdateManyWithoutTripNestedInput
   assignedUsers?: Prisma.TripAssignmentUpdateManyWithoutTripNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutTripNestedInput
   documents?: Prisma.TripDocumentUpdateManyWithoutTripNestedInput
@@ -1754,6 +1916,7 @@ export type TripUncheckedUpdateWithoutRequestedByInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   stages?: Prisma.TripStageUncheckedUpdateManyWithoutTripNestedInput
+  projects?: Prisma.TripProjectUncheckedUpdateManyWithoutTripNestedInput
   assignedUsers?: Prisma.TripAssignmentUncheckedUpdateManyWithoutTripNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTripNestedInput
   documents?: Prisma.TripDocumentUncheckedUpdateManyWithoutTripNestedInput
@@ -1798,6 +1961,7 @@ export type TripUpdateWithoutApprovedByInput = {
   createdByAdmin?: Prisma.UserUpdateOneWithoutCreatedTripsNestedInput
   requestedBy?: Prisma.UserUpdateOneWithoutRequestedTripsNestedInput
   stages?: Prisma.TripStageUpdateManyWithoutTripNestedInput
+  projects?: Prisma.TripProjectUpdateManyWithoutTripNestedInput
   assignedUsers?: Prisma.TripAssignmentUpdateManyWithoutTripNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutTripNestedInput
   documents?: Prisma.TripDocumentUpdateManyWithoutTripNestedInput
@@ -1822,6 +1986,7 @@ export type TripUncheckedUpdateWithoutApprovedByInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   stages?: Prisma.TripStageUncheckedUpdateManyWithoutTripNestedInput
+  projects?: Prisma.TripProjectUncheckedUpdateManyWithoutTripNestedInput
   assignedUsers?: Prisma.TripAssignmentUncheckedUpdateManyWithoutTripNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTripNestedInput
   documents?: Prisma.TripDocumentUncheckedUpdateManyWithoutTripNestedInput
@@ -1854,6 +2019,7 @@ export type TripUncheckedUpdateManyWithoutApprovedByInput = {
 
 export type TripCountOutputType = {
   stages: number
+  projects: number
   assignedUsers: number
   expenses: number
   documents: number
@@ -1861,6 +2027,7 @@ export type TripCountOutputType = {
 
 export type TripCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   stages?: boolean | TripCountOutputTypeCountStagesArgs
+  projects?: boolean | TripCountOutputTypeCountProjectsArgs
   assignedUsers?: boolean | TripCountOutputTypeCountAssignedUsersArgs
   expenses?: boolean | TripCountOutputTypeCountExpensesArgs
   documents?: boolean | TripCountOutputTypeCountDocumentsArgs
@@ -1881,6 +2048,13 @@ export type TripCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensi
  */
 export type TripCountOutputTypeCountStagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.TripStageWhereInput
+}
+
+/**
+ * TripCountOutputType without action
+ */
+export type TripCountOutputTypeCountProjectsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TripProjectWhereInput
 }
 
 /**
@@ -1928,6 +2102,7 @@ export type TripSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   requestedBy?: boolean | Prisma.Trip$requestedByArgs<ExtArgs>
   approvedBy?: boolean | Prisma.Trip$approvedByArgs<ExtArgs>
   stages?: boolean | Prisma.Trip$stagesArgs<ExtArgs>
+  projects?: boolean | Prisma.Trip$projectsArgs<ExtArgs>
   assignedUsers?: boolean | Prisma.Trip$assignedUsersArgs<ExtArgs>
   expenses?: boolean | Prisma.Trip$expensesArgs<ExtArgs>
   documents?: boolean | Prisma.Trip$documentsArgs<ExtArgs>
@@ -2009,6 +2184,7 @@ export type TripInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   requestedBy?: boolean | Prisma.Trip$requestedByArgs<ExtArgs>
   approvedBy?: boolean | Prisma.Trip$approvedByArgs<ExtArgs>
   stages?: boolean | Prisma.Trip$stagesArgs<ExtArgs>
+  projects?: boolean | Prisma.Trip$projectsArgs<ExtArgs>
   assignedUsers?: boolean | Prisma.Trip$assignedUsersArgs<ExtArgs>
   expenses?: boolean | Prisma.Trip$expensesArgs<ExtArgs>
   documents?: boolean | Prisma.Trip$documentsArgs<ExtArgs>
@@ -2032,6 +2208,7 @@ export type $TripPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     requestedBy: Prisma.$UserPayload<ExtArgs> | null
     approvedBy: Prisma.$UserPayload<ExtArgs> | null
     stages: Prisma.$TripStagePayload<ExtArgs>[]
+    projects: Prisma.$TripProjectPayload<ExtArgs>[]
     assignedUsers: Prisma.$TripAssignmentPayload<ExtArgs>[]
     expenses: Prisma.$ExpensePayload<ExtArgs>[]
     documents: Prisma.$TripDocumentPayload<ExtArgs>[]
@@ -2453,6 +2630,7 @@ export interface Prisma__TripClient<T, Null = never, ExtArgs extends runtime.Typ
   requestedBy<T extends Prisma.Trip$requestedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Trip$requestedByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   approvedBy<T extends Prisma.Trip$approvedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Trip$approvedByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   stages<T extends Prisma.Trip$stagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Trip$stagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TripStagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  projects<T extends Prisma.Trip$projectsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Trip$projectsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TripProjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   assignedUsers<T extends Prisma.Trip$assignedUsersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Trip$assignedUsersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TripAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   expenses<T extends Prisma.Trip$expensesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Trip$expensesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExpensePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   documents<T extends Prisma.Trip$documentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Trip$documentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TripDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -2977,6 +3155,30 @@ export type Trip$stagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
   take?: number
   skip?: number
   distinct?: Prisma.TripStageScalarFieldEnum | Prisma.TripStageScalarFieldEnum[]
+}
+
+/**
+ * Trip.projects
+ */
+export type Trip$projectsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TripProject
+   */
+  select?: Prisma.TripProjectSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TripProject
+   */
+  omit?: Prisma.TripProjectOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TripProjectInclude<ExtArgs> | null
+  where?: Prisma.TripProjectWhereInput
+  orderBy?: Prisma.TripProjectOrderByWithRelationInput | Prisma.TripProjectOrderByWithRelationInput[]
+  cursor?: Prisma.TripProjectWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TripProjectScalarFieldEnum | Prisma.TripProjectScalarFieldEnum[]
 }
 
 /**

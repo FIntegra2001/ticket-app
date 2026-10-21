@@ -59,8 +59,10 @@ export function expenseDetail(e: {
   kmTotal?: number | string | null;
   destinationAddress?: string | null;
   justification?: string | null;
+  accountingCode?: string | null;
 }): string {
   return [
+    e.accountingCode,
     e.kmTotal != null ? `${formatKm(Number(e.kmTotal))} km ida y vuelta` : null,
     e.destinationAddress,
     e.justification,

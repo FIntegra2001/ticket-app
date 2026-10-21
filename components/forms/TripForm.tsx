@@ -9,6 +9,8 @@ import type { CreateTripDto, StageInput, Trip } from "@/types";
 import { formatDateForInput } from "@/lib/utils";
 import { useUsers } from "@/hooks/useUser";
 import { useCities } from "@/hooks/useCities";
+import { useProjects } from "@/hooks/useProjects";
+import { cityKeys, DELEGATIONS, projectLabel, projectsForKeys } from "@/lib/projects";
 import {
   checkStages,
   MAX_STAGES,
@@ -62,7 +64,12 @@ export default function TripForm({
   const [selectedUserIds, setSelectedUserIds] = React.useState<string[]>(
     initialData?.assignedUsers?.map((a) => a.userId) || [],
   );
-  const [project, setProject] = React.useState(initialData?.project || "");
+  // Fase 3: proyectos del catálogo (filtrados por los destinos del viaje)
+  const { data: allProjects = [] } = useProjects();
+  const [projectIds, setProjectIds] = React.useState<string[]>(
+    initialData?.projects?.map((p) => p.projectId) ?? [],
+  );
+  const [projectSearch, setProjectSearch] = React.useState("");
   const [notes, setNotes] = React.useState(initialData?.notes || "");
   const [numberInvoice, setNumberInvoice] = React.useState(
     initialData?.numberInvoice || "",
@@ -76,6 +83,7 @@ export default function TripForm({
           .map((s) => ({
             cityId: s.cityId,
             cityOther: s.cityOther ?? "",
+            delegation: s.delegation ?? "",
             arrivalDate: formatDateForInput(s.arrivalDate),
             departureDate: formatDateForInput(s.departureDate),
           }))
@@ -139,8 +147,23 @@ export default function TripForm({
 
   const { errors, warnings } = checkStages(stages, cities);
   const incomplete = stages.some((s) => !s.cityId || !s.arrivalDate || !s.departureDate);
+  // Proyectos que se desarrollan en alguno de los destinos elegidos
+  const eligibleProjects = projectsForKeys(
+    allProjects,
+    stages.filter((s) => s.cityId).map((s) => cityKeys(cities.find((c) => c.id === s.cityId), s.delegation)),
+  );
+  const validProjectIds = projectIds.filter((id) => eligibleProjects.some((p) => p.id === id));
+  const shownProjects = eligibleProjects.filter((p) =>
+    projectLabel(p).toLowerCase().includes(projectSearch.trim().toLowerCase()),
+  );
+  const toggleProject = (id: string) =>
+    setProjectIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
+
   const canContinue =
-    !incomplete && errors.length === 0 && (isRequest || selectedUserIds.length > 0);
+    !incomplete &&
+    errors.length === 0 &&
+    validProjectIds.length > 0 &&
+    (isRequest || selectedUserIds.length > 0);
 
   const cityById = (id: string) => cities.find((c) => c.id === id);
   const availableUsers = users?.filter((u) => u.role === "USER") || [];
@@ -150,8 +173,9 @@ export default function TripForm({
       stages: stages.map((s) => ({
         ...s,
         cityOther: cityById(s.cityId)?.isOther ? s.cityOther : undefined,
+        delegation: cityById(s.cityId)?.isOther ? s.delegation : undefined,
       })),
-      project,
+      projectIds: validProjectIds,
       notes,
       numberInvoice,
       assignedUserIds: selectedUserIds,
@@ -167,9 +191,17 @@ export default function TripForm({
     return (
       <div className="space-y-4">
         <h3 className="font-semibold text-lg">Revisa el viaje antes de enviarlo</h3>
-        {project && (
-          <p className="text-sm">
-            <span className="text-muted-foreground">Proyecto:</span> {project}
+        <p className="text-sm">
+          <span className="text-muted-foreground">
+            {validProjectIds.length === 1 ? "Proyecto:" : "Proyectos:"}
+          </span>{" "}
+          {validProjectIds
+            .map((id) => eligibleProjects.find((p) => p.id === id)?.shortName)
+            .join(", ")}
+        </p>
+        {validProjectIds.length > 1 && (
+          <p className="text-xs text-muted-foreground">
+            Al añadir cada gasto tendrás que elegir a qué proyecto va.
           </p>
         )}
         <ol className="space-y-2">
@@ -233,12 +265,8 @@ export default function TripForm({
         </p>
       )}
 
-      {/* 1. Proyecto y motivo */}
+      {/* 1. Motivo */}
       <div className="space-y-3">
-        <div>
-          <Label htmlFor="project">Proyecto</Label>
-          <Input id="project" value={project} onChange={(e) => setProject(e.target.value)} />
-        </div>
         <div>
           <Label htmlFor="notes">{isRequest ? "Motivo del viaje" : "Notas"}</Label>
           <Textarea id="notes" value={notes} onChange={(e) => setNotes(e.target.value)} rows={2} />
@@ -325,6 +353,26 @@ export default function TripForm({
               </div>
               {city?.isOther && (
                 <div>
+                  <Label>Delegación a la que se imputa *</Label>
+                  <Select
+                    value={s.delegation ?? ""}
+                    onValueChange={(v) => updateStage(i, { delegation: v })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Elige delegación..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {DELEGATIONS.map((d) => (
+                        <SelectItem key={d.code} value={d.code}>
+                          {d.name} ({d.code})
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+              {city?.isOther && (
+                <div>
                   <Label>¿Qué ciudad? *</Label>
                   <Input
                     value={s.cityOther ?? ""}
@@ -377,6 +425,46 @@ export default function TripForm({
             <AlertTriangle className="w-4 h-4 shrink-0" /> {w.message}
           </p>
         ))}
+      </div>
+
+      {/* Fase 3: proyectos del viaje, según los destinos */}
+      <div className="space-y-2">
+        <Label>¿A qué proyecto(s) va este viaje? *</Label>
+        {stages.every((s) => !s.cityId) ? (
+          <p className="text-sm text-muted-foreground">Elige primero el destino.</p>
+        ) : (
+          <>
+            <p className="text-xs text-muted-foreground">
+              Si parte del viaje es para un proyecto y parte para General, marca los dos.
+            </p>
+            {eligibleProjects.length > 8 && (
+              <Input
+                placeholder="Buscar proyecto..."
+                value={projectSearch}
+                onChange={(e) => setProjectSearch(e.target.value)}
+              />
+            )}
+            <div className="max-h-56 overflow-y-auto border rounded-lg divide-y">
+              {shownProjects.map((p) => (
+                <label key={p.id} className="flex items-center gap-3 px-3 py-2 text-sm cursor-pointer hover:bg-muted/50">
+                  <input
+                    type="checkbox"
+                    className="h-4 w-4"
+                    checked={projectIds.includes(p.id)}
+                    onChange={() => toggleProject(p.id)}
+                  />
+                  <span>{projectLabel(p)}</span>
+                </label>
+              ))}
+              {shownProjects.length === 0 && (
+                <p className="px-3 py-2 text-sm text-muted-foreground">Ningún proyecto coincide.</p>
+              )}
+            </div>
+            {validProjectIds.length === 0 && (
+              <p className="text-xs text-destructive">Marca al menos un proyecto</p>
+            )}
+          </>
+        )}
       </div>
 
       {/* Nº de liquidación: lo rellena el admin, normalmente al aprobar */}

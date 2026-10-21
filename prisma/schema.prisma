@@ -91,6 +91,8 @@ model Trip {
   // y `endDate` de arriba se recalculan a partir de ellos (lib/trip-stages.ts)
   // para que los listados y los Excel existentes sigan funcionando igual.
   stages        TripStage[]
+  // Fase 3: proyectos del viaje (uno o varios; cada gasto elige uno de ellos)
+  projects      TripProject[]
   // Comunidad autónoma del viaje (todas sus ciudades son de la misma).
   region        String?
 
@@ -152,6 +154,12 @@ model City {
   id        String      @id @default(cuid())
   name      String      @unique
   region    String?
+  // Fase 3: código propio de la ciudad (MAD, PML, IBZ, GC…) y delegación a la
+  // que se imputa normalmente (Mallorca e Ibiza → BLR). El código contable de
+  // un gasto se busca primero por `code` y, si el proyecto no lo tiene, por
+  // `delegation` (así General va a PML/IBZ y el resto de proyectos a BLR).
+  code       String?
+  delegation String?
   isOther   Boolean     @default(false)
   active    Boolean     @default(true)
   sortOrder Int         @default(0)
@@ -173,6 +181,8 @@ model TripStage {
   city          City     @relation(fields: [cityId], references: [id])
   // Texto libre cuando la ciudad es "Otro (especificar)"
   cityOther     String?
+  // Fase 3: delegación elegida a mano cuando la ciudad es "Otro (especificar)"
+  delegation    String?
   arrivalDate   DateTime
   departureDate DateTime
   expenses      Expense[]
@@ -266,6 +276,13 @@ model Expense {
   kmTotal            Decimal?
   ratePerKm          Decimal?
 
+  // Fase 3: proyecto del gasto y código contable resultante (CÓD-DELEG-AÑO),
+  // que es lo que sale en la columna PROYECTO del Excel de gastos.
+  projectId      String?
+  project        Project? @relation(fields: [projectId], references: [id])
+  delegation     String?
+  accountingCode String?
+
   // Fase 1: tramo del viaje al que se imputa el gasto (null en gastos de oficina)
   stageId       String?
   stage         TripStage? @relation(fields: [stageId], references: [id], onDelete: SetNull)
@@ -358,4 +375,51 @@ model Reimbursement {
 
   @@unique([userId, year, month])
   @@map("reimbursements")
+}
+
+// Fase 3: catálogo de proyectos (Proyectos_Maestro). Un proyecto = código +
+// año: una renovación es el mismo código con otro año.
+model Project {
+  id          String              @id @default(cuid())
+  code        Int
+  year        Int
+  shortName   String
+  funder      String?
+  fullName    String?
+  type        String?             // Proyecto | LGD | Interno
+  status      String?             // Activo, Pdte cierre, Siempre activo…
+  active      Boolean             @default(true)
+  allocations ProjectAllocation[]
+  trips       TripProject[]
+  expenses    Expense[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([code, year])
+  @@map("projects")
+}
+
+// Fase 3: delegaciones donde se desarrolla un proyecto, con su código contable
+// (p. ej. 006-MAD-2027).
+model ProjectAllocation {
+  id             String  @id @default(cuid())
+  projectId      String
+  project        Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  delegation     String
+  accountingCode String
+
+  @@unique([projectId, delegation])
+  @@index([delegation])
+  @@map("project_allocations")
+}
+
+model TripProject {
+  tripId    String
+  trip      Trip    @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id])
+
+  @@id([tripId, projectId])
+  @@map("trip_projects")
 }
