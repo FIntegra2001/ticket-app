@@ -4,6 +4,8 @@
 //   node scripts/produccion.mjs esquema    → paso A: añade tablas/campos (no borra)
 //   node scripts/produccion.mjs simular    → paso B: informe de migración (no escribe)
 //   node scripts/produccion.mjs aplicar    → paso C: aplica la migración
+//   node scripts/produccion.mjs proyectos-simular "<excel>"  → Fase 3: informe
+//   node scripts/produccion.mjs proyectos-aplicar "<excel>"  → Fase 3: carga
 //
 // Lee la conexión de .env.produccion (no del .env de pruebas).
 // ============================================================================
@@ -16,9 +18,11 @@ const steps = {
   esquema: ["prisma", "db", "push"],
   simular: ["tsx", "scripts/fase1-migracion.ts"],
   aplicar: ["tsx", "scripts/fase1-migracion.ts", "--apply"],
+  "proyectos-simular": ["tsx", "scripts/fase3-proyectos.ts", `"${process.argv[3] ?? ""}"`],
+  "proyectos-aplicar": ["tsx", "scripts/fase3-proyectos.ts", `"${process.argv[3] ?? ""}"`, "--apply"],
 };
 if (!steps[step]) {
-  console.error("Uso: node scripts/produccion.mjs esquema | simular | aplicar");
+  console.error("Uso: node scripts/produccion.mjs esquema | simular | aplicar | proyectos-simular <excel> | proyectos-aplicar <excel>");
   process.exit(1);
 }
 

@@ -57,7 +57,8 @@ const EXTRA_PROJECTS = [
 // Texto libre antiguo → código de proyecto (+ delegación forzada)
 function legacyProject(text: string): { code: number; delegation?: string } | null {
   const t = text.trim().toLowerCase();
-  if (!t) return null;
+  // Decisión de Gabriel (21/10/2026): los viajes sin proyecto son General
+  if (!t) return { code: 27 };
   if (t === "ibiza general") return { code: 27, delegation: "IBZ" };
   if (t === "valencia") return { code: 27, delegation: "VLC" };
   if (t.includes("general")) return { code: 27 };
@@ -149,6 +150,22 @@ async function main() {
     }
   }
 
+  // -------------------------------------- 2b. TRAMOS "Otros" = IBIZA ----
+  // Decisión de Gabriel: el texto libre "Otros" de los viajes antiguos era Ibiza.
+  const ibiza = (await prisma.city.findMany()).find((c) => c.name === "Ibiza");
+  const otrosStages = await prisma.tripStage.findMany({
+    where: { cityOther: { equals: "Otros", mode: "insensitive" } },
+    include: { trip: { include: { stages: { include: { city: true }, orderBy: { position: "asc" } } } } },
+  });
+  L.push(``, `## Tramos "Otros" → Ibiza`, ``, `${otrosStages.length} tramos (${[...new Set(otrosStages.map((s) => s.trip.numberInvoice ?? s.trip.city))].join(", ")})`);
+  if (APPLY && ibiza) {
+    for (const st of otrosStages) {
+      await prisma.tripStage.update({ where: { id: st.id }, data: { cityId: ibiza.id, cityOther: null, delegation: null } });
+      const names = st.trip.stages.map((x) => (x.id === st.id ? "Ibiza" : x.city.isOther ? x.cityOther ?? "Otro" : x.city.name));
+      await prisma.trip.update({ where: { id: st.tripId }, data: { city: names.join(" + "), region: "Baleares" } });
+    }
+  }
+
   // ---------------------------------------------- 3. VIAJES ANTIGUOS ----
   const dbProjects = APPLY
     ? await prisma.project.findMany({ include: { allocations: true } })
@@ -219,6 +236,22 @@ async function main() {
   summary.forEach((n, k) => L.push(`  - ${k}: ${n} viajes`));
   L.push(``, `### Sin asignar (decidir a mano)`, ``, unmapped.length ? unmapped.join("\n") : "Ninguno.");
   L.push(``, `### Gastos sin código contable (ciudad "Otro" sin delegación)`, ``, noCode.length ? [...new Set(noCode)].join("\n") : "Ninguno.");
+
+  // ------------------------- 4. GASTOS CON PROYECTO PERO SIN CÓDIGO ----
+  // (p. ej. los de tramos "Otros" que ahora son Ibiza): se recalcula el código.
+  const missing = await prisma.expense.findMany({
+    where: { projectId: { not: null }, accountingCode: null, tripId: { not: null } },
+    include: { project: { include: { allocations: true } }, stage: { include: { city: true } } },
+  });
+  let fixed = 0;
+  for (const e of missing) {
+    const keys = [e.stage?.city.code, e.stage?.city.delegation, e.stage?.delegation].filter(Boolean) as string[];
+    const a = keys.map((k) => e.project!.allocations.find((x) => x.delegation === k)).find(Boolean);
+    if (!a) continue;
+    fixed++;
+    if (APPLY) await prisma.expense.update({ where: { id: e.id }, data: { delegation: a.delegation, accountingCode: a.accountingCode } });
+  }
+  L.push(``, `## Gastos con proyecto sin código contable`, ``, `${missing.length} encontrados, ${fixed} se completan.`);
 
   const outDir = path.join(process.cwd(), "scripts", "out");
   fs.mkdirSync(outDir, { recursive: true });
