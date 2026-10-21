@@ -84,6 +84,9 @@ export default function TripDocuments({
     inputRef.current?.click();
   };
 
+  // Fase 3: columna sobre la que se está arrastrando un fichero (resaltado)
+  const [dragOver, setDragOver] = React.useState<TripDocumentType | null>(null);
+
   const handleFileSelected = async (
     e: React.ChangeEvent<HTMLInputElement>,
   ) => {
@@ -91,6 +94,20 @@ export default function TripDocuments({
     // Se limpia siempre para que elegir el mismo fichero dos veces vuelva a disparar el change
     e.target.value = "";
     if (!file || !uploadingType) return;
+    await processFile(file, uploadingType);
+  };
+
+  const handleDrop = async (e: React.DragEvent, type: TripDocumentType) => {
+    e.preventDefault();
+    setDragOver(null);
+    const files = Array.from(e.dataTransfer.files);
+    if (files.length === 0) return;
+    // Uno detrás de otro: cada subida comprime en el navegador y va al servidor
+    for (const file of files) await processFile(file, type);
+  };
+
+  const processFile = async (file: File, type: TripDocumentType) => {
+    setUploadingType(type);
 
     if (!(ALLOWED_DOCUMENT_TYPES as readonly string[]).includes(file.type)) {
       toast.error(
@@ -113,7 +130,8 @@ export default function TripDocuments({
         return;
       }
 
-      upload.mutate({ file: toUpload, type: uploadingType });
+      // El hook ya avisa del error; aquí solo se espera para encadenar subidas
+      await upload.mutateAsync({ file: toUpload, type }).catch(() => {});
     } catch (error) {
       toast.error(
         error instanceof Error
@@ -143,7 +161,20 @@ export default function TripDocuments({
           const isUploadingThis = upload.isPending && uploadingType === type;
 
           return (
-            <div key={type} className="flex-1 space-y-2">
+            <div
+              key={type}
+              className={`flex-1 space-y-2 rounded-md p-1 transition-colors ${
+                dragOver === type ? "bg-indigo-50 ring-2 ring-indigo-400 ring-dashed" : ""
+              }`}
+              {...(isAdmin && {
+                onDragOver: (e: React.DragEvent) => {
+                  e.preventDefault();
+                  setDragOver(type);
+                },
+                onDragLeave: () => setDragOver(null),
+                onDrop: (e: React.DragEvent) => handleDrop(e, type),
+              })}
+            >
               {docs.length > 0 ? (
                 docs.map((doc) => (
                   <div key={doc.id} className="flex items-center gap-1">
@@ -245,7 +276,9 @@ export default function TripDocuments({
             onChange={handleFileSelected}
           />
           <p className="mt-3 text-xs text-muted-foreground">
-            PDF o imagen, máximo 4 MB. Las imágenes se comprimen
+            Puedes arrastrar los ficheros sobre Billete o Reserva. Si la confirmación del
+            hotel es un correo, guárdalo como PDF (Imprimir → Guardar como PDF). PDF o imagen,
+            máximo 4 MB. Las imágenes se comprimen
             automáticamente; los PDF se suben tal cual.
           </p>
         </>

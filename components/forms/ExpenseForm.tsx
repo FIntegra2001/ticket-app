@@ -21,6 +21,7 @@ import { Loader2 } from "lucide-react";
 import { ImageCapture } from "./ImageCapture"; // ✅ nuevo componente
 import { compressImage } from "@/lib/compress-image";
 import { pickStageForDate, stageCityName } from "@/lib/trip-stages";
+import { categoryLabel } from "@/lib/expense-categories";
 import {
   computeMileage,
   formatKm,
@@ -28,6 +29,7 @@ import {
   OFFICES,
   PAYMENT_METHODS,
   PERSONAL_ADVANCE,
+  paymentMethodLabel,
 } from "@/lib/mileage";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -120,6 +122,8 @@ export default function ExpenseForm({
   const [chosenStageId, setChosenStageId] = React.useState<string>(
     initialData?.stageId || "",
   );
+  // Fase 3: segunda confirmación. Con valores aquí se muestra el resumen.
+  const [pendingValues, setPendingValues] = React.useState<ExpenseFormValues | null>(null);
   // ✅ Estado para bloquear el botón de submit mientras se guarda
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
@@ -294,10 +298,8 @@ export default function ExpenseForm({
       toast.error("Introduce un monto válido");
       return;
     }
-    if (isSubmitting) return; // guardia extra contra doble tap
-    setIsSubmitting(true);
-    try {
-      onSubmit({
+    // Fase 3: no se guarda aún; se muestra el resumen para confirmar
+    setPendingValues({
         ...values,
         amount: parsedAmount,
         receiptUrl: kmMode ? undefined : receiptUrl,
@@ -307,7 +309,14 @@ export default function ExpenseForm({
         ...(kmMode
           ? { kmOneWay, paymentMethod: PERSONAL_ADVANCE }
           : { kmOneWay: undefined, originOffice: undefined, destinationAddress: undefined }),
-      });
+    });
+  }
+
+  function confirmSave() {
+    if (!pendingValues || isSubmitting) return; // guardia extra contra doble tap
+    setIsSubmitting(true);
+    try {
+      onSubmit(pendingValues);
     } finally {
       // El padre cierra el modal; si no lo hace, desbloqueamos tras 3s
       setTimeout(() => setIsSubmitting(false), 3000);
@@ -319,6 +328,76 @@ export default function ExpenseForm({
   const sortedStages = [...stages].sort((a, b) => a.position - b.position);
   const effectiveStageId =
     chosenStageId || pickStageForDate(sortedStages, values.date)?.id || undefined;
+
+  // ------------------------------------------------ RESUMEN (Fase 3) ----
+  if (pendingValues) {
+    const v = pendingValues;
+    const stage = sortedStages.find((st) => st.id === v.stageId);
+    const project =
+      allProjects.find((p) => p.id === v.projectId) ?? tripProjects.find((p) => p.id === v.projectId);
+    const rows: [string, React.ReactNode][] = [
+      ["Fecha", v.date.toLocaleDateString("es-ES")],
+      ["Importe", <strong key="i">{v.amount.toFixed(2).replace(".", ",")} €</strong>],
+      ["Categoría", categoryLabel(v.category)],
+      ...(kmMode
+        ? ([
+            ["Origen", OFFICES.find((o) => o.value === v.originOffice)?.label ?? v.originOffice],
+            ["Destino", v.destinationAddress],
+            ["Kilómetros", `${formatKm(kmOneWay)} ida · ${formatKm(mileage.kmTotal)} ida y vuelta`],
+          ] as [string, React.ReactNode][])
+        : ([
+            ["Proveedor", v.vendor || "—"],
+            ["NIF/CIF", v.invoiceNumber || "—"],
+          ] as [string, React.ReactNode][])),
+      ["Método de pago", paymentMethodLabel(v.paymentMethod)],
+      ...(stage ? ([["Destino del viaje", `${stage.position}. ${stageCityName(stage)}`]] as [string, React.ReactNode][]) : []),
+      ...(project ? ([["Proyecto", projectLabel(project)]] as [string, React.ReactNode][]) : []),
+      ...(v.delegation ? ([["Delegación", v.delegation]] as [string, React.ReactNode][]) : []),
+      ...(v.justification ? ([["Justificación", v.justification]] as [string, React.ReactNode][]) : []),
+      ...(v.description ? ([["Descripción", v.description]] as [string, React.ReactNode][]) : []),
+    ];
+    return (
+      <div className="space-y-4">
+        <h3 className="font-semibold text-lg">Revisa el gasto antes de guardarlo</h3>
+        <div className="flex gap-4 flex-col sm:flex-row">
+          {!kmMode && previewUrl && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={previewUrl}
+              alt="Ticket"
+              className="w-full sm:w-40 max-h-56 object-contain rounded border bg-white"
+            />
+          )}
+          <dl className="flex-1 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm">
+            {rows.map(([k, val]) => (
+              <React.Fragment key={k}>
+                <dt className="text-muted-foreground">{k}</dt>
+                <dd>{val}</dd>
+              </React.Fragment>
+            ))}
+          </dl>
+        </div>
+        <p className="text-xs text-muted-foreground">
+          Comprueba que el importe es el <strong>total con IVA</strong> del ticket y que la fecha es correcta.
+        </p>
+        <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2">
+          <Button type="button" variant="outline" onClick={() => setPendingValues(null)} disabled={isSubmitting}>
+            Corregir
+          </Button>
+          <Button type="button" onClick={confirmSave} disabled={isSubmitting}>
+            {isSubmitting ? (
+              <>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                Guardando...
+              </>
+            ) : (
+              "Confirmar y guardar"
+            )}
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <form className="space-y-3" onSubmit={handleSubmit}>
@@ -648,7 +727,7 @@ export default function ExpenseForm({
               Guardando...
             </>
           ) : (
-            <>{initialData ? "Actualizar" : "Guardar"} Gasto</>
+            <>Revisar y {initialData ? "actualizar" : "guardar"}</>
           )}
         </Button>
       </div>
