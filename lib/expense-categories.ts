@@ -91,9 +91,9 @@ export const EXPENSE_CATEGORIES = [
   // ⚠️ Estas 8 son las que financiero entregó para gastos de oficina. Las 4 que
   // ya existían conservan su `subconcepto` (validado con financiero) y solo
   // cambian de `label`: dentro de un parte de oficina no hace falta el sufijo.
-  // ⚠️ `ComidasOficina` ya NO aparece en el select de viajes (donde figuraba con
-  // el label "Escuela Formación"). Los gastos históricos que la tengan siguen
-  // exportando bien: SUBCUENTAS conserva la entrada.
+  // `ComidasOficina` también se ofrece en VIAJES con el nombre "Desayuno EF"
+  // (ver ALSO_IN_TRIPS): la gente de viajes compra comidas de oficina y las
+  // registra en el viaje. Misma subcuenta en los dos sitios.
   {
     value: "Limpieza",
     label: "Limpieza",
@@ -188,10 +188,20 @@ export const SUBCUENTAS: Record<
 export const SUBCUENTAS_CONTABILIDAD: Record<string, string> =
   Object.fromEntries(EXPENSE_CATEGORIES.map((c) => [c.value, c.subcuenta]));
 
+// Categorías de oficina que también se registran dentro de un viaje, con el
+// nombre que se ve en viajes (decisión de Gabriel, 22/10/2026).
+const ALSO_IN_TRIPS: Record<string, string> = { ComidasOficina: "Desayuno EF" };
+
 // Categorías por contexto. Es lo que alimenta cada select.
-export const TRIP_CATEGORIES = EXPENSE_CATEGORIES.filter(
-  (c) => c.scope === "trip",
-);
+export const TRIP_CATEGORIES = [
+  ...EXPENSE_CATEGORIES.filter((c) => c.scope === "trip"),
+  ...EXPENSE_CATEGORIES.filter((c) => c.value in ALSO_IN_TRIPS).map((c) => ({
+    ...c,
+    label: ALSO_IN_TRIPS[c.value],
+    // En un viaje el OCR no la propone: un desayuno de viaje es "Comida"
+    ocr: false,
+  })),
+];
 export const OFFICE_CATEGORIES = EXPENSE_CATEGORIES.filter(
   (c) => c.scope === "office",
 );
@@ -232,7 +242,8 @@ export function isValidCategoryForScope(
 }
 
 /** Label visible de una categoría (el `value` guardado si no está en el catálogo). */
-export function categoryLabel(value?: string | null): string {
+export function categoryLabel(value?: string | null, scope?: CategoryScope): string {
   if (!value) return "Sin categoría";
+  if (scope === "trip" && ALSO_IN_TRIPS[value]) return ALSO_IN_TRIPS[value];
   return EXPENSE_CATEGORIES.find((c) => c.value === value)?.label ?? value;
 }

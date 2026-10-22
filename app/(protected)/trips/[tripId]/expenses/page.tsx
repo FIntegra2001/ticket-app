@@ -167,7 +167,7 @@ export default function TripExpensesPage() {
               >
                 <div className="flex-1">
                   <p className="font-medium">
-                    {exp.vendor || categoryLabel(exp.category) || "Sin categoría"}
+                    {exp.vendor || categoryLabel(exp.category, "trip")}
                   </p>
                   <p className="text-xs text-muted-foreground">
                     {formatDate(exp.date)} • {exp.description}

@@ -338,7 +338,7 @@ export default function ExpenseForm({
     const rows: [string, React.ReactNode][] = [
       ["Fecha", v.date.toLocaleDateString("es-ES")],
       ["Importe", <strong key="i">{v.amount.toFixed(2).replace(".", ",")} €</strong>],
-      ["Categoría", categoryLabel(v.category)],
+      ["Categoría", categoryLabel(v.category, scope)],
       ...(kmMode
         ? ([
             ["Origen", OFFICES.find((o) => o.value === v.originOffice)?.label ?? v.originOffice],

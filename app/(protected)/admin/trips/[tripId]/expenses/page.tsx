@@ -1,6 +1,7 @@
 "use client";
 
 import { paymentMethodLabel } from "@/lib/mileage";
+import { categoryLabel } from "@/lib/expense-categories";
 import { InvoiceField } from "@/components/trips/InvoiceField";
 import { HotelStatus } from "@/components/trips/HotelStatus";
 import { TripItinerary } from "@/components/trips/TripItinerary";
@@ -275,7 +276,7 @@ export default function AdminTripExpenses({
                           expense.createdByAdminId ? "default" : "secondary"
                         }
                       >
-                        {expense.category ?? "-"}
+                        {categoryLabel(expense.category, "trip")}
                       </Badge>
                     </TableCell>
                     <TableCell>{expense.vendor ?? "-"}</TableCell>
