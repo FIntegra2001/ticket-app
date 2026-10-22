@@ -91,16 +91,16 @@ function TripCardContent({
             : "w-full border-2 border-dashed bg-muted/40"
         }
       >
-        <CardHeader className="pb-3">
+        <CardHeader className="pb-3 [&>*]:min-w-0">
           <div className="flex justify-between items-start gap-2">
             <CardTitle
-              className={`text-lg font-bold truncate flex-1 ${
+              className={`text-lg font-bold min-w-0 flex-1 break-words ${
                 canLoadExpenses ? "" : "text-muted-foreground"
               }`}
             >
               {trip.city}
             </CardTitle>
-            <Badge variant={TRIP_STATUS_VARIANT[trip.status]}>
+            <Badge variant={TRIP_STATUS_VARIANT[trip.status]} className="shrink-0 max-w-[45%] whitespace-normal text-center">
               {TRIP_STATUS_LABEL[trip.status]}
             </Badge>
           </div>
