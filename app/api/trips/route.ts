@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth";
 import prisma from "@/lib/db";
 import { createTripSchema, requestTripSchema } from "@/lib/validations";
 import { prepareTripProjects, ProjectError } from "@/lib/projects.server";
+import { invoiceNumberError } from "@/lib/data-rules.server";
 import {
   createStagesInput,
   prepareStages,
@@ -94,6 +95,9 @@ export async function POST(request: Request) {
     const data: Prisma.TripCreateInput = isAdmin
       ? await (async () => {
           const v = createTripSchema.parse(body);
+          // Fase 5: nº de liquidación único
+          const dup = await invoiceNumberError(v.numberInvoice);
+          if (dup) throw new StageError(dup, 409);
           return {
             createdByAdmin: { connect: { id: session.user.id } },
             ...(await prepareStages(v.stages)),

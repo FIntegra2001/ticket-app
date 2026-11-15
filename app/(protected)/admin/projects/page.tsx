@@ -1,10 +1,9 @@
 "use client";
 
 import * as React from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
+import { useQuery } from "@tanstack/react-query";
+import { MaestrosSyncPanel } from "@/components/admin/MaestrosSyncPanel";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { projectLabel, type Project } from "@/lib/projects";
@@ -14,7 +13,6 @@ type AdminProject = Project & { _count: { expenses: number } };
 // Fase 3: catálogo de proyectos con sus códigos contables por delegación.
 // Solo ADMIN. La carga inicial viene del Excel Proyectos_Maestro.
 export default function AdminProjectsPage() {
-  const queryClient = useQueryClient();
   const [search, setSearch] = React.useState("");
   const [open, setOpen] = React.useState<string | null>(null);
 
@@ -25,22 +23,6 @@ export default function AdminProjectsPage() {
       if (!res.ok) throw new Error("Error al cargar");
       return res.json();
     },
-  });
-
-  const toggle = useMutation({
-    mutationFn: async ({ id, active }: { id: string; active: boolean }) => {
-      const res = await fetch(`/api/admin/projects/${id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ active }),
-      });
-      if (!res.ok) throw new Error("Error al actualizar");
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin-projects"] });
-      queryClient.invalidateQueries({ queryKey: ["projects"] });
-    },
-    onError: (e: Error) => toast.error(e.message),
   });
 
   const q = search.trim().toLowerCase();
@@ -58,9 +40,10 @@ export default function AdminProjectsPage() {
         <h1 className="text-2xl font-bold text-gray-900">Proyectos</h1>
         <p className="text-sm text-muted-foreground">
           {projects.filter((p) => p.active).length} activos de {projects.length}. Un proyecto
-          desactivado deja de ofrecerse en viajes y gastos nuevos; lo ya imputado no cambia.
+          que Facturas deja de enviar se desactiva aquí; lo ya imputado no cambia.
         </p>
       </div>
+      <MaestrosSyncPanel />
       <Input
         placeholder="Buscar por nombre, código, financiador o delegación (MAD, BLR…)"
         value={search}
@@ -89,14 +72,6 @@ export default function AdminProjectsPage() {
                     {p._count.expenses} gastos
                   </p>
                 </button>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  disabled={toggle.isPending}
-                  onClick={() => toggle.mutate({ id: p.id, active: !p.active })}
-                >
-                  {p.active ? "Desactivar" : "Activar"}
-                </Button>
               </div>
               {open === p.id && (
                 <div className="mt-3 border-t pt-2">

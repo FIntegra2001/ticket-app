@@ -66,7 +66,8 @@ export const ModelName = {
   Reimbursement: 'Reimbursement',
   Project: 'Project',
   ProjectAllocation: 'ProjectAllocation',
-  TripProject: 'TripProject'
+  TripProject: 'TripProject',
+  SyncState: 'SyncState'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -320,7 +321,8 @@ export const ProjectAllocationScalarFieldEnum = {
   id: 'id',
   projectId: 'projectId',
   delegation: 'delegation',
-  accountingCode: 'accountingCode'
+  accountingCode: 'accountingCode',
+  active: 'active'
 } as const
 
 export type ProjectAllocationScalarFieldEnum = (typeof ProjectAllocationScalarFieldEnum)[keyof typeof ProjectAllocationScalarFieldEnum]
@@ -332,6 +334,17 @@ export const TripProjectScalarFieldEnum = {
 } as const
 
 export type TripProjectScalarFieldEnum = (typeof TripProjectScalarFieldEnum)[keyof typeof TripProjectScalarFieldEnum]
+
+
+export const SyncStateScalarFieldEnum = {
+  id: 'id',
+  lastSyncAt: 'lastSyncAt',
+  lastError: 'lastError',
+  lastResult: 'lastResult',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SyncStateScalarFieldEnum = (typeof SyncStateScalarFieldEnum)[keyof typeof SyncStateScalarFieldEnum]
 
 
 export const SortOrder = {

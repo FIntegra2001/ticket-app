@@ -5,6 +5,7 @@ import { updateExpenseSchema } from "@/lib/validations";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { ZodError } from "zod";
+import { tripExpenseDateError } from "@/lib/data-rules";
 import { buildMileageData, MileageError } from "@/lib/mileage.server";
 import { ProjectError, resolveOfficeExpenseProject, resolveTripExpenseProject } from "@/lib/projects.server";
 import { resolveExpenseStage, StageError } from "@/lib/trip-stages.server";
@@ -95,6 +96,10 @@ export async function PUT(request: Request, { params }: Params) {
     const updateData: Prisma.ExpenseUpdateInput = {};
 
     if (validatedData.date !== undefined) {
+      // Fase 5: fecha del ticket coherente con el viaje
+      const trip = await prisma.trip.findUnique({ where: { id: tripId }, select: { startDate: true } });
+      const dateError = trip && tripExpenseDateError(validatedData.date, trip.startDate);
+      if (dateError) return NextResponse.json({ error: dateError }, { status: 400 });
       updateData.date = new Date(validatedData.date);
     }
     if (validatedData.amount !== undefined) {

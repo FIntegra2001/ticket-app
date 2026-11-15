@@ -399,7 +399,8 @@ export const ModelName = {
   Reimbursement: 'Reimbursement',
   Project: 'Project',
   ProjectAllocation: 'ProjectAllocation',
-  TripProject: 'TripProject'
+  TripProject: 'TripProject',
+  SyncState: 'SyncState'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -415,7 +416,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "trip" | "tripDocument" | "city" | "tripStage" | "tripAssignment" | "officeExpense" | "expense" | "session" | "account" | "verification" | "mileageRate" | "reimbursement" | "project" | "projectAllocation" | "tripProject"
+    modelProps: "user" | "trip" | "tripDocument" | "city" | "tripStage" | "tripAssignment" | "officeExpense" | "expense" | "session" | "account" | "verification" | "mileageRate" | "reimbursement" | "project" | "projectAllocation" | "tripProject" | "syncState"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1603,6 +1604,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    SyncState: {
+      payload: Prisma.$SyncStatePayload<ExtArgs>
+      fields: Prisma.SyncStateFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SyncStateFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SyncStatePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SyncStateFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SyncStatePayload>
+        }
+        findFirst: {
+          args: Prisma.SyncStateFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SyncStatePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SyncStateFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SyncStatePayload>
+        }
+        findMany: {
+          args: Prisma.SyncStateFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SyncStatePayload>[]
+        }
+        create: {
+          args: Prisma.SyncStateCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SyncStatePayload>
+        }
+        createMany: {
+          args: Prisma.SyncStateCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SyncStateCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SyncStatePayload>[]
+        }
+        delete: {
+          args: Prisma.SyncStateDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SyncStatePayload>
+        }
+        update: {
+          args: Prisma.SyncStateUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SyncStatePayload>
+        }
+        deleteMany: {
+          args: Prisma.SyncStateDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SyncStateUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SyncStateUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SyncStatePayload>[]
+        }
+        upsert: {
+          args: Prisma.SyncStateUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SyncStatePayload>
+        }
+        aggregate: {
+          args: Prisma.SyncStateAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSyncState>
+        }
+        groupBy: {
+          args: Prisma.SyncStateGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SyncStateGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SyncStateCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SyncStateCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1877,7 +1952,8 @@ export const ProjectAllocationScalarFieldEnum = {
   id: 'id',
   projectId: 'projectId',
   delegation: 'delegation',
-  accountingCode: 'accountingCode'
+  accountingCode: 'accountingCode',
+  active: 'active'
 } as const
 
 export type ProjectAllocationScalarFieldEnum = (typeof ProjectAllocationScalarFieldEnum)[keyof typeof ProjectAllocationScalarFieldEnum]
@@ -1889,6 +1965,17 @@ export const TripProjectScalarFieldEnum = {
 } as const
 
 export type TripProjectScalarFieldEnum = (typeof TripProjectScalarFieldEnum)[keyof typeof TripProjectScalarFieldEnum]
+
+
+export const SyncStateScalarFieldEnum = {
+  id: 'id',
+  lastSyncAt: 'lastSyncAt',
+  lastError: 'lastError',
+  lastResult: 'lastResult',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SyncStateScalarFieldEnum = (typeof SyncStateScalarFieldEnum)[keyof typeof SyncStateScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -2178,6 +2265,7 @@ export type GlobalOmitConfig = {
   project?: Prisma.ProjectOmit
   projectAllocation?: Prisma.ProjectAllocationOmit
   tripProject?: Prisma.TripProjectOmit
+  syncState?: Prisma.SyncStateOmit
 }
 
 /* Types for Logging */

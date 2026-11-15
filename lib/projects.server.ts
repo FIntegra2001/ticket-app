@@ -8,7 +8,7 @@ export class ProjectError extends Error {
   }
 }
 
-const withAllocations = { allocations: { select: { delegation: true, accountingCode: true } } };
+const withAllocations = { allocations: { where: { active: true }, select: { delegation: true, accountingCode: true } } };
 
 /**
  * Valida los proyectos de un viaje contra sus ciudades y devuelve el texto

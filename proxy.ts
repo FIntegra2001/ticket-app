@@ -3,7 +3,8 @@ import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 
 // Rutas accesibles sin sesión
-const PUBLIC_PATHS = ["/auth", "/api/auth"]
+// /api/cron se protege con CRON_SECRET en la propia ruta (Vercel Cron no tiene sesión)
+const PUBLIC_PATHS = ["/auth", "/api/auth", "/api/cron"]
 // Pantalla para cuentas aún no aprobadas
 const PENDING_PATH = "/pendiente"
 

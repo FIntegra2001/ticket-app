@@ -11,7 +11,7 @@ export async function GET() {
   }
   const projects = await prisma.project.findMany({
     include: {
-      allocations: { select: { delegation: true, accountingCode: true }, orderBy: { delegation: "asc" } },
+      allocations: { where: { active: true }, select: { delegation: true, accountingCode: true }, orderBy: { delegation: "asc" } },
       _count: { select: { expenses: true } },
     },
     orderBy: [{ code: "asc" }, { year: "desc" }],

@@ -134,7 +134,10 @@ export function useCreateTrip() {
       // ✅ Invalidar trips de usuario: el nuevo trip aparecerá en su lista
       queryClient.invalidateQueries({ queryKey: ["trips"] });
     },
-    onError: (error) => console.error("Error creating trip:", error),
+    onError: (error) => {
+      console.error("Error creating trip:", error);
+      toast.error(error instanceof Error ? error.message : "No se pudo crear el viaje");
+    },
   });
 }
 
@@ -165,7 +168,10 @@ export function useUpdateTrip() {
       queryClient.invalidateQueries({ queryKey: ["trips"] });
       queryClient.invalidateQueries({ queryKey: ["trip", updatedTrip.id] });
     },
-    onError: (error) => console.error("Error updating trip:", error),
+    onError: (error) => {
+      console.error("Error updating trip:", error);
+      toast.error(error instanceof Error ? error.message : "No se pudo actualizar el viaje");
+    },
   });
 }
 

@@ -29,6 +29,7 @@ export type ProjectAllocationMinAggregateOutputType = {
   projectId: string | null
   delegation: string | null
   accountingCode: string | null
+  active: boolean | null
 }
 
 export type ProjectAllocationMaxAggregateOutputType = {
@@ -36,6 +37,7 @@ export type ProjectAllocationMaxAggregateOutputType = {
   projectId: string | null
   delegation: string | null
   accountingCode: string | null
+  active: boolean | null
 }
 
 export type ProjectAllocationCountAggregateOutputType = {
@@ -43,6 +45,7 @@ export type ProjectAllocationCountAggregateOutputType = {
   projectId: number
   delegation: number
   accountingCode: number
+  active: number
   _all: number
 }
 
@@ -52,6 +55,7 @@ export type ProjectAllocationMinAggregateInputType = {
   projectId?: true
   delegation?: true
   accountingCode?: true
+  active?: true
 }
 
 export type ProjectAllocationMaxAggregateInputType = {
@@ -59,6 +63,7 @@ export type ProjectAllocationMaxAggregateInputType = {
   projectId?: true
   delegation?: true
   accountingCode?: true
+  active?: true
 }
 
 export type ProjectAllocationCountAggregateInputType = {
@@ -66,6 +71,7 @@ export type ProjectAllocationCountAggregateInputType = {
   projectId?: true
   delegation?: true
   accountingCode?: true
+  active?: true
   _all?: true
 }
 
@@ -146,6 +152,7 @@ export type ProjectAllocationGroupByOutputType = {
   projectId: string
   delegation: string
   accountingCode: string
+  active: boolean
   _count: ProjectAllocationCountAggregateOutputType | null
   _min: ProjectAllocationMinAggregateOutputType | null
   _max: ProjectAllocationMaxAggregateOutputType | null
@@ -174,6 +181,7 @@ export type ProjectAllocationWhereInput = {
   projectId?: Prisma.StringFilter<"ProjectAllocation"> | string
   delegation?: Prisma.StringFilter<"ProjectAllocation"> | string
   accountingCode?: Prisma.StringFilter<"ProjectAllocation"> | string
+  active?: Prisma.BoolFilter<"ProjectAllocation"> | boolean
   project?: Prisma.XOR<Prisma.ProjectScalarRelationFilter, Prisma.ProjectWhereInput>
 }
 
@@ -182,6 +190,7 @@ export type ProjectAllocationOrderByWithRelationInput = {
   projectId?: Prisma.SortOrder
   delegation?: Prisma.SortOrder
   accountingCode?: Prisma.SortOrder
+  active?: Prisma.SortOrder
   project?: Prisma.ProjectOrderByWithRelationInput
 }
 
@@ -194,6 +203,7 @@ export type ProjectAllocationWhereUniqueInput = Prisma.AtLeast<{
   projectId?: Prisma.StringFilter<"ProjectAllocation"> | string
   delegation?: Prisma.StringFilter<"ProjectAllocation"> | string
   accountingCode?: Prisma.StringFilter<"ProjectAllocation"> | string
+  active?: Prisma.BoolFilter<"ProjectAllocation"> | boolean
   project?: Prisma.XOR<Prisma.ProjectScalarRelationFilter, Prisma.ProjectWhereInput>
 }, "id" | "projectId_delegation">
 
@@ -202,6 +212,7 @@ export type ProjectAllocationOrderByWithAggregationInput = {
   projectId?: Prisma.SortOrder
   delegation?: Prisma.SortOrder
   accountingCode?: Prisma.SortOrder
+  active?: Prisma.SortOrder
   _count?: Prisma.ProjectAllocationCountOrderByAggregateInput
   _max?: Prisma.ProjectAllocationMaxOrderByAggregateInput
   _min?: Prisma.ProjectAllocationMinOrderByAggregateInput
@@ -215,12 +226,14 @@ export type ProjectAllocationScalarWhereWithAggregatesInput = {
   projectId?: Prisma.StringWithAggregatesFilter<"ProjectAllocation"> | string
   delegation?: Prisma.StringWithAggregatesFilter<"ProjectAllocation"> | string
   accountingCode?: Prisma.StringWithAggregatesFilter<"ProjectAllocation"> | string
+  active?: Prisma.BoolWithAggregatesFilter<"ProjectAllocation"> | boolean
 }
 
 export type ProjectAllocationCreateInput = {
   id?: string
   delegation: string
   accountingCode: string
+  active?: boolean
   project: Prisma.ProjectCreateNestedOneWithoutAllocationsInput
 }
 
@@ -229,12 +242,14 @@ export type ProjectAllocationUncheckedCreateInput = {
   projectId: string
   delegation: string
   accountingCode: string
+  active?: boolean
 }
 
 export type ProjectAllocationUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   delegation?: Prisma.StringFieldUpdateOperationsInput | string
   accountingCode?: Prisma.StringFieldUpdateOperationsInput | string
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   project?: Prisma.ProjectUpdateOneRequiredWithoutAllocationsNestedInput
 }
 
@@ -243,6 +258,7 @@ export type ProjectAllocationUncheckedUpdateInput = {
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
   delegation?: Prisma.StringFieldUpdateOperationsInput | string
   accountingCode?: Prisma.StringFieldUpdateOperationsInput | string
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type ProjectAllocationCreateManyInput = {
@@ -250,12 +266,14 @@ export type ProjectAllocationCreateManyInput = {
   projectId: string
   delegation: string
   accountingCode: string
+  active?: boolean
 }
 
 export type ProjectAllocationUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   delegation?: Prisma.StringFieldUpdateOperationsInput | string
   accountingCode?: Prisma.StringFieldUpdateOperationsInput | string
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type ProjectAllocationUncheckedUpdateManyInput = {
@@ -263,6 +281,7 @@ export type ProjectAllocationUncheckedUpdateManyInput = {
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
   delegation?: Prisma.StringFieldUpdateOperationsInput | string
   accountingCode?: Prisma.StringFieldUpdateOperationsInput | string
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type ProjectAllocationListRelationFilter = {
@@ -285,6 +304,7 @@ export type ProjectAllocationCountOrderByAggregateInput = {
   projectId?: Prisma.SortOrder
   delegation?: Prisma.SortOrder
   accountingCode?: Prisma.SortOrder
+  active?: Prisma.SortOrder
 }
 
 export type ProjectAllocationMaxOrderByAggregateInput = {
@@ -292,6 +312,7 @@ export type ProjectAllocationMaxOrderByAggregateInput = {
   projectId?: Prisma.SortOrder
   delegation?: Prisma.SortOrder
   accountingCode?: Prisma.SortOrder
+  active?: Prisma.SortOrder
 }
 
 export type ProjectAllocationMinOrderByAggregateInput = {
@@ -299,6 +320,7 @@ export type ProjectAllocationMinOrderByAggregateInput = {
   projectId?: Prisma.SortOrder
   delegation?: Prisma.SortOrder
   accountingCode?: Prisma.SortOrder
+  active?: Prisma.SortOrder
 }
 
 export type ProjectAllocationCreateNestedManyWithoutProjectInput = {
@@ -347,12 +369,14 @@ export type ProjectAllocationCreateWithoutProjectInput = {
   id?: string
   delegation: string
   accountingCode: string
+  active?: boolean
 }
 
 export type ProjectAllocationUncheckedCreateWithoutProjectInput = {
   id?: string
   delegation: string
   accountingCode: string
+  active?: boolean
 }
 
 export type ProjectAllocationCreateOrConnectWithoutProjectInput = {
@@ -389,30 +413,35 @@ export type ProjectAllocationScalarWhereInput = {
   projectId?: Prisma.StringFilter<"ProjectAllocation"> | string
   delegation?: Prisma.StringFilter<"ProjectAllocation"> | string
   accountingCode?: Prisma.StringFilter<"ProjectAllocation"> | string
+  active?: Prisma.BoolFilter<"ProjectAllocation"> | boolean
 }
 
 export type ProjectAllocationCreateManyProjectInput = {
   id?: string
   delegation: string
   accountingCode: string
+  active?: boolean
 }
 
 export type ProjectAllocationUpdateWithoutProjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   delegation?: Prisma.StringFieldUpdateOperationsInput | string
   accountingCode?: Prisma.StringFieldUpdateOperationsInput | string
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type ProjectAllocationUncheckedUpdateWithoutProjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   delegation?: Prisma.StringFieldUpdateOperationsInput | string
   accountingCode?: Prisma.StringFieldUpdateOperationsInput | string
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type ProjectAllocationUncheckedUpdateManyWithoutProjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   delegation?: Prisma.StringFieldUpdateOperationsInput | string
   accountingCode?: Prisma.StringFieldUpdateOperationsInput | string
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 
@@ -422,6 +451,7 @@ export type ProjectAllocationSelect<ExtArgs extends runtime.Types.Extensions.Int
   projectId?: boolean
   delegation?: boolean
   accountingCode?: boolean
+  active?: boolean
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["projectAllocation"]>
 
@@ -430,6 +460,7 @@ export type ProjectAllocationSelectCreateManyAndReturn<ExtArgs extends runtime.T
   projectId?: boolean
   delegation?: boolean
   accountingCode?: boolean
+  active?: boolean
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["projectAllocation"]>
 
@@ -438,6 +469,7 @@ export type ProjectAllocationSelectUpdateManyAndReturn<ExtArgs extends runtime.T
   projectId?: boolean
   delegation?: boolean
   accountingCode?: boolean
+  active?: boolean
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["projectAllocation"]>
 
@@ -446,9 +478,10 @@ export type ProjectAllocationSelectScalar = {
   projectId?: boolean
   delegation?: boolean
   accountingCode?: boolean
+  active?: boolean
 }
 
-export type ProjectAllocationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "projectId" | "delegation" | "accountingCode", ExtArgs["result"]["projectAllocation"]>
+export type ProjectAllocationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "projectId" | "delegation" | "accountingCode" | "active", ExtArgs["result"]["projectAllocation"]>
 export type ProjectAllocationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
 }
@@ -469,6 +502,7 @@ export type $ProjectAllocationPayload<ExtArgs extends runtime.Types.Extensions.I
     projectId: string
     delegation: string
     accountingCode: string
+    active: boolean
   }, ExtArgs["result"]["projectAllocation"]>
   composites: {}
 }
@@ -897,6 +931,7 @@ export interface ProjectAllocationFieldRefs {
   readonly projectId: Prisma.FieldRef<"ProjectAllocation", 'String'>
   readonly delegation: Prisma.FieldRef<"ProjectAllocation", 'String'>
   readonly accountingCode: Prisma.FieldRef<"ProjectAllocation", 'String'>
+  readonly active: Prisma.FieldRef<"ProjectAllocation", 'Boolean'>
 }
     
 

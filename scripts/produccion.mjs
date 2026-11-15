@@ -6,6 +6,8 @@
 //   node scripts/produccion.mjs aplicar    → paso C: aplica la migración
 //   node scripts/produccion.mjs proyectos-simular "<excel>"  → Fase 3: informe
 //   node scripts/produccion.mjs proyectos-aplicar "<excel>"  → Fase 3: carga
+//   node scripts/produccion.mjs correcciones-simular --asignar 1501=email …  → Fase 5
+//   node scripts/produccion.mjs correcciones-aplicar --asignar 1501=email …
 //
 // Lee la conexión de .env.produccion (no del .env de pruebas).
 // ============================================================================
@@ -19,6 +21,8 @@ const steps = {
   simular: ["tsx", "scripts/fase1-migracion.ts"],
   aplicar: ["tsx", "scripts/fase1-migracion.ts", "--apply"],
   "proyectos-simular": ["tsx", "scripts/fase3-proyectos.ts", `"${process.argv[3] ?? ""}"`],
+  "correcciones-simular": ["tsx", "scripts/fase5-correcciones.ts", ...process.argv.slice(3)],
+  "correcciones-aplicar": ["tsx", "scripts/fase5-correcciones.ts", ...process.argv.slice(3), "--apply"],
   "proyectos-aplicar": ["tsx", "scripts/fase3-proyectos.ts", `"${process.argv[3] ?? ""}"`, "--apply"],
 };
 if (!steps[step]) {

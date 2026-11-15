@@ -5,8 +5,9 @@ import { createExpenseSchema } from "@/lib/validations";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { ZodError } from "zod";
+import { tripExpenseDateError } from "@/lib/data-rules";
 import { buildMileageData, MileageError } from "@/lib/mileage.server";
-import { ProjectError, resolveOfficeExpenseProject, resolveTripExpenseProject } from "@/lib/projects.server";
+import { ProjectError, resolveTripExpenseProject } from "@/lib/projects.server";
 import { resolveExpenseStage, StageError } from "@/lib/trip-stages.server";
 
 type Params = {
@@ -102,6 +103,9 @@ export async function POST(request: Request, { params }: Params) {
 
     const body = await request.json();
     const validatedData = createExpenseSchema.parse(body);
+    // Fase 5: fecha del ticket coherente con el viaje
+    const dateError = tripExpenseDateError(validatedData.date, trip.startDate);
+    if (dateError) return NextResponse.json({ error: dateError }, { status: 400 });
     // Fase 1: tramo elegido o, si no, el que toca por fecha
     const stageId = await resolveExpenseStage(
       tripId,

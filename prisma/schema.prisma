@@ -408,6 +408,8 @@ model ProjectAllocation {
   project        Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
   delegation     String
   accountingCode String
+  // Fase 5: false si Facturas deja de enviarla (nunca se borra)
+  active         Boolean @default(true)
 
   @@unique([projectId, delegation])
   @@index([delegation])
@@ -422,4 +424,16 @@ model TripProject {
 
   @@id([tripId, projectId])
   @@map("trip_projects")
+}
+
+// Fase 5: estado de la sincronización de proyectos y ciudades con Facturas
+// Integra (fila única id = "maestros").
+model SyncState {
+  id         String    @id
+  lastSyncAt DateTime?
+  lastError  String?
+  lastResult String?
+  updatedAt  DateTime  @updatedAt
+
+  @@map("sync_state")
 }

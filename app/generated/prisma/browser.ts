@@ -97,3 +97,8 @@ export type ProjectAllocation = Prisma.ProjectAllocationModel
  * 
  */
 export type TripProject = Prisma.TripProjectModel
+/**
+ * Model SyncState
+ * 
+ */
+export type SyncState = Prisma.SyncStateModel

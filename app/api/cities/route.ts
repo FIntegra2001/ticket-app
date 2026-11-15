@@ -1,5 +1,6 @@
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/db";
+import { syncIfStale } from "@/lib/maestros-sync.server";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 
@@ -15,6 +16,7 @@ export async function GET(request: Request) {
       new URL(request.url).searchParams.get("all") === "1" &&
       session.user.role === "ADMIN";
 
+    await syncIfStale(); // Fase 5: catálogo maestro en Facturas
     const cities = await prisma.city.findMany({
       where: all ? {} : { active: true },
       // "Otro (especificar)" siempre al final

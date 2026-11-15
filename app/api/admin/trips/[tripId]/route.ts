@@ -9,6 +9,7 @@ import {
   stagesInclude,
 } from "@/lib/trip-stages.server";
 import { prepareTripProjects, ProjectError, stagesOf, tripProjectsInput } from "@/lib/projects.server";
+import { invoiceNumberError } from "@/lib/data-rules.server";
 import { destroyTripDocument } from "@/lib/trip-documents.server";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
@@ -104,8 +105,15 @@ export async function PUT(request: Request, { params }: Params) {
       updateData.notes = validatedData.notes;
     if (validatedData.status !== undefined)
       updateData.status = validatedData.status;
-    if (validatedData.numberInvoice !== undefined)
-      updateData.numberInvoice = validatedData.numberInvoice;
+    if (validatedData.numberInvoice !== undefined) {
+      // Fase 5: nº de liquidación único (solo se comprueba si cambia)
+      const current = await prisma.trip.findUnique({ where: { id: tripId }, select: { numberInvoice: true } });
+      if ((current?.numberInvoice ?? "") !== validatedData.numberInvoice.trim()) {
+        const dup = await invoiceNumberError(validatedData.numberInvoice, tripId);
+        if (dup) return NextResponse.json({ error: dup }, { status: 409 });
+      }
+      updateData.numberInvoice = validatedData.numberInvoice.trim();
+    }
     // Fase 1: nuevo itinerario → se recalculan ciudad, fechas y comunidad
     if (validatedData.stages !== undefined) {
       Object.assign(updateData, await prepareStages(validatedData.stages));

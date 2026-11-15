@@ -1,292 +1,185 @@
 "use client";
 
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import Link from "next/link";
+import { useQuery } from "@tanstack/react-query";
+import {
+  AlertCircle,
+  CalendarClock,
+  FileWarning,
+  Hash,
+  Inbox,
+  Receipt,
+  Briefcase,
+  type LucideIcon,
+} from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useAdminTripStats } from "@/hooks/useAdminTrips";
-import { useUsers } from "@/hooks/useUser";
-import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
 import { ReimbursementAlert } from "@/components/admin/ReimbursementAlert";
+import { formatDate } from "@/lib/utils";
 
+type TripTask = {
+  id: string;
+  city: string;
+  startDate: string;
+  endDate: string;
+  numberInvoice: string | null;
+  people: string;
+  detail?: string;
+};
+type Tasks = {
+  pending: TripTask[];
+  noInvoice: TripTask[];
+  upcoming: TripTask[];
+  missingDocs: TripTask[];
+  ticketIssues: TripTask[];
+  openOffice: { id: string; person: string; period: string; expenses: number }[];
+  topCities: { city: string; trips: number }[];
+};
+
+// Fase 5: el panel del ADMIN es una bandeja de tareas, sin importes agregados.
+// Las cifras económicas (con billetes y hotel) están en Facturas Integra.
 export default function AdminDashboard() {
-  const router = useRouter();
-  const { data: allTrips, isLoading: loadingTrips } = useAdminTripStats();
-  const { users, isLoading: loadingUsers } = useUsers();
-  const isLoading = loadingTrips || loadingUsers;
+  const { data, isLoading } = useQuery<Tasks>({
+    queryKey: ["admin-tasks"],
+    queryFn: async () => {
+      const res = await fetch("/api/admin/tasks");
+      if (!res.ok) throw new Error("Error al cargar la bandeja");
+      return res.json();
+    },
+    refetchInterval: 60_000,
+  });
 
-  // --- Métricas globales ---
-  const totalTrips = allTrips?.length ?? 0;
-  const totalAmount =
-    allTrips?.reduce((acc, t) => acc + Number(t.totalAmount ?? 0), 0) ?? 0;
-  const usersActivos = users?.filter((u) => u.role === "USER").length ?? 0;
-
-  // Contar por estado
-  const tripsByStatus = {
-    PENDIENTE: allTrips?.filter((t) => t.status === "PENDIENTE").length ?? 0,
-    APROBADO: allTrips?.filter((t) => t.status === "APROBADO").length ?? 0,
-    RECHAZADO: allTrips?.filter((t) => t.status === "RECHAZADO").length ?? 0,
-  };
-
-  // ✅ Gasto por usuario — ahora iteramos assignedUsers (array)
-  // Un trip puede estar asignado a varios usuarios: lo contamos para cada uno
-  const spendByUser = (() => {
-    const map = new Map<
-      string,
-      { name: string; email: string; total: number; trips: number }
-    >();
-
-    allTrips?.forEach((trip) => {
-      const amount = Number(trip.totalAmount ?? 0);
-
-      // ✅ assignedUsers es un array de TripAssignment
-      trip.assignedUsers?.forEach((assignment) => {
-        const userId = assignment.userId;
-        const name = assignment.user?.name ?? "Sin nombre";
-        const email = assignment.user?.email ?? "";
-
-        const existing = map.get(userId);
-        if (existing) {
-          existing.total += amount;
-          existing.trips += 1;
-        } else {
-          map.set(userId, { name, email, total: amount, trips: 1 });
-        }
-      });
-    });
-
-    return Array.from(map.values())
-      .sort((a, b) => b.total - a.total)
-      .slice(0, 5);
-  })();
-
-  // Ciudades más visitadas
-  const topCities = (() => {
-    const map = new Map<string, number>();
-    allTrips?.forEach((t) => {
-      if (t.city) map.set(t.city, (map.get(t.city) ?? 0) + 1);
-    });
-    return Array.from(map.entries())
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 5);
-  })();
+  const tripLink = (id: string) => `/admin/trips/${id}/expenses`;
+  const totalPending = data
+    ? data.pending.length + data.noInvoice.length + data.missingDocs.length + data.ticketIssues.length + data.openOffice.length
+    : 0;
 
   return (
-    <main className="flex flex-col gap-6 p-6">
+    <main className="max-w-6xl mx-auto flex flex-col gap-6 p-4 sm:p-6">
       <ReimbursementAlert />
-      <section className="flex flex-col items-center gap-4 md:flex-row md:items-center md:justify-between">
-        <div className="text-center md:text-left">
-          <h1 className="text-3xl font-bold">Dashboard Administrador</h1>
-          <p className="text-muted-foreground text-sm mt-1">
-            Resumen global de viajes y gastos
-          </p>
-        </div>
-        <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-          <Button
-            variant="outline"
-            onClick={() => router.push("/admin/alltrips")}
-            className="w-full sm:w-auto"
-          >
-            Gestionar viajes
-          </Button>
-          <Button
-            variant="outline"
-            onClick={() => router.push("/admin")}
-            className="w-full sm:w-auto"
-          >
-            Ver tabla
-          </Button>
-        </div>
-      </section>
-
-      {/* KPIs globales */}
-      <div className="grid gap-4 md:grid-cols-4">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm text-muted-foreground">
-              Total viajes
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {isLoading ? (
-              <Skeleton className="h-9 w-16" />
-            ) : (
-              <p className="text-3xl font-bold">{totalTrips}</p>
-            )}
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm text-muted-foreground">
-              Gasto total
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {isLoading ? (
-              <Skeleton className="h-9 w-32" />
-            ) : (
-              <p className="text-3xl font-bold">
-                {totalAmount.toLocaleString("es-ES", {
-                  style: "currency",
-                  currency: "EUR",
-                })}
-              </p>
-            )}
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm text-muted-foreground">
-              Usuarios activos
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {isLoading ? (
-              <Skeleton className="h-9 w-12" />
-            ) : (
-              <p className="text-3xl font-bold">{usersActivos}</p>
-            )}
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm text-yellow-600">
-              Pendientes
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {isLoading ? (
-              <Skeleton className="h-9 w-12" />
-            ) : (
-              <p className="text-3xl font-bold text-yellow-600">
-                {tripsByStatus.PENDIENTE}
-              </p>
-            )}
-          </CardContent>
-        </Card>
+      <div>
+        <h1 className="text-3xl font-bold">Bandeja de tareas</h1>
+        <p className="text-muted-foreground text-sm mt-1">
+          {isLoading ? "Cargando…" : totalPending ? `${totalPending} tareas pendientes` : "Todo al día"} · Los
+          importes completos de cada viaje (con billetes y hotel) están en Facturas Integra.
+        </p>
       </div>
 
-      {/* Estados */}
-      <div className="grid gap-4 md:grid-cols-3">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm text-yellow-600">
-              Pendientes
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {isLoading ? (
-              <Skeleton className="h-8 w-12" />
-            ) : (
-              <p className="text-2xl font-bold">{tripsByStatus.PENDIENTE}</p>
-            )}
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm text-green-600">Aprobados</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {isLoading ? (
-              <Skeleton className="h-8 w-12" />
-            ) : (
-              <p className="text-2xl font-bold">{tripsByStatus.APROBADO}</p>
-            )}
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm text-red-600">Rechazados</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {isLoading ? (
-              <Skeleton className="h-8 w-12" />
-            ) : (
-              <p className="text-2xl font-bold">{tripsByStatus.RECHAZADO}</p>
-            )}
-          </CardContent>
-        </Card>
-      </div>
+      {isLoading || !data ? (
+        <div className="grid gap-4 md:grid-cols-2">
+          {[...Array(6)].map((_, i) => (
+            <Skeleton key={i} className="h-40 w-full rounded-lg" />
+          ))}
+        </div>
+      ) : (
+        <div className="grid gap-4 md:grid-cols-2">
+          <TaskBlock icon={Inbox} title="Solicitudes por aprobar" items={data.pending} href="/admin/alltrips?tab=solicitudes" tripLink={tripLink} tone="amber" />
+          <TaskBlock icon={Hash} title="Aprobados sin nº de liquidación" items={data.noInvoice} href="/admin/alltrips?tab=proximos" tripLink={tripLink} tone="amber" />
+          <TaskBlock icon={FileWarning} title="Sin billete o sin reserva" items={data.missingDocs} href="/admin/alltrips?tab=proximos" tripLink={tripLink} tone="amber" />
+          <TaskBlock icon={Receipt} title="Viajes terminados con tickets pendientes" items={data.ticketIssues} href="/admin/alltrips?tab=realizados" tripLink={tripLink} tone="amber" />
+          <TaskBlock icon={CalendarClock} title="Próximos viajes (30 días)" items={data.upcoming} href="/admin/alltrips?tab=proximos" tripLink={tripLink} tone="neutral" />
 
-      {/* Gasto por usuario + ciudades */}
-      <div className="grid gap-4 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>Gasto por usuario (top 5)</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {isLoading ? (
-              <div className="space-y-3">
-                {[...Array(5)].map((_, i) => (
-                  <Skeleton key={i} className="h-12 w-full" />
-                ))}
-              </div>
-            ) : spendByUser.length === 0 ? (
-              <p className="text-sm text-muted-foreground text-center py-4">
-                No hay datos disponibles
-              </p>
+          <section className="bg-white border rounded-lg p-4 space-y-3">
+            <Header icon={Briefcase} title="Partes de oficina del mes anterior abiertos" count={data.openOffice.length} tone="amber" />
+            <p className="text-xs text-muted-foreground">Facturas solo importa los partes CERRADOS.</p>
+            {data.openOffice.length === 0 ? (
+              <Empty />
             ) : (
-              <ul className="space-y-3">
-                {spendByUser.map((u) => (
-                  <li
-                    key={u.email}
-                    className="flex justify-between items-center py-2 border-b last:border-0"
-                  >
-                    <div>
-                      <span className="font-medium">{u.name}</span>
-                      <p className="text-xs text-muted-foreground">
-                        {u.email} · {u.trips}{" "}
-                        {u.trips === 1 ? "viaje" : "viajes"}
-                      </p>
-                    </div>
-                    <span className="font-semibold">
-                      {u.total.toLocaleString("es-ES", {
-                        style: "currency",
-                        currency: "EUR",
-                      })}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Ciudades más visitadas</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {isLoading ? (
-              <div className="space-y-3">
-                {[...Array(5)].map((_, i) => (
-                  <Skeleton key={i} className="h-12 w-full" />
-                ))}
-              </div>
-            ) : topCities.length === 0 ? (
-              <p className="text-sm text-muted-foreground text-center py-4">
-                No hay datos disponibles
-              </p>
-            ) : (
-              <ul className="space-y-3">
-                {topCities.map(([city, count]) => (
-                  <li
-                    key={city}
-                    className="flex justify-between items-center py-2 border-b last:border-0"
-                  >
-                    <span className="font-medium">{city}</span>
+              <ul className="divide-y">
+                {data.openOffice.map((o) => (
+                  <li key={o.id} className="py-2 text-sm flex justify-between gap-2">
+                    <Link href={`/office-expenses/${o.id}`} className="font-medium hover:underline">
+                      {o.person}
+                    </Link>
                     <span className="text-muted-foreground">
-                      {count} {count === 1 ? "viaje" : "viajes"}
+                      {o.period} · {o.expenses} gastos
                     </span>
                   </li>
                 ))}
               </ul>
             )}
-          </CardContent>
-        </Card>
-      </div>
+          </section>
+
+          <section className="bg-white border rounded-lg p-4 space-y-3 md:col-span-2">
+            <Header icon={AlertCircle} title="Ciudades más visitadas" tone="neutral" />
+            <div className="flex flex-wrap gap-2">
+              {data.topCities.map((c) => (
+                <span key={c.city} className="text-sm bg-muted rounded-full px-3 py-1">
+                  {c.city} · {c.trips} viajes
+                </span>
+              ))}
+            </div>
+          </section>
+        </div>
+      )}
     </main>
+  );
+}
+
+function Header({ icon: Icon, title, count, tone }: { icon: LucideIcon; title: string; count?: number; tone: "amber" | "neutral" }) {
+  return (
+    <div className="flex items-center gap-2">
+      <Icon className="w-5 h-5 text-muted-foreground shrink-0" />
+      <h2 className="font-semibold flex-1">{title}</h2>
+      {count !== undefined && (
+        <span
+          className={`min-w-7 text-center rounded-full px-2 py-0.5 text-sm font-semibold ${
+            count && tone === "amber" ? "bg-amber-500 text-white" : "bg-gray-100 text-gray-600"
+          }`}
+        >
+          {count}
+        </span>
+      )}
+    </div>
+  );
+}
+
+function Empty() {
+  return <p className="text-sm text-green-700">Nada pendiente.</p>;
+}
+
+function TaskBlock({
+  icon,
+  title,
+  items,
+  href,
+  tripLink,
+  tone,
+}: {
+  icon: LucideIcon;
+  title: string;
+  items: TripTask[];
+  href: string;
+  tripLink: (id: string) => string;
+  tone: "amber" | "neutral";
+}) {
+  const shown = items.slice(0, 6);
+  return (
+    <section className="bg-white border rounded-lg p-4 space-y-3">
+      <Header icon={icon} title={title} count={items.length} tone={tone} />
+      {items.length === 0 ? (
+        <Empty />
+      ) : (
+        <ul className="divide-y">
+          {shown.map((t) => (
+            <li key={t.id} className="py-2 text-sm">
+              <Link href={tripLink(t.id)} className="font-medium hover:underline">
+                {t.city}
+              </Link>
+              {t.numberInvoice && <span className="text-muted-foreground"> · Nº {t.numberInvoice}</span>}
+              <div className="text-xs text-muted-foreground">
+                {formatDate(t.startDate)} – {formatDate(t.endDate)}
+                {t.people ? ` · ${t.people}` : ""}
+                {t.detail ? <span className="text-amber-700"> · {t.detail}</span> : null}
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+      {items.length > shown.length && (
+        <Link href={href} className="text-sm text-indigo-600 hover:underline">
+          Ver los {items.length} →
+        </Link>
+      )}
+    </section>
   );
 }
