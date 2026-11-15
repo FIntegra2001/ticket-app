@@ -32,3 +32,25 @@ App de **gastos de viajes y de oficina** (no es un helpdesk: "ticket" = foto de 
 - `proxy.ts` NO protege `/api/*` ni comprueba rol: cada ruta API debe validar sesión y rol ADMIN.
 - No hay tests ni CI.
 - IVA inconsistente entre exportaciones (`app/api/admin/export/route.ts` vs `app/api/trips/export/route.ts`).
+
+## Contrato con Facturas Integra (NO ROMPER)
+Facturas Integra (github.com/FIntegra2001/facturas-integra) es la app MAESTRA de contabilidad y lee esta BD en SOLO LECTURA (rol Neon `lector_facturas`) para traer liquidaciones (Trip) y gastos (Expense de viajes y de partes de oficina). Nunca escribe aquí.
+
+- **Añadir** campos o tablas: sí. **Renombrar o borrar** cualquiera de estos: no, sin avisar antes a Gabriel.
+  - Trip: id, numberInvoice (= nº de liquidación), status (PENDIENTE/APROBADO/RECHAZADO), city, startDate, endDate, project, region, approvedAt, createdAt, updatedAt.
+  - TripAssignment (tripId, userId) y User (id, name, email). El viajero real debe quedar siempre asignado al viaje (no usar administracion@ como "usuario de visibilidad").
+  - TripStage: tripId, position, cityId/cityOther, delegation, arrivalDate, departureDate.
+  - TripProject (tripId, projectId) y Project (code, year).
+  - Expense: id, tripId, officeExpenseId, date, amount, category, vendor, description, invoiceNumber, paymentMethod, projectId, delegation, accountingCode, stageId, kmTotal, ratePerKm, receiptUrl.
+  - OfficeExpense: id, userId, year, month, status (ABIERTO/CERRADO).
+- Valores de `category` (`lib/expense-categories.ts`) y de `paymentMethod` (Tarjeta, Efectivo, Transferencia, Domiciliacion, Bankinter): añadir o renombrar uno → avisar antes. Las etiquetas visibles (p. ej. "Adelanto personal (reembolso)" = Efectivo, "Desayuno EF" = ComidasOficina en viajes) pueden cambiar; el `value` guardado no.
+
+## Hoja de ruta acordada (todavía NO implementar)
+1. Proyectos, ciudades/delegaciones, personas y medios de pago se leerán de Facturas (API de solo lectura con clave). No invertir en mejorar las pantallas de Proyectos/Ciudades de esta app.
+2. El dashboard de admin pasará a ser una bandeja de tareas SIN importes agregados (quitar "Gasto total" y "Gasto por usuario"; mantener el importe de tickets de cada viaje para reembolsos). Bandeja: solicitudes pendientes de aprobar, próximos viajes, aprobados sin billete/reserva, viajes pasados con tickets sin subir o sin categorizar, aprobados sin nº de liquidación.
+3. Billetes (tren/avión), hotel y gasolina de viaje se contabilizan en Facturas vinculados a la liquidación; aquí se siguen guardando como TripDocument para el viajero.
+
+## Estado actual (noviembre 2026)
+- Fases 0-3 en producción: acceso solo Microsoft con aprobación de usuarios (User.status), viajes con tramos (TripStage) y catálogo de ciudades, gastos de oficina con kilometraje y reembolsos, pestañas Solicitudes/Próximos/Realizados, seguimiento de hotel, filtros de exportación, catálogo de proyectos (Project/ProjectAllocation, código contable CÓD-DELEG-AÑO por gasto), resumen de confirmación al guardar un gasto, arrastrar documentos.
+- BD de pruebas: rama de Neon `pruebas` en `.env`; producción en `.env.produccion` (no se sube). Los cambios en producción los ejecuta Gabriel con `node scripts/produccion.mjs …`.
+- Vercel y Azure están en cuentas de Nicolás: pendiente recuperarlas vía el admin de Microsoft 365.
