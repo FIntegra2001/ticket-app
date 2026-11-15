@@ -73,6 +73,8 @@ export interface Trip {
   /** Fase 3: seguimiento del hotel */
   hotelRequestedAt?: Date | string | null
   hotelConfirmedAt?: Date | string | null
+  /** Cerrado por administración: el viajero ya no puede tocar sus gastos */
+  closedAt?: Date | string | null
   /** Fase 3: proyectos del viaje */
   projects?: { projectId: string; project: Project }[]
 }

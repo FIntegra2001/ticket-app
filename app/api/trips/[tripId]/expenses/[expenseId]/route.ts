@@ -23,7 +23,7 @@ async function verifyExpenseAccess(
   isAdmin: boolean
 ) {
   // Se incluye el status del viaje para poder aplicar el candado de aprobación
-  const include = { trip: { select: { status: true } } } as const;
+  const include = { trip: { select: { status: true, closedAt: true } } } as const;
 
   if (isAdmin) {
     // Admin puede acceder a cualquier expense
@@ -54,11 +54,13 @@ const EXPENSES_LOCKED_MSG =
   "Este viaje no está aprobado, así que sus gastos no se pueden modificar.";
 
 function expensesLocked(
-  expense: { trip: { status: string } | null },
+  expense: { trip: { status: string; closedAt?: Date | null } | null },
   isAdmin: boolean,
 ): boolean {
-  return !isAdmin && expense.trip?.status !== "APROBADO";
+  return !isAdmin && (expense.trip?.status !== "APROBADO" || !!expense.trip?.closedAt);
 }
+const CLOSED_MSG =
+  "Administración ya ha cerrado este viaje, así que sus gastos no se pueden modificar. Si falta algo, avisa a administración.";
 
 export async function PUT(request: Request, { params }: Params) {
   try {
@@ -86,7 +88,7 @@ export async function PUT(request: Request, { params }: Params) {
     }
 
     if (expensesLocked(existingExpense, isAdmin)) {
-      return NextResponse.json({ error: EXPENSES_LOCKED_MSG }, { status: 403 });
+      return NextResponse.json({ error: existingExpense.trip?.closedAt ? CLOSED_MSG : EXPENSES_LOCKED_MSG }, { status: 403 });
     }
 
     const body = await request.json();
@@ -243,7 +245,7 @@ export async function DELETE(_: Request, { params }: Params) {
     }
 
     if (expensesLocked(existingExpense, isAdmin)) {
-      return NextResponse.json({ error: EXPENSES_LOCKED_MSG }, { status: 403 });
+      return NextResponse.json({ error: existingExpense.trip?.closedAt ? CLOSED_MSG : EXPENSES_LOCKED_MSG }, { status: 403 });
     }
 
     // ✅ Eliminar expense y actualizar total en transacción

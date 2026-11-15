@@ -51,6 +51,8 @@ export type TripMinAggregateOutputType = {
   region: string | null
   hotelRequestedAt: Date | null
   hotelConfirmedAt: Date | null
+  closedAt: Date | null
+  closedById: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -72,6 +74,8 @@ export type TripMaxAggregateOutputType = {
   region: string | null
   hotelRequestedAt: Date | null
   hotelConfirmedAt: Date | null
+  closedAt: Date | null
+  closedById: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -93,6 +97,8 @@ export type TripCountAggregateOutputType = {
   region: number
   hotelRequestedAt: number
   hotelConfirmedAt: number
+  closedAt: number
+  closedById: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -124,6 +130,8 @@ export type TripMinAggregateInputType = {
   region?: true
   hotelRequestedAt?: true
   hotelConfirmedAt?: true
+  closedAt?: true
+  closedById?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -145,6 +153,8 @@ export type TripMaxAggregateInputType = {
   region?: true
   hotelRequestedAt?: true
   hotelConfirmedAt?: true
+  closedAt?: true
+  closedById?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -166,6 +176,8 @@ export type TripCountAggregateInputType = {
   region?: true
   hotelRequestedAt?: true
   hotelConfirmedAt?: true
+  closedAt?: true
+  closedById?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -274,6 +286,8 @@ export type TripGroupByOutputType = {
   region: string | null
   hotelRequestedAt: Date | null
   hotelConfirmedAt: Date | null
+  closedAt: Date | null
+  closedById: string | null
   createdAt: Date
   updatedAt: Date
   _count: TripCountAggregateOutputType | null
@@ -318,6 +332,8 @@ export type TripWhereInput = {
   region?: Prisma.StringNullableFilter<"Trip"> | string | null
   hotelRequestedAt?: Prisma.DateTimeNullableFilter<"Trip"> | Date | string | null
   hotelConfirmedAt?: Prisma.DateTimeNullableFilter<"Trip"> | Date | string | null
+  closedAt?: Prisma.DateTimeNullableFilter<"Trip"> | Date | string | null
+  closedById?: Prisma.StringNullableFilter<"Trip"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Trip"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Trip"> | Date | string
   createdByAdmin?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
@@ -347,6 +363,8 @@ export type TripOrderByWithRelationInput = {
   region?: Prisma.SortOrderInput | Prisma.SortOrder
   hotelRequestedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   hotelConfirmedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  closedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  closedById?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   createdByAdmin?: Prisma.UserOrderByWithRelationInput
@@ -379,6 +397,8 @@ export type TripWhereUniqueInput = Prisma.AtLeast<{
   region?: Prisma.StringNullableFilter<"Trip"> | string | null
   hotelRequestedAt?: Prisma.DateTimeNullableFilter<"Trip"> | Date | string | null
   hotelConfirmedAt?: Prisma.DateTimeNullableFilter<"Trip"> | Date | string | null
+  closedAt?: Prisma.DateTimeNullableFilter<"Trip"> | Date | string | null
+  closedById?: Prisma.StringNullableFilter<"Trip"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Trip"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Trip"> | Date | string
   createdByAdmin?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
@@ -408,6 +428,8 @@ export type TripOrderByWithAggregationInput = {
   region?: Prisma.SortOrderInput | Prisma.SortOrder
   hotelRequestedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   hotelConfirmedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  closedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  closedById?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.TripCountOrderByAggregateInput
@@ -437,6 +459,8 @@ export type TripScalarWhereWithAggregatesInput = {
   region?: Prisma.StringNullableWithAggregatesFilter<"Trip"> | string | null
   hotelRequestedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Trip"> | Date | string | null
   hotelConfirmedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Trip"> | Date | string | null
+  closedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Trip"> | Date | string | null
+  closedById?: Prisma.StringNullableWithAggregatesFilter<"Trip"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Trip"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Trip"> | Date | string
 }
@@ -455,6 +479,8 @@ export type TripCreateInput = {
   region?: string | null
   hotelRequestedAt?: Date | string | null
   hotelConfirmedAt?: Date | string | null
+  closedAt?: Date | string | null
+  closedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   createdByAdmin?: Prisma.UserCreateNestedOneWithoutCreatedTripsInput
@@ -484,6 +510,8 @@ export type TripUncheckedCreateInput = {
   region?: string | null
   hotelRequestedAt?: Date | string | null
   hotelConfirmedAt?: Date | string | null
+  closedAt?: Date | string | null
+  closedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   stages?: Prisma.TripStageUncheckedCreateNestedManyWithoutTripInput
@@ -507,6 +535,8 @@ export type TripUpdateInput = {
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hotelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   hotelConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdByAdmin?: Prisma.UserUpdateOneWithoutCreatedTripsNestedInput
@@ -536,6 +566,8 @@ export type TripUncheckedUpdateInput = {
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hotelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   hotelConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   stages?: Prisma.TripStageUncheckedUpdateManyWithoutTripNestedInput
@@ -562,6 +594,8 @@ export type TripCreateManyInput = {
   region?: string | null
   hotelRequestedAt?: Date | string | null
   hotelConfirmedAt?: Date | string | null
+  closedAt?: Date | string | null
+  closedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -580,6 +614,8 @@ export type TripUpdateManyMutationInput = {
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hotelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   hotelConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -601,6 +637,8 @@ export type TripUncheckedUpdateManyInput = {
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hotelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   hotelConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -632,6 +670,8 @@ export type TripCountOrderByAggregateInput = {
   region?: Prisma.SortOrder
   hotelRequestedAt?: Prisma.SortOrder
   hotelConfirmedAt?: Prisma.SortOrder
+  closedAt?: Prisma.SortOrder
+  closedById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -657,6 +697,8 @@ export type TripMaxOrderByAggregateInput = {
   region?: Prisma.SortOrder
   hotelRequestedAt?: Prisma.SortOrder
   hotelConfirmedAt?: Prisma.SortOrder
+  closedAt?: Prisma.SortOrder
+  closedById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -678,6 +720,8 @@ export type TripMinOrderByAggregateInput = {
   region?: Prisma.SortOrder
   hotelRequestedAt?: Prisma.SortOrder
   hotelConfirmedAt?: Prisma.SortOrder
+  closedAt?: Prisma.SortOrder
+  closedById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -924,6 +968,8 @@ export type TripCreateWithoutCreatedByAdminInput = {
   region?: string | null
   hotelRequestedAt?: Date | string | null
   hotelConfirmedAt?: Date | string | null
+  closedAt?: Date | string | null
+  closedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   requestedBy?: Prisma.UserCreateNestedOneWithoutRequestedTripsInput
@@ -951,6 +997,8 @@ export type TripUncheckedCreateWithoutCreatedByAdminInput = {
   region?: string | null
   hotelRequestedAt?: Date | string | null
   hotelConfirmedAt?: Date | string | null
+  closedAt?: Date | string | null
+  closedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   stages?: Prisma.TripStageUncheckedCreateNestedManyWithoutTripInput
@@ -984,6 +1032,8 @@ export type TripCreateWithoutRequestedByInput = {
   region?: string | null
   hotelRequestedAt?: Date | string | null
   hotelConfirmedAt?: Date | string | null
+  closedAt?: Date | string | null
+  closedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   createdByAdmin?: Prisma.UserCreateNestedOneWithoutCreatedTripsInput
@@ -1011,6 +1061,8 @@ export type TripUncheckedCreateWithoutRequestedByInput = {
   region?: string | null
   hotelRequestedAt?: Date | string | null
   hotelConfirmedAt?: Date | string | null
+  closedAt?: Date | string | null
+  closedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   stages?: Prisma.TripStageUncheckedCreateNestedManyWithoutTripInput
@@ -1044,6 +1096,8 @@ export type TripCreateWithoutApprovedByInput = {
   region?: string | null
   hotelRequestedAt?: Date | string | null
   hotelConfirmedAt?: Date | string | null
+  closedAt?: Date | string | null
+  closedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   createdByAdmin?: Prisma.UserCreateNestedOneWithoutCreatedTripsInput
@@ -1071,6 +1125,8 @@ export type TripUncheckedCreateWithoutApprovedByInput = {
   region?: string | null
   hotelRequestedAt?: Date | string | null
   hotelConfirmedAt?: Date | string | null
+  closedAt?: Date | string | null
+  closedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   stages?: Prisma.TripStageUncheckedCreateNestedManyWithoutTripInput
@@ -1126,6 +1182,8 @@ export type TripScalarWhereInput = {
   region?: Prisma.StringNullableFilter<"Trip"> | string | null
   hotelRequestedAt?: Prisma.DateTimeNullableFilter<"Trip"> | Date | string | null
   hotelConfirmedAt?: Prisma.DateTimeNullableFilter<"Trip"> | Date | string | null
+  closedAt?: Prisma.DateTimeNullableFilter<"Trip"> | Date | string | null
+  closedById?: Prisma.StringNullableFilter<"Trip"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Trip"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Trip"> | Date | string
 }
@@ -1176,6 +1234,8 @@ export type TripCreateWithoutDocumentsInput = {
   region?: string | null
   hotelRequestedAt?: Date | string | null
   hotelConfirmedAt?: Date | string | null
+  closedAt?: Date | string | null
+  closedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   createdByAdmin?: Prisma.UserCreateNestedOneWithoutCreatedTripsInput
@@ -1204,6 +1264,8 @@ export type TripUncheckedCreateWithoutDocumentsInput = {
   region?: string | null
   hotelRequestedAt?: Date | string | null
   hotelConfirmedAt?: Date | string | null
+  closedAt?: Date | string | null
+  closedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   stages?: Prisma.TripStageUncheckedCreateNestedManyWithoutTripInput
@@ -1242,6 +1304,8 @@ export type TripUpdateWithoutDocumentsInput = {
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hotelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   hotelConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdByAdmin?: Prisma.UserUpdateOneWithoutCreatedTripsNestedInput
@@ -1270,6 +1334,8 @@ export type TripUncheckedUpdateWithoutDocumentsInput = {
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hotelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   hotelConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   stages?: Prisma.TripStageUncheckedUpdateManyWithoutTripNestedInput
@@ -1292,6 +1358,8 @@ export type TripCreateWithoutStagesInput = {
   region?: string | null
   hotelRequestedAt?: Date | string | null
   hotelConfirmedAt?: Date | string | null
+  closedAt?: Date | string | null
+  closedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   createdByAdmin?: Prisma.UserCreateNestedOneWithoutCreatedTripsInput
@@ -1320,6 +1388,8 @@ export type TripUncheckedCreateWithoutStagesInput = {
   region?: string | null
   hotelRequestedAt?: Date | string | null
   hotelConfirmedAt?: Date | string | null
+  closedAt?: Date | string | null
+  closedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   projects?: Prisma.TripProjectUncheckedCreateNestedManyWithoutTripInput
@@ -1358,6 +1428,8 @@ export type TripUpdateWithoutStagesInput = {
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hotelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   hotelConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdByAdmin?: Prisma.UserUpdateOneWithoutCreatedTripsNestedInput
@@ -1386,6 +1458,8 @@ export type TripUncheckedUpdateWithoutStagesInput = {
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hotelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   hotelConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   projects?: Prisma.TripProjectUncheckedUpdateManyWithoutTripNestedInput
@@ -1408,6 +1482,8 @@ export type TripCreateWithoutAssignedUsersInput = {
   region?: string | null
   hotelRequestedAt?: Date | string | null
   hotelConfirmedAt?: Date | string | null
+  closedAt?: Date | string | null
+  closedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   createdByAdmin?: Prisma.UserCreateNestedOneWithoutCreatedTripsInput
@@ -1436,6 +1512,8 @@ export type TripUncheckedCreateWithoutAssignedUsersInput = {
   region?: string | null
   hotelRequestedAt?: Date | string | null
   hotelConfirmedAt?: Date | string | null
+  closedAt?: Date | string | null
+  closedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   stages?: Prisma.TripStageUncheckedCreateNestedManyWithoutTripInput
@@ -1474,6 +1552,8 @@ export type TripUpdateWithoutAssignedUsersInput = {
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hotelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   hotelConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdByAdmin?: Prisma.UserUpdateOneWithoutCreatedTripsNestedInput
@@ -1502,6 +1582,8 @@ export type TripUncheckedUpdateWithoutAssignedUsersInput = {
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hotelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   hotelConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   stages?: Prisma.TripStageUncheckedUpdateManyWithoutTripNestedInput
@@ -1524,6 +1606,8 @@ export type TripCreateWithoutExpensesInput = {
   region?: string | null
   hotelRequestedAt?: Date | string | null
   hotelConfirmedAt?: Date | string | null
+  closedAt?: Date | string | null
+  closedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   createdByAdmin?: Prisma.UserCreateNestedOneWithoutCreatedTripsInput
@@ -1552,6 +1636,8 @@ export type TripUncheckedCreateWithoutExpensesInput = {
   region?: string | null
   hotelRequestedAt?: Date | string | null
   hotelConfirmedAt?: Date | string | null
+  closedAt?: Date | string | null
+  closedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   stages?: Prisma.TripStageUncheckedCreateNestedManyWithoutTripInput
@@ -1590,6 +1676,8 @@ export type TripUpdateWithoutExpensesInput = {
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hotelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   hotelConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdByAdmin?: Prisma.UserUpdateOneWithoutCreatedTripsNestedInput
@@ -1618,6 +1706,8 @@ export type TripUncheckedUpdateWithoutExpensesInput = {
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hotelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   hotelConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   stages?: Prisma.TripStageUncheckedUpdateManyWithoutTripNestedInput
@@ -1640,6 +1730,8 @@ export type TripCreateWithoutProjectsInput = {
   region?: string | null
   hotelRequestedAt?: Date | string | null
   hotelConfirmedAt?: Date | string | null
+  closedAt?: Date | string | null
+  closedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   createdByAdmin?: Prisma.UserCreateNestedOneWithoutCreatedTripsInput
@@ -1668,6 +1760,8 @@ export type TripUncheckedCreateWithoutProjectsInput = {
   region?: string | null
   hotelRequestedAt?: Date | string | null
   hotelConfirmedAt?: Date | string | null
+  closedAt?: Date | string | null
+  closedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   stages?: Prisma.TripStageUncheckedCreateNestedManyWithoutTripInput
@@ -1706,6 +1800,8 @@ export type TripUpdateWithoutProjectsInput = {
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hotelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   hotelConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdByAdmin?: Prisma.UserUpdateOneWithoutCreatedTripsNestedInput
@@ -1734,6 +1830,8 @@ export type TripUncheckedUpdateWithoutProjectsInput = {
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hotelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   hotelConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   stages?: Prisma.TripStageUncheckedUpdateManyWithoutTripNestedInput
@@ -1758,6 +1856,8 @@ export type TripCreateManyCreatedByAdminInput = {
   region?: string | null
   hotelRequestedAt?: Date | string | null
   hotelConfirmedAt?: Date | string | null
+  closedAt?: Date | string | null
+  closedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1778,6 +1878,8 @@ export type TripCreateManyRequestedByInput = {
   region?: string | null
   hotelRequestedAt?: Date | string | null
   hotelConfirmedAt?: Date | string | null
+  closedAt?: Date | string | null
+  closedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1798,6 +1900,8 @@ export type TripCreateManyApprovedByInput = {
   region?: string | null
   hotelRequestedAt?: Date | string | null
   hotelConfirmedAt?: Date | string | null
+  closedAt?: Date | string | null
+  closedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1816,6 +1920,8 @@ export type TripUpdateWithoutCreatedByAdminInput = {
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hotelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   hotelConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   requestedBy?: Prisma.UserUpdateOneWithoutRequestedTripsNestedInput
@@ -1843,6 +1949,8 @@ export type TripUncheckedUpdateWithoutCreatedByAdminInput = {
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hotelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   hotelConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   stages?: Prisma.TripStageUncheckedUpdateManyWithoutTripNestedInput
@@ -1868,6 +1976,8 @@ export type TripUncheckedUpdateManyWithoutCreatedByAdminInput = {
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hotelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   hotelConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1886,6 +1996,8 @@ export type TripUpdateWithoutRequestedByInput = {
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hotelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   hotelConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdByAdmin?: Prisma.UserUpdateOneWithoutCreatedTripsNestedInput
@@ -1913,6 +2025,8 @@ export type TripUncheckedUpdateWithoutRequestedByInput = {
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hotelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   hotelConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   stages?: Prisma.TripStageUncheckedUpdateManyWithoutTripNestedInput
@@ -1938,6 +2052,8 @@ export type TripUncheckedUpdateManyWithoutRequestedByInput = {
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hotelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   hotelConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1956,6 +2072,8 @@ export type TripUpdateWithoutApprovedByInput = {
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hotelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   hotelConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdByAdmin?: Prisma.UserUpdateOneWithoutCreatedTripsNestedInput
@@ -1983,6 +2101,8 @@ export type TripUncheckedUpdateWithoutApprovedByInput = {
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hotelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   hotelConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   stages?: Prisma.TripStageUncheckedUpdateManyWithoutTripNestedInput
@@ -2008,6 +2128,8 @@ export type TripUncheckedUpdateManyWithoutApprovedByInput = {
   region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hotelRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   hotelConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -2096,6 +2218,8 @@ export type TripSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   region?: boolean
   hotelRequestedAt?: boolean
   hotelConfirmedAt?: boolean
+  closedAt?: boolean
+  closedById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   createdByAdmin?: boolean | Prisma.Trip$createdByAdminArgs<ExtArgs>
@@ -2126,6 +2250,8 @@ export type TripSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   region?: boolean
   hotelRequestedAt?: boolean
   hotelConfirmedAt?: boolean
+  closedAt?: boolean
+  closedById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   createdByAdmin?: boolean | Prisma.Trip$createdByAdminArgs<ExtArgs>
@@ -2150,6 +2276,8 @@ export type TripSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   region?: boolean
   hotelRequestedAt?: boolean
   hotelConfirmedAt?: boolean
+  closedAt?: boolean
+  closedById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   createdByAdmin?: boolean | Prisma.Trip$createdByAdminArgs<ExtArgs>
@@ -2174,11 +2302,13 @@ export type TripSelectScalar = {
   region?: boolean
   hotelRequestedAt?: boolean
   hotelConfirmedAt?: boolean
+  closedAt?: boolean
+  closedById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type TripOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdByAdminId" | "requestedById" | "approvedAt" | "approvedById" | "city" | "startDate" | "endDate" | "project" | "notes" | "status" | "totalAmount" | "numberInvoice" | "region" | "hotelRequestedAt" | "hotelConfirmedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["trip"]>
+export type TripOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdByAdminId" | "requestedById" | "approvedAt" | "approvedById" | "city" | "startDate" | "endDate" | "project" | "notes" | "status" | "totalAmount" | "numberInvoice" | "region" | "hotelRequestedAt" | "hotelConfirmedAt" | "closedAt" | "closedById" | "createdAt" | "updatedAt", ExtArgs["result"]["trip"]>
 export type TripInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   createdByAdmin?: boolean | Prisma.Trip$createdByAdminArgs<ExtArgs>
   requestedBy?: boolean | Prisma.Trip$requestedByArgs<ExtArgs>
@@ -2230,6 +2360,8 @@ export type $TripPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     region: string | null
     hotelRequestedAt: Date | null
     hotelConfirmedAt: Date | null
+    closedAt: Date | null
+    closedById: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["trip"]>
@@ -2679,6 +2811,8 @@ export interface TripFieldRefs {
   readonly region: Prisma.FieldRef<"Trip", 'String'>
   readonly hotelRequestedAt: Prisma.FieldRef<"Trip", 'DateTime'>
   readonly hotelConfirmedAt: Prisma.FieldRef<"Trip", 'DateTime'>
+  readonly closedAt: Prisma.FieldRef<"Trip", 'DateTime'>
+  readonly closedById: Prisma.FieldRef<"Trip", 'String'>
   readonly createdAt: Prisma.FieldRef<"Trip", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Trip", 'DateTime'>
 }

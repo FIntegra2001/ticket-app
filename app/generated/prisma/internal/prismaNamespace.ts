@@ -1749,6 +1749,8 @@ export const TripScalarFieldEnum = {
   region: 'region',
   hotelRequestedAt: 'hotelRequestedAt',
   hotelConfirmedAt: 'hotelConfirmedAt',
+  closedAt: 'closedAt',
+  closedById: 'closedById',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

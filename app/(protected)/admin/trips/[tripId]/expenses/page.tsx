@@ -5,6 +5,7 @@ import { categoryLabel } from "@/lib/expense-categories";
 import { InvoiceField } from "@/components/trips/InvoiceField";
 import { HotelStatus } from "@/components/trips/HotelStatus";
 import { EditTripButton } from "@/components/admin/EditTripButton";
+import { CloseTripButton } from "@/components/admin/CloseTripButton";
 import { TripItinerary } from "@/components/trips/TripItinerary";
 import { use, useState } from "react";
 import { useAdminTrip, useUpdateTripStatus } from "@/hooks/useAdminTrips";
@@ -149,6 +150,7 @@ export default function AdminTripExpenses({
           {/* Cambiar status */}
           <div className="flex items-center gap-3 flex-wrap">
             <EditTripButton trip={trip} />
+            <CloseTripButton trip={trip} />
             <Badge variant={TRIP_STATUS_VARIANT[trip.status]} className="text-sm">
               {TRIP_STATUS_LABEL[trip.status]}
             </Badge>

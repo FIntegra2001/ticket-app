@@ -45,6 +45,8 @@ Facturas Integra (github.com/FIntegra2001/facturas-integra) es la app MAESTRA de
   - OfficeExpense: id, userId, year, month, status (ABIERTO/CERRADO).
 - Valores de `category` (`lib/expense-categories.ts`) y de `paymentMethod` (Tarjeta, Efectivo, Transferencia, Domiciliacion, Bankinter): añadir o renombrar uno → avisar antes. Las etiquetas visibles (p. ej. "Adelanto personal (reembolso)" = Efectivo, "Desayuno EF" = ComidasOficina en viajes) pueden cambiar; el `value` guardado no.
 
+- Campo añadido después del contrato: `Trip.closedAt` / `closedById` = viaje cerrado por administración (el viajero ya no puede tocar sus gastos). El `status` sigue siendo APROBADO; Facturas puede usar `closedAt` para saber qué liquidaciones están validadas.
+
 ## Hoja de ruta acordada (todavía NO implementar)
 1. Proyectos, ciudades/delegaciones, personas y medios de pago se leerán de Facturas (API de solo lectura con clave). No invertir en mejorar las pantallas de Proyectos/Ciudades de esta app.
 2. El dashboard de admin pasará a ser una bandeja de tareas SIN importes agregados (quitar "Gasto total" y "Gasto por usuario"; mantener el importe de tickets de cada viaje para reembolsos). Bandeja: solicitudes pendientes de aprobar, próximos viajes, aprobados sin billete/reserva, viajes pasados con tickets sin subir o sin categorizar, aprobados sin nº de liquidación.

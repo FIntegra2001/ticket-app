@@ -101,6 +101,12 @@ model Trip {
   hotelRequestedAt DateTime?
   hotelConfirmedAt DateTime?
 
+  // Cierre: administración valida el viaje y, desde entonces, el viajero ya no
+  // puede añadir, editar ni borrar sus gastos. No es un estado nuevo (status
+  // sigue APROBADO) para no romper a Facturas Integra, que lee status.
+  closedAt   DateTime?
+  closedById String?
+
   // ✅ NUEVO: usuarios asignados (many-to-many)
   assignedUsers TripAssignment[]
   expenses      Expense[]

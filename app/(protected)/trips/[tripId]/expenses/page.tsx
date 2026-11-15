@@ -31,6 +31,7 @@ export default function TripExpensesPage() {
   const router = useRouter();
 
   const { data: trip } = useTrip(tripId);
+  const closed = !!trip?.closedAt;
   const { data: expenses, isLoading } = useExpenses(tripId);
   const createExpense = useCreateExpense(tripId);
   const updateExpense = useUpdateExpense(tripId);
@@ -99,16 +100,26 @@ export default function TripExpensesPage() {
           </p>
         </div>
         <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto mb-2">
-          <Button
-            onClick={() => {
-              setEditing(null);
-              setShowForm(true);
-            }}
-          >
-            Nuevo gasto
-          </Button>
+          {!closed && (
+            <Button
+              onClick={() => {
+                setEditing(null);
+                setShowForm(true);
+              }}
+            >
+              Nuevo gasto
+            </Button>
+          )}
         </div>
       </div>
+
+      {/* Viaje cerrado por administración: solo consulta */}
+      {closed && (
+        <p className="text-sm bg-gray-100 border rounded-lg px-4 py-3">
+          🔒 Administración cerró este viaje el {formatDate(trip!.closedAt!)}. Ya no se pueden añadir ni modificar
+          gastos; si falta algo, avisa a administración.
+        </p>
+      )}
 
       {trip && <TripItinerary trip={trip} />}
 
@@ -182,6 +193,8 @@ export default function TripExpensesPage() {
                   <span className="font-semibold text-center sm:text-right">
                     {formatCurrency(exp.amount)}
                   </span>
+                  {!closed && (
+                  <>
                   <Button
                     variant="outline"
                     size="sm"
@@ -223,6 +236,8 @@ export default function TripExpensesPage() {
                       </Button>
                     }
                   />
+                  </>
+                  )}
                 </div>
               </div>
             ))

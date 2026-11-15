@@ -38,11 +38,13 @@ const EXPENSES_LOCKED_MSG =
   "Este viaje todavía no está aprobado, así que no admite gastos. En cuanto administración lo apruebe podrás cargarlos.";
 
 function expensesLocked(
-  trip: { status: string },
+  trip: { status: string; closedAt?: Date | null },
   isAdmin: boolean,
 ): boolean {
-  return !isAdmin && trip.status !== "APROBADO";
+  return !isAdmin && (trip.status !== "APROBADO" || !!trip.closedAt);
 }
+const CLOSED_MSG =
+  "Administración ya ha cerrado este viaje, así que sus gastos no se pueden modificar. Si falta algo, avisa a administración.";
 
 export async function GET(_: Request, { params }: Params) {
   try {
@@ -98,7 +100,7 @@ export async function POST(request: Request, { params }: Params) {
     }
 
     if (expensesLocked(trip, isAdmin)) {
-      return NextResponse.json({ error: EXPENSES_LOCKED_MSG }, { status: 403 });
+      return NextResponse.json({ error: trip.closedAt ? CLOSED_MSG : EXPENSES_LOCKED_MSG }, { status: 403 });
     }
 
     const body = await request.json();

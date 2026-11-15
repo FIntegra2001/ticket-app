@@ -50,11 +50,14 @@ export async function POST(request: NextRequest) {
         where: isAdmin
           ? { id: tripId }
           : { id: tripId, assignedUsers: { some: { userId: session.user.id } } },
-        select: { numberInvoice: true, city: true, createdAt: true },
+        select: { numberInvoice: true, city: true, createdAt: true, closedAt: true },
       });
 
       if (!trip) {
         return NextResponse.json({ error: "Trip not found" }, { status: 404 });
+      }
+      if (trip.closedAt && !isAdmin) {
+        return NextResponse.json({ error: "Este viaje ya está cerrado por administración." }, { status: 403 });
       }
 
       // ✅ Nombre de carpeta basado en numberInvoice o ciudad + día como fallback

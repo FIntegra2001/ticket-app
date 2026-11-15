@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { HotelStatus } from "@/components/trips/HotelStatus";
 import { EditTripButton } from "@/components/admin/EditTripButton";
+import { CloseTripButton } from "@/components/admin/CloseTripButton";
 import { useUpdateTripStatus } from "@/hooks/useAdminTrips";
 import { isKmCategory } from "@/lib/mileage";
 import { formatCurrency, formatDate } from "@/lib/utils";
@@ -105,6 +106,7 @@ export function AdminTripRow({ trip, tab, onEdit }: { trip: Trip; tab: TripTab; 
             ) : (
               <Badge className="bg-green-100 text-green-800">Completo</Badge>
             )}
+            <CloseTripButton trip={trip} compact />
           </>
         )}
       </div>
