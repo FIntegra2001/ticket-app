@@ -5,6 +5,7 @@ import { Check, Pencil, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { HotelStatus } from "@/components/trips/HotelStatus";
+import { EditTripButton } from "@/components/admin/EditTripButton";
 import { useUpdateTripStatus } from "@/hooks/useAdminTrips";
 import { isKmCategory } from "@/lib/mileage";
 import { formatCurrency, formatDate } from "@/lib/utils";
@@ -29,12 +30,16 @@ export function AdminTripRow({ trip, tab, onEdit }: { trip: Trip; tab: TripTab; 
   };
 
   return (
-    <Link
-      href={`/admin/trips/${trip.id}/expenses`}
-      className="grid gap-2 md:grid-cols-[minmax(0,1fr)_auto] md:items-center px-4 py-3 hover:bg-gray-50 transition-colors"
-    >
+    <div className="relative grid gap-2 md:grid-cols-[minmax(0,1fr)_auto] md:items-center px-4 py-3 hover:bg-gray-50 transition-colors">
+      {/* El enlace cubre la fila por debajo; los botones quedan por encima, así
+          los diálogos que abren (editar) no disparan la navegación */}
+      <Link
+        href={`/admin/trips/${trip.id}/expenses`}
+        className="absolute inset-0"
+        aria-label={`Abrir viaje ${trip.numberInvoice ?? ""} ${trip.city}`}
+      />
       {/* Izquierda: qué viaje es */}
-      <div className="min-w-0">
+      <div className="min-w-0 pointer-events-none">
         <div className="flex items-center gap-2 flex-wrap">
           {trip.numberInvoice ? (
             <span className="font-mono text-sm font-semibold">{trip.numberInvoice}</span>
@@ -52,7 +57,7 @@ export function AdminTripRow({ trip, tab, onEdit }: { trip: Trip; tab: TripTab; 
       </div>
 
       {/* Derecha: lo relevante en cada pestaña */}
-      <div className="flex flex-wrap items-center gap-2 md:justify-end">
+      <div className="relative z-10 flex flex-wrap items-center gap-2 md:justify-end">
         {tab === "solicitudes" && (
           <>
             <span className="text-xs text-muted-foreground mr-1">
@@ -84,6 +89,7 @@ export function AdminTripRow({ trip, tab, onEdit }: { trip: Trip; tab: TripTab; 
         )}
 
         {tab === "proximos" && <HotelStatus trip={trip} />}
+        {tab !== "solicitudes" && <EditTripButton trip={trip} compact />}
 
         {tab === "realizados" && trip.status !== "RECHAZADO" && (
           <>
@@ -102,6 +108,6 @@ export function AdminTripRow({ trip, tab, onEdit }: { trip: Trip; tab: TripTab; 
           </>
         )}
       </div>
-    </Link>
+    </div>
   );
 }

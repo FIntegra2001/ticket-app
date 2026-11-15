@@ -166,7 +166,9 @@ export default function TripForm({
     (isRequest || selectedUserIds.length > 0);
 
   const cityById = (id: string) => cities.find((c) => c.id === id);
-  const availableUsers = users?.filter((u) => u.role === "USER") || [];
+  // Cualquier usuario activo puede viajar (también un ADMIN); /api/users ya
+  // devuelve solo los activos
+  const availableUsers = users ?? [];
 
   const handleSubmit = () => {
     onSubmit({
