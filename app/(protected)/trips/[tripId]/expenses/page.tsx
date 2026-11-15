@@ -125,6 +125,8 @@ export default function TripExpensesPage() {
               tripId={tripId}
               stages={trip?.stages}
             tripProjects={trip?.projects?.map((p) => p.project)}
+            tripStart={trip?.startDate}
+            tripEnd={trip?.endDate}
               initialData={editing || undefined}
               onSubmit={(values) => {
                 if (editing) {

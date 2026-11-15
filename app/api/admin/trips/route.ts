@@ -1,4 +1,4 @@
-import { isTripTab, TRIP_TABS, tripTabOrder, tripTabWhere } from "@/lib/trip-tabs";
+import { isTripTab, TRIP_TABS, tripFilterWhere, tripTabOrder, tripTabWhere } from "@/lib/trip-tabs";
 import { stagesInclude } from "@/lib/trip-stages.server";
 import { Prisma } from "@/app/generated/prisma/client";
 import prisma from "@/lib/db";
@@ -26,13 +26,20 @@ export async function GET(request: NextRequest) {
     // Fase 3: pestaña del listado (solicitudes | proximos | realizados)
     const tabParam = searchParams.get("tab");
     const tab = isTripTab(tabParam) ? tabParam : null;
-    const where: Prisma.TripWhereInput = tab
+    // Filtros del listado (buscador, ciudad, mes), combinados con la pestaña
+    const filter = tripFilterWhere({
+      q: searchParams.get("q"),
+      cityId: searchParams.get("cityId"),
+      month: searchParams.get("month"),
+    });
+    const base: Prisma.TripWhereInput = tab
       ? tripTabWhere(tab)
       : statusParam === "PENDIENTE" ||
           statusParam === "APROBADO" ||
           statusParam === "RECHAZADO"
         ? { status: statusParam }
         : {};
+    const where: Prisma.TripWhereInput = { AND: [base, filter] };
 
     // ✅ Consulta con paginación
     const [trips, totalCount] = await Promise.all([
@@ -64,7 +71,7 @@ export async function GET(request: NextRequest) {
     // Contadores de las tres pestañas (para los números junto a cada una)
     const counts = Object.fromEntries(
       await Promise.all(
-        TRIP_TABS.map(async (t) => [t.value, await prisma.trip.count({ where: tripTabWhere(t.value) })]),
+        TRIP_TABS.map(async (t) => [t.value, await prisma.trip.count({ where: { AND: [tripTabWhere(t.value), filter] } })]),
       ),
     );
 

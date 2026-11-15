@@ -10,14 +10,19 @@ import { Trip, TripStatus, PaginatedResponse, CreateTripDto, UpdateTripDto } fro
 import { toast } from "sonner";
 
 /** Fase 3: listado por pestaña (solicitudes | proximos | realizados). */
-export function useAdminTrips(tab?: string) {
+export type TripListFilters = { q?: string; cityId?: string; month?: string };
+
+export function useAdminTrips(tab?: string, filters: TripListFilters = {}) {
+  const extra = new URLSearchParams(
+    Object.entries(filters).filter(([, v]) => v) as [string, string][],
+  ).toString();
   return useInfiniteQuery<PaginatedResponse<Trip>>({
-    queryKey: ["adminTrips", tab ?? "all"],
+    queryKey: ["adminTrips", tab ?? "all", extra],
     // Al cambiar de pestaña se mantiene la lista anterior hasta que llega la nueva
     placeholderData: (prev) => prev,
     queryFn: async ({ pageParam = 1 }) => {
       const tabParam = tab ? `&tab=${tab}` : "";
-      const res = await fetch(`/api/admin/trips?page=${pageParam}&limit=9${tabParam}`, {
+      const res = await fetch(`/api/admin/trips?page=${pageParam}&limit=30${tabParam}${extra ? "&" + extra : ""}`, {
         credentials: "include",
         headers: { "Content-Type": "application/json" },
       });

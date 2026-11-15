@@ -395,6 +395,8 @@ export default function AdminTripExpenses({
             tripId={tripId}
             stages={trip?.stages}
             tripProjects={trip?.projects?.map((p) => p.project)}
+            tripStart={trip?.startDate}
+            tripEnd={trip?.endDate}
             initialData={editingExpense}
             onSubmit={handleCreateOrUpdate}
             onCancel={() => {

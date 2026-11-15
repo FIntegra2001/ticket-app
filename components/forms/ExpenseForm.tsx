@@ -20,7 +20,7 @@ import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { ImageCapture } from "./ImageCapture"; // ✅ nuevo componente
 import { compressImage } from "@/lib/compress-image";
-import { pickStageForDate, stageCityName } from "@/lib/trip-stages";
+import { pickStageForDate, stageCityName, toDay } from "@/lib/trip-stages";
 import { categoryLabel } from "@/lib/expense-categories";
 import {
   computeMileage,
@@ -71,6 +71,9 @@ interface ExpenseFormProps {
   stages?: TripStage[];
   /** Fase 3: proyectos del viaje. Con 2 o más, el gasto elige uno. */
   tripProjects?: Project[];
+  /** Fase 5: fechas del viaje, para avisar si el ticket cae fuera */
+  tripStart?: Date | string;
+  tripEnd?: Date | string;
   onSubmit: (values: ExpenseFormValues) => void;
   onCancel: () => void;
 }
@@ -84,6 +87,8 @@ export default function ExpenseForm({
   scope = "trip",
   stages = [],
   tripProjects = [],
+  tripStart,
+  tripEnd,
 }: ExpenseFormProps) {
   // Fase 3: proyecto del gasto. En oficina, también la delegación (se propone
   // la última usada en este dispositivo).
@@ -326,6 +331,19 @@ export default function ExpenseForm({
   const isProcessing = ocrMutation.isPending || uploadMutation.isPending;
 
   const sortedStages = [...stages].sort((a, b) => a.position - b.position);
+
+  // Fase 5: aviso (no bloquea) si la fecha del ticket cae fuera del viaje
+  const dateWarning = (date: Date) => {
+    if (!tripStart || !tripEnd) return null;
+    const d = toDay(date).getTime();
+    if (d >= toDay(tripStart).getTime() && d <= toDay(tripEnd).getTime()) return null;
+    const f = (x: Date | string) => toDay(x).toLocaleDateString("es-ES", { timeZone: "UTC" });
+    return `La fecha del ticket (${f(date)}) está fuera del viaje (${f(tripStart)} – ${f(tripEnd)}). Comprueba que se ha leído bien.`;
+  };
+  const DateWarning = ({ date }: { date: Date }) => {
+    const msg = dateWarning(date);
+    return msg ? <p className="text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-md px-3 py-2">⚠️ {msg}</p> : null;
+  };
   const effectiveStageId =
     chosenStageId || pickStageForDate(sortedStages, values.date)?.id || undefined;
 
@@ -377,6 +395,7 @@ export default function ExpenseForm({
             ))}
           </dl>
         </div>
+        <DateWarning date={v.date} />
         <p className="text-xs text-muted-foreground">
           Comprueba que el importe es el <strong>total con IVA</strong> del ticket y que la fecha es correcta.
         </p>
@@ -580,6 +599,7 @@ export default function ExpenseForm({
               setValues((prev) => ({ ...prev, date: new Date(e.target.value) }))
             }
           />
+          <div className="mt-2"><DateWarning date={values.date} /></div>
         </div>
         {sortedStages.length > 1 && (
           <div>

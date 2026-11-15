@@ -47,3 +47,25 @@ export function monthWhere(month: string | null): Prisma.TripWhereInput {
   const [y, m] = month.split("-").map(Number);
   return { startDate: { gte: new Date(Date.UTC(y, m - 1, 1)), lt: new Date(Date.UTC(y, m, 1)) } };
 }
+
+/**
+ * Filtros del listado del ADMIN: buscador (nº de liquidación, persona o
+ * ciudad), ciudad del catálogo (cualquier tramo) y mes de inicio.
+ */
+export function tripFilterWhere(f: { q?: string | null; cityId?: string | null; month?: string | null }): Prisma.TripWhereInput {
+  const and: Prisma.TripWhereInput[] = [];
+  const q = f.q?.trim();
+  if (q) {
+    and.push({
+      OR: [
+        { numberInvoice: { contains: q, mode: "insensitive" } },
+        { city: { contains: q, mode: "insensitive" } },
+        { assignedUsers: { some: { user: { OR: [{ name: { contains: q, mode: "insensitive" } }, { email: { contains: q, mode: "insensitive" } }] } } } },
+      ],
+    });
+  }
+  if (f.cityId) and.push({ stages: { some: { cityId: f.cityId } } });
+  const m = monthWhere(f.month ?? null);
+  if (Object.keys(m).length) and.push(m);
+  return and.length ? { AND: and } : {};
+}
