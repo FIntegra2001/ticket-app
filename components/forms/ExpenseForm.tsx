@@ -33,6 +33,16 @@ import {
 } from "@/lib/mileage";
 import { useQuery } from "@tanstack/react-query";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
   getCategoriesByScope,
   type CategoryScope,
 } from "@/lib/expense-categories";
@@ -129,6 +139,8 @@ export default function ExpenseForm({
   );
   // Fase 3: segunda confirmación. Con valores aquí se muestra el resumen.
   const [pendingValues, setPendingValues] = React.useState<ExpenseFormValues | null>(null);
+  // Gasto pendiente de confirmar porque su fecha cae fuera del viaje
+  const [dateCheck, setDateCheck] = React.useState<ExpenseFormValues | null>(null);
   // ✅ Estado para bloquear el botón de submit mientras se guarda
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
@@ -304,7 +316,7 @@ export default function ExpenseForm({
       return;
     }
     // Fase 3: no se guarda aún; se muestra el resumen para confirmar
-    setPendingValues({
+    const next: ExpenseFormValues = {
         ...values,
         amount: parsedAmount,
         receiptUrl: kmMode ? undefined : receiptUrl,
@@ -314,7 +326,14 @@ export default function ExpenseForm({
         ...(kmMode
           ? { kmOneWay, paymentMethod: PERSONAL_ADVANCE }
           : { kmOneWay: undefined, originOffice: undefined, destinationAddress: undefined }),
-    });
+    };
+    // Fecha fuera del viaje → doble confirmación en el centro de la pantalla
+    // antes del resumen (en el móvil el aviso del formulario pasa desapercibido)
+    if (dateWarning(next.date)) {
+      setDateCheck(next);
+      return;
+    }
+    setPendingValues(next);
   }
 
   function confirmSave() {
@@ -751,6 +770,27 @@ export default function ExpenseForm({
           )}
         </Button>
       </div>
+      <AlertDialog open={!!dateCheck} onOpenChange={(o) => !o && setDateCheck(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>⚠️ ¿La fecha del ticket es correcta?</AlertDialogTitle>
+            <AlertDialogDescription>
+              {dateCheck && dateWarning(dateCheck.date)} Acepta solo si estás seguro de que es correcta.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Corregir la fecha</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                setPendingValues(dateCheck);
+                setDateCheck(null);
+              }}
+            >
+              Sí, es correcta
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </form>
   );
 }
