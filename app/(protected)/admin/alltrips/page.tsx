@@ -98,6 +98,9 @@ function AdminAllTrips() {
         </div>
         <div className="flex flex-col sm:flex-row gap-2">
           <ExportDialog />
+          <Button variant="outline" asChild>
+            <a href="/api/admin/export/hl-report" download>Reporte HL</a>
+          </Button>
           <Dialog
             open={isOpen}
             onOpenChange={(open) => {
